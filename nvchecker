@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+# vim:fileencoding=utf-8
+
+import sys
+import configparser
+import logging
+from functools import partial
+
+from tornado.ioloop import IOLoop
+import tornado.options
+
+from get_version import get_version
+
+logger = logging.getLogger(__name__)
+g_counter = 0
+
+def task_inc():
+  global g_counter
+  g_counter += 1
+
+def task_dec():
+  global g_counter
+  g_counter -= 1
+  if g_counter == 0:
+    IOLoop.instance().stop()
+
+def load_config(*files):
+  config = configparser.ConfigParser(
+    dict_type=dict, allow_no_value=True
+  )
+  for file in files:
+    with open(file) as f:
+      config.read_file(f)
+
+  return config
+
+def print_version(name, version):
+  print('%s: %s' % (name, version))
+  task_dec()
+
+def get_versions(config):
+  task_inc()
+  for name in config.sections():
+    task_inc()
+    get_version(name, config[name], print_version)
+  task_dec()
+
+def test():
+  files = tornado.options.parse_command_line()
+
+  def run_test():
+    config = load_config(*files)
+    get_versions(config)
+
+  ioloop = IOLoop.instance()
+  ioloop.add_callback(run_test)
+  ioloop.start()
+
+if __name__ == '__main__':
+  test()
