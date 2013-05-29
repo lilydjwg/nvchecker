@@ -13,8 +13,8 @@ NOTIFY_URGENCY_NORMAL = 1
 NOTIFY_URGENCY_CRITICAL = 2
 UrgencyLevel = {NOTIFY_URGENCY_LOW, NOTIFY_URGENCY_NORMAL, NOTIFY_URGENCY_CRITICAL}
 
-libnotify = CDLL('libnotify.so')
-gobj = CDLL('libgobject-2.0.so')
+libnotify = None
+gobj = None
 libnotify_lock = Lock()
 libnotify_inited = False
 
@@ -61,9 +61,15 @@ def set_urgency(self, urgency):
   libnotify.notify_notification_set_urgency(notify_st.notify, urgency)
 
 def init():
-  global libnotify_inited
+  global libnotify_inited, libnotify, gobj
   if libnotify_inited:
     return
+
+  try:
+    libnotify = CDLL('libnotify.so')
+  except OSError:
+    libnotify = CDLL('libnotify.so.4')
+  gobj = CDLL('libgobject-2.0.so')
 
   libnotify.notify_init('pynotify')
   libnotify_inited = True
