@@ -68,6 +68,20 @@ Use a shell command line to get the version. The output is striped first, so tra
 cmd
   The command line to use. This will run with the system's standard shell (e.g. ``/bin/sh``).
 
+Check AUR
+---------
+Check [Arch User Repository](https://aur.archlinux.org/) for updates.
+
+aur
+  The package name in AUR. If empty, use the name of software (the *section name*).
+
+Check GitHub
+------------
+Check [GitHub](https://github.com/) for updates. The version returned is in date format `%Y%m%d`, e.g. `20130701`.
+
+github
+  The github repository, with author, e.g. `lilydjwg/nvchecker`.
+
 Other
 -----
 More to come. Send me a patch or pull request if you can't wait and have written one yourself :-)
