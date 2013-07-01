@@ -70,14 +70,14 @@ cmd
 
 Check AUR
 ---------
-Check [Arch User Repository](https://aur.archlinux.org/) for updates.
+Check `Arch User Repository <https://aur.archlinux.org/>` for updates.
 
 aur
   The package name in AUR. If empty, use the name of software (the *section name*).
 
 Check GitHub
 ------------
-Check [GitHub](https://github.com/) for updates. The version returned is in date format `%Y%m%d`, e.g. `20130701`.
+Check `GitHub <https://github.com/>` for updates. The version returned is in date format `%Y%m%d`, e.g. `20130701`.
 
 github
   The github repository, with author, e.g. `lilydjwg/nvchecker`.
