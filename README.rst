@@ -77,10 +77,10 @@ aur
 
 Check GitHub
 ------------
-Check `GitHub <https://github.com/>` for updates. The version returned is in date format `%Y%m%d`, e.g. `20130701`.
+Check `GitHub <https://github.com/>` for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
 
 github
-  The github repository, with author, e.g. `lilydjwg/nvchecker`.
+  The github repository, with author, e.g. ``lilydjwg/nvchecker``.
 
 Other
 -----
