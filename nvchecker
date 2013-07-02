@@ -62,7 +62,9 @@ def write_verfile():
     return
 
   with open(options.verfile, 'w') as f:
-    for item in sorted(g_curver.items()):
+    # sort using only alphanums, as done by the sort command, and needed by
+    # comm command
+    for item in sorted(g_curver.items(), key=lambda i: (''.join(filter(str.isalnum, i[0])), i[1])):
       print('%s: %s' % item, file=f)
 
 def print_version_update(name, version):
