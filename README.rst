@@ -61,6 +61,9 @@ regex
 
   When multiple version strings are found, the maximum of those is chosen.
 
+proxy
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
+
 Find with a Command
 -------------------
 Use a shell command line to get the version. The output is striped first, so trailing newlines do not bother.

@@ -4,6 +4,7 @@ import logging
 from functools import partial
 import queue
 import json
+import urllib.parse
 
 from pkg_resources import parse_version
 from tornado.httpclient import AsyncHTTPClient
@@ -12,6 +13,12 @@ from tornado.ioloop import IOLoop
 
 logger = logging.getLogger(__name__)
 handler_precedence = ('github', 'aur', 'cmd', 'regex')
+
+try:
+  import pycurl
+  AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
+except ImportError:
+  pycurl = None
 
 def get_version(name, conf, callback):
   g = globals()
@@ -34,9 +41,19 @@ def get_version_by_regex(name, conf, callback):
 
   encoding = conf.get('encoding', 'latin1')
   httpclient = AsyncHTTPClient()
+
+  kwargs = {}
+  if conf.get('proxy'):
+    if pycurl:
+      host, port = urllib.parse.splitport(conf['proxy'])
+      kwargs['proxy_host'] = host
+      kwargs['proxy_port'] = int(port)
+    else:
+      logger.warn('%s: proxy set but not used because pycurl is unavailable.', name)
+
   httpclient.fetch(conf['url'], partial(
     _get_version_by_regex, name, r, encoding, callback
-  ))
+  ), **kwargs)
 
 def _get_version_by_regex(name, regex, encoding, callback, res):
   body = res.body.decode(encoding)
