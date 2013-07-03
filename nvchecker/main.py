@@ -6,14 +6,13 @@ import sys
 import configparser
 import logging
 from functools import partial
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lib'))
 
 from pkg_resources import parse_version
 from tornado.ioloop import IOLoop
 from tornado.options import parse_command_line, define, options
 
-from get_version import get_version
-import notify
+from nvchecker.get_version import get_version
+from nvchecker import notify
 
 logger = logging.getLogger(__name__)
 notifications = []
@@ -91,7 +90,7 @@ def get_versions(config):
     get_version(name, config[name], print_version_update)
   task_dec()
 
-def test():
+def main():
   files = parse_command_line()
   if not files:
     return
@@ -108,4 +107,4 @@ def test():
   ioloop.start()
 
 if __name__ == '__main__':
-  test()
+  main()

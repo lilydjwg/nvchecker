@@ -92,4 +92,3 @@ More to come. Send me a patch or pull request if you can't wait and have written
 Bugs
 ----
 * Finish writing results even on Ctrl-C or other interruption.
-* ``setup.py`` script.
