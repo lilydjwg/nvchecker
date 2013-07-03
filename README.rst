@@ -37,6 +37,8 @@ Compare the two files for updates (assuming they are sorted alphabetically; file
   comm -13 old_ver.txt new_ver.txt
   # or say that in English:
   comm -13 old_ver.txt new_ver.txt | sed 's/:/ has updated to version/;s/$/./'
+  # show both old and new versions
+  join old_ver.txt new_ver.txt | awk '$2 != $3'
 
 Configuration Files
 ===================
