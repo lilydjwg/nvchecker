@@ -117,8 +117,8 @@ def main():
 
   def run_test():
     config = load_config(*args.files)
-    if args.current:
-      g_oldver.update(load_oldverfile(args.current))
+    if args.oldver:
+      g_oldver.update(load_oldverfile(args.oldver))
       g_curver.update(g_oldver)
     get_versions(config)
 
