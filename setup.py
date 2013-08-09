@@ -2,10 +2,11 @@
 # vim:fileencoding=utf-8
 
 from setuptools import setup, find_packages
+import nvchecker
 
 setup(
   name = 'nvchecker',
-  version = '0.1',
+  version = nvchecker.__version__,
   packages = find_packages(),
   install_requires = ['tornado'],
   entry_points = {

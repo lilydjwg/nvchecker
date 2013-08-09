@@ -5,27 +5,22 @@ import os
 import sys
 import configparser
 import logging
+import argparse
 from functools import partial
 
 from pkg_resources import parse_version
 from tornado.ioloop import IOLoop
-from tornado.options import parse_command_line, define, options
 
-from nvchecker.get_version import get_version
-from nvchecker import notify
+from .lib import notify, nicelogger
+
+from .get_version import get_version
+from . import __version__
 
 logger = logging.getLogger(__name__)
 notifications = []
 g_counter = 0
 g_oldver = {}
 g_curver = {}
-
-define("notify", type=bool,
-       help="show desktop notifications when a new version is available")
-define("oldverfile", type=str, metavar="FILE",
-       help="a text file listing current version info in format 'name: version'")
-define("verfile", type=str, metavar="FILE",
-       help="write a new version file")
 
 def task_inc():
   global g_counter
@@ -57,10 +52,10 @@ def load_oldverfile(file):
   return v
 
 def write_verfile():
-  if not options.verfile:
+  if not args.newver:
     return
 
-  with open(options.verfile, 'w') as f:
+  with open(args.newver, 'w') as f:
     # sort using only alphanums, as done by the sort command, and needed by
     # comm command
     for item in sorted(g_curver.items(), key=lambda i: (''.join(filter(str.isalnum, i[0])), i[1])):
@@ -78,7 +73,7 @@ def print_version_update(name, version):
 def _updated(name, version):
   g_curver[name] = version
 
-  if options.notify:
+  if args.notify:
     msg = '%s updated to version %s' % (name, version)
     notifications.append(msg)
     notify.update('nvchecker', '\n'.join(notifications))
@@ -91,14 +86,39 @@ def get_versions(config):
   task_dec()
 
 def main():
-  files = parse_command_line()
-  if not files:
+  global args
+
+  parser = argparse.ArgumentParser(description='New version checker for software')
+  parser.add_argument('files', metavar='FILE', nargs='*',
+                      help='software version source files')
+  parser.add_argument('-i', '--oldver',
+                      help='read an existing version record file')
+  parser.add_argument('-o', '--newver',
+                      help='write a new version record file')
+  # parser.add_argument('-r', '--rc', default=os.path.expanduser('~/.nvcheckerrc'),
+  #                     help='specify the nvcheckerrc file to use')
+  parser.add_argument('-n', '--notify', action='store_true', default=False,
+                      help='show desktop notifications when a new version is available')
+  parser.add_argument('-l', '--logging',
+                      choices=('debug', 'info', 'warning', 'error'), default='info',
+                      help='logging level (default: info)')
+  parser.add_argument('-V', '--version', action='store_true',
+                      help='show version and exit')
+
+  args = parser.parse_args()
+  nicelogger.enable_pretty_logging(getattr(logging, args.logging.upper()))
+
+  if args.version:
+      print('nvchecker v' + __version__)
+      return
+
+  if not args.files:
     return
 
   def run_test():
-    config = load_config(*files)
-    if options.oldverfile:
-      g_oldver.update(load_oldverfile(options.oldverfile))
+    config = load_config(*args.files)
+    if args.current:
+      g_oldver.update(load_oldverfile(args.current))
       g_curver.update(g_oldver)
     get_versions(config)
 
