@@ -11,10 +11,10 @@ from functools import partial
 from pkg_resources import parse_version
 from tornado.ioloop import IOLoop
 
-from .lib import notify, nicelogger
+from .lib import notify
 
 from .get_version import get_version
-from . import __version__
+from . import util
 
 logger = logging.getLogger(__name__)
 notifications = []
@@ -91,26 +91,13 @@ def main():
   parser = argparse.ArgumentParser(description='New version checker for software')
   parser.add_argument('files', metavar='FILE', nargs='*',
                       help='software version source files')
-  parser.add_argument('-i', '--oldver',
-                      help='read an existing version record file')
-  parser.add_argument('-o', '--newver',
-                      help='write a new version record file')
-  # parser.add_argument('-r', '--rc', default=os.path.expanduser('~/.nvcheckerrc'),
-  #                     help='specify the nvcheckerrc file to use')
   parser.add_argument('-n', '--notify', action='store_true', default=False,
                       help='show desktop notifications when a new version is available')
-  parser.add_argument('-l', '--logging',
-                      choices=('debug', 'info', 'warning', 'error'), default='info',
-                      help='logging level (default: info)')
-  parser.add_argument('-V', '--version', action='store_true',
-                      help='show version and exit')
+  util.add_common_arguments(parser)
 
   args = parser.parse_args()
-  nicelogger.enable_pretty_logging(getattr(logging, args.logging.upper()))
-
-  if args.version:
-      print('nvchecker v' + __version__)
-      return
+  if util.process_common_arguments(args):
+    return
 
   if not args.files:
     return
