@@ -95,7 +95,7 @@ def main():
                       help='show desktop notifications when a new version is available')
   util.add_common_arguments(parser)
 
-  args = parser.parse_args()
+  args = util.parse_args(parser)
   if util.process_common_arguments(args):
     return
 
