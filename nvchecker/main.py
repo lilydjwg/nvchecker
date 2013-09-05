@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# vim:fileencoding=utf-8
 
 import os
 import sys
@@ -43,23 +42,10 @@ def load_config(*files):
 
   return config
 
-def load_oldverfile(file):
-  v = {}
-  with open(file) as f:
-    for l in f:
-      name, ver = [x.strip() for x in l.split(':', 1)]
-      v[name] = ver
-  return v
-
 def write_verfile():
   if not args.newver:
     return
-
-  with open(args.newver, 'w') as f:
-    # sort using only alphanums, as done by the sort command, and needed by
-    # comm command
-    for item in sorted(g_curver.items(), key=lambda i: (''.join(filter(str.isalnum, i[0])), i[1])):
-      print('%s: %s' % item, file=f)
+  util.write_verfile(args.newver, g_curver)
 
 def print_version_update(name, version):
   oldver = g_oldver.get(name, None)
@@ -105,7 +91,7 @@ def main():
   def run_test():
     config = load_config(*args.files)
     if args.oldver:
-      g_oldver.update(load_oldverfile(args.oldver))
+      g_oldver.update(util.read_verfile(args.oldver))
       g_curver.update(g_oldver)
     get_versions(config)
 

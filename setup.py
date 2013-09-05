@@ -12,6 +12,7 @@ setup(
   entry_points = {
     'console_scripts': [
       'nvchecker = nvchecker.main:main',
+      'nvtake = nvchecker.tools:take',
     ],
   },
 

@@ -40,6 +40,14 @@ Compare the two files for updates (assuming they are sorted alphabetically; file
   # show both old and new versions
   join old_ver.txt new_ver.txt | awk '$2 != $3'
 
+The ``nvtake`` Command
+----------------------
+This command helps to manage version record files. It reads both old and new version record files, and a list of names given on the commandline. It then update the versions of those names in the old version record file.
+
+This helps when you have known (and processed) some of the updated software, but not all. You can tell nvchecker that via this command instead of editing the file by hand.
+
+This command will help most if you specify where you version record files are in your config file. See below for how to use a config file.
+
 Version Source Files
 ====================
 The software version source files are in ini format. *Section names* is the name of the software. Following fields are used to tell nvchecker how to determine the current version of that software.
@@ -106,4 +114,4 @@ Bugs
 
 TODO
 ====
-* ``nvtake`` command
+* Tool to replace the ``join`` command
