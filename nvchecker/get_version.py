@@ -154,6 +154,7 @@ def _gcodehg_done(name, callback, res):
     t = time.strptime('Aug 15, 2013', '%b %d, %Y')
     version = time.strftime('%Y%m%d', t)
   else:
+    logger.error('%s: version not found.', name)
     version = None
   callback(name, version)
 
