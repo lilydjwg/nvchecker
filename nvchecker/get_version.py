@@ -5,6 +5,7 @@ from functools import partial
 import queue
 import json
 import urllib.parse
+import time
 
 from pkg_resources import parse_version
 from tornado.httpclient import AsyncHTTPClient
@@ -12,7 +13,7 @@ import tornado.process
 from tornado.ioloop import IOLoop
 
 logger = logging.getLogger(__name__)
-handler_precedence = ('github', 'aur', 'pypi', 'cmd', 'regex')
+handler_precedence = ('github', 'aur', 'pypi', 'cmd', 'gcode_hg', 'regex')
 
 try:
   import pycurl
@@ -135,3 +136,24 @@ def _pypi_done(name, callback, res):
   data = json.loads(res.body.decode('utf-8'))
   version = data['info']['version']
   callback(name, version)
+
+GCODE_URL = 'https://code.google.com/p/%s/source/list'
+GCODE_HG_RE = re.compile(
+  r'<a onclick="cancelBubble=true" href="detail\?r=[0-9a-f]+">([^<]+)</a>')
+
+def get_version_by_gcode_hg(name, conf, callback):
+  repo = conf.get('gcode_hg') or name
+  url = GCODE_URL % repo
+  AsyncHTTPClient().fetch(url, user_agent='lilydjwg/nvchecker',
+                          callback=partial(_gcodehg_done, name, callback))
+
+def _gcodehg_done(name, callback, res):
+  data = res.body.decode('utf-8')
+  m = GCODE_HG_RE.search(data)
+  if m:
+    t = time.strptime('Aug 15, 2013', '%b %d, %Y')
+    version = time.strftime('%Y%m%d', t)
+  else:
+    version = None
+  callback(name, version)
+
