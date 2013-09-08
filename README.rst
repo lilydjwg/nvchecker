@@ -95,6 +95,20 @@ Check `GitHub <https://github.com/>`_ for updates. The version returned is in da
 github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
 
+Check PyPI
+----------
+Check `PyPI <https://pypi.python.org/>`_ for updates.
+
+pypi
+  The name used on PyPI, e.g. ``PySide``.
+
+Check Google Code (hg repository)
+---------------------------------
+Check a mecurial (hg) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+
+gcode_hg
+  The name used on Google Code, e.g. ``chromium-compact-language-detector``.
+
 Other
 -----
 More to come. Send me a patch or pull request if you can't wait and have written one yourself :-)
