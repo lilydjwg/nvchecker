@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+if [[ $# -ne 2 || ! -r $1 || -z $2 ]]; then
+  echo >&2 "usage: arch_repopkg_unmonitored config.ini pkg_list or repository_namee"
+  exit 1
+fi
+
+tmp_configured=$(mktemp)
+tmp_list=$(mktemp)
+
+trap 'rm -f "$tmp_configured" "$tmp_list"' INT QUIT TERM EXIT
+
+config=$1
+if [[ -r $2 ]]; then
+  sort "$2" > "$tmp_list"
+else
+  pacman -Sl "$2" | cut -d' ' -f2 | sort > "$tmp_list"
+fi
+
+# Also take commented-out items into account
+grep -oP '^(?:[;#]\s*)?\[.*(?=]$)' "$config" | sed 's/^\([;#]\s*\)\?\[//' | sort > "$tmp_configured"
+
+echo ">>> Un-monitored list:"
+comm -23 "$tmp_list" "$tmp_configured"
+echo
+
+echo ">>> Monitored but not in list:"
+comm -13 "$tmp_list" "$tmp_configured"
+echo
