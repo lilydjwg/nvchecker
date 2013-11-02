@@ -72,7 +72,7 @@ regex
   When multiple version strings are found, the maximum of those is chosen.
 
 proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>_`.
 
 Find with a Command
 -------------------
@@ -102,6 +102,13 @@ Check `PyPI <https://pypi.python.org/>`_ for updates.
 pypi
   The name used on PyPI, e.g. ``PySide``.
 
+Check Local Pacman Database
+---------------------------
+This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman <https://wiki.archlinux.org/index.php/Pacman>`_.
+
+pacman
+  The package name to reference to.
+
 Check Google Code (hg repository)
 ---------------------------------
 Check a mecurial (hg) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
@@ -129,3 +136,5 @@ Bugs
 TODO
 ====
 * Tool to replace the ``join`` command
+* Support GitHub tags
+* Remove troublesome colon from record files

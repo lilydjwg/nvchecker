@@ -13,7 +13,8 @@ import tornado.process
 from tornado.ioloop import IOLoop
 
 logger = logging.getLogger(__name__)
-handler_precedence = ('github', 'aur', 'pypi', 'cmd', 'gcode_hg', 'regex')
+handler_precedence = ('github', 'aur', 'pypi', 'pacman',
+                      'cmd', 'gcode_hg', 'regex')
 
 try:
   import pycurl
@@ -158,3 +159,9 @@ def _gcodehg_done(name, callback, res):
     version = None
   callback(name, version)
 
+
+def get_version_by_pacman(name, conf, callback):
+  referree = conf['pacman']
+  cmd = "LANG=C pacman -Si %s | grep -F Version | awk '{print $3}'" % referree
+  conf['cmd'] = cmd
+  get_version_by_cmd(name, conf, callback)
