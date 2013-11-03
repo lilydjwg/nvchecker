@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
-import os
-import sys
 import configparser
 import logging
 import argparse
-from functools import partial
 
 from pkg_resources import parse_version
 from tornado.ioloop import IOLoop
@@ -20,6 +17,7 @@ notifications = []
 g_counter = 0
 g_oldver = {}
 g_curver = {}
+args = None
 
 def task_inc():
   global g_counter
