@@ -46,6 +46,10 @@ def write_verfile():
   util.write_verfile(args.newver, g_curver)
 
 def print_version_update(name, version):
+  if version is None:
+    task_dec()
+    return
+
   oldver = g_oldver.get(name, None)
   if not oldver or parse_version(oldver) < parse_version(version):
     logger.info('%s: updated version %s', name, version)
