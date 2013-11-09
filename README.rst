@@ -79,7 +79,7 @@ Find with a Command
 Use a shell command line to get the version. The output is striped first, so trailing newlines do not bother.
 
 cmd
-  The command line to use. This will run with the system's standard shell (e.g. ``/bin/sh``).
+  The command line to use. This will run with the system's standard shell (i.e. ``/bin/sh``).
 
 Check AUR
 ---------
