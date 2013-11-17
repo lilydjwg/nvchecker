@@ -14,6 +14,9 @@ def get_version(name, conf, callback):
   AsyncHTTPClient().fetch(url, partial(_aur_done, name, callback))
 
 def _aur_done(name, callback, res):
+  if res.error:
+    raise res.error
+
   data = json.loads(res.body.decode('utf-8'))
 
   if not data['results']:
