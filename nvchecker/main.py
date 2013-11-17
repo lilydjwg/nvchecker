@@ -90,7 +90,7 @@ def main():
   if not args.files:
     return
 
-  def run_test():
+  def run():
     config = load_config(*args.files)
     if args.oldver:
       g_oldver.update(util.read_verfile(args.oldver))
@@ -98,7 +98,7 @@ def main():
     get_versions(config)
 
   ioloop = IOLoop.instance()
-  ioloop.add_callback(run_test)
+  ioloop.add_callback(run)
   ioloop.start()
 
 if __name__ == '__main__':
