@@ -125,6 +125,7 @@ Config File
 ``nvchecker`` supports a config file, which contains whatever you would give on commandline every time. This file is at ``~/.nvcheckerrc`` by default, and can be changed by the ``-c`` option. You can specify ``-c /dev/null`` to disable the default config file temporarily.
 
 A typical config file looks like this::
+
     --oldver ~/.nvchecker/versionlist.txt --newver ~/.nvchecker/versionlist_new.txt
 
 ``~`` and environmental variables will be expanded. Options given on commandline override those in a config file.
