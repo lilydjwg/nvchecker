@@ -22,11 +22,11 @@ You normally will like to specify some "version record files"; see below.
 
 Version Record Files
 ====================
-Version record files record which version of the software you know or is available. They are simple key-value pairs of ``(name, version)`` seperated by ``:`` ::
+Version record files record which version of the software you know or is available. They are simple key-value pairs of ``(name, version)`` seperated by a space\ [#]_::
 
-  fcitx: 4.2.7
-  google-chrome: 27.0.1453.93-200836
-  vim: 7.3.1024
+  fcitx 4.2.7
+  google-chrome 27.0.1453.93-200836
+  vim 7.3.1024
 
 Say you've got a version record file called ``old_ver.txt`` which records all your watched software and their versions. To update it using ``nvchecker``::
 
@@ -36,7 +36,7 @@ Compare the two files for updates (assuming they are sorted alphabetically; file
 
   comm -13 old_ver.txt new_ver.txt
   # or say that in English:
-  comm -13 old_ver.txt new_ver.txt | sed 's/:/ has updated to version/;s/$/./'
+  comm -13 old_ver.txt new_ver.txt | awk '{print $1 " has updated to version " $2 "."}'
   # show both old and new versions
   join old_ver.txt new_ver.txt | awk '$2 != $3'
 
@@ -137,4 +137,7 @@ TODO
 ====
 * Tool to replace the ``join`` command
 * Support GitHub tags
-* Remove troublesome colon from record files
+
+Footnotes
+=========
+.. [#] Note: with nvchecker <= 0.2, there are one more colon each line. You can use ``sed -i 's/://' FILES...`` to remove them.

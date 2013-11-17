@@ -72,14 +72,14 @@ def read_verfile(file):
   v = {}
   with open(file) as f:
     for l in f:
-      name, ver = [x.strip() for x in l.split(':', 1)]
+      name, ver = l.rstrip().split(None, 1)
       v[name] = ver
   return v
 
 def write_verfile(file, versions):
   # sort using only alphanums, as done by the sort command, and needed by
   # comm command
-  data = ['%s: %s\n' % item
+  data = ['%s %s\n' % item
           for item in sorted(versions.items(), key=lambda i: (''.join(filter(str.isalnum, i[0])), i[1]))]
   safe_overwrite(file, data, method='writelines')
 

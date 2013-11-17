@@ -52,10 +52,10 @@ def print_version_update(name, version):
 
   oldver = g_oldver.get(name, None)
   if not oldver or parse_version(oldver) < parse_version(version):
-    logger.info('%s: updated version %s', name, version)
+    logger.info('%s updated version %s', name, version)
     _updated(name, version)
   else:
-    logger.info('%s: current version %s', name, version)
+    logger.info('%s current version %s', name, version)
   task_dec()
 
 def _updated(name, version):
