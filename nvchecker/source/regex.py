@@ -36,11 +36,12 @@ def get_version(name, conf, callback):
   ), **kwargs)
 
 def _got_version(name, regex, encoding, callback, res):
-  body = res.body.decode(encoding)
+  version = None
   try:
-    version = max(regex.findall(body), key=parse_version)
-  except ValueError:
-    logger.error('%s: version string not found.', name)
-    callback(name, None)
-  else:
+    body = res.body.decode(encoding)
+    try:
+      version = max(regex.findall(body), key=parse_version)
+    except ValueError:
+      logger.error('%s: version string not found.', name)
+  finally:
     callback(name, version)

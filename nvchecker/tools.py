@@ -2,26 +2,31 @@
 
 import sys
 import argparse
+import logging
 
-from . import util
+from . import core
+
+logger = logging.getLogger(__name__)
 
 def take():
   parser = argparse.ArgumentParser(description='update version records of nvchecker')
+  core.add_common_arguments(parser)
   parser.add_argument('names', metavar='NAME', nargs='*',
                       help='software name to be updated')
-  util.add_common_arguments(parser)
-
-  args = util.parse_args(parser)
-  if util.process_common_arguments(args):
+  args = parser.parse_args()
+  if core.process_common_arguments(args):
     return
 
-  if not args.oldver or not args.newver:
-    sys.exit('You must specify old and new version records so that I can update.')
+  s = core.Source(args.file)
+  if not s.oldver or not s.newver:
+    logger.error(
+      "%s doesn't have both 'oldver' and 'newver' set, ignoring.", s
+    )
 
-  oldvers = util.read_verfile(args.oldver)
-  newvers = util.read_verfile(args.newver)
+  oldvers = core.read_verfile(s.oldver)
+  newvers = core.read_verfile(s.newver)
 
   for name in args.names:
     oldvers[name] = newvers[name]
 
-  util.write_verfile(args.oldver, oldvers)
+  core.write_verfile(s.oldver, oldvers)
