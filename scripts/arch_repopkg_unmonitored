@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 if [[ $# -ne 2 || ! -r $1 || -z $2 ]]; then
-  echo >&2 "usage: arch_repopkg_unmonitored config.ini pkg_list or repository_namee"
+  echo >&2 "usage: arch_repopkg_unmonitored config.ini pkg_list or repository_name"
   exit 1
 fi
 
@@ -18,7 +18,7 @@ else
 fi
 
 # Also take commented-out items into account
-grep -oP '^(?:[;#]\s*)?\[.*(?=]$)' "$config" | sed 's/^\([;#]\s*\)\?\[//' | sort > "$tmp_configured"
+grep -oP '^(?:[;#]\s*)?\[.*(?=]$)' "$config" | sed 's/^\([;#]\s*\)\?\[//;/^__/d' | sort > "$tmp_configured"
 
 echo ">>> Un-monitored list:"
 comm -23 "$tmp_list" "$tmp_configured"
