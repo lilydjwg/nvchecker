@@ -31,3 +31,18 @@ def take():
     oldvers[name] = newvers[name]
 
   core.write_verfile(s.oldver, oldvers)
+
+def cmp():
+  parser = argparse.ArgumentParser(description='compare version records of nvchecker')
+  core.add_common_arguments(parser)
+  args = parser.parse_args()
+  if core.process_common_arguments(args):
+    return
+
+  s = core.Source(args.file)
+  oldvers = core.read_verfile(s.oldver) if s.oldver else {}
+  newvers = core.read_verfile(s.newver)
+  for name, newver in sorted(newvers.items()):
+    oldver = oldvers.get(name, None)
+    if oldver != newver:
+      print('%s %s -> %s' % (name, oldver, newver))

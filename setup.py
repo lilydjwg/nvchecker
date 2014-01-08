@@ -13,6 +13,7 @@ setup(
     'console_scripts': [
       'nvchecker = nvchecker.main:main',
       'nvtake = nvchecker.tools:take',
+      'nvcmp = nvchecker.tools:cmp',
     ],
   },
 
