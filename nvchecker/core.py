@@ -60,6 +60,7 @@ def write_verfile(file, versions):
 class Source:
   started = False
   tasks = 0
+  oldver = newver = None
   def __init__(self, file):
     self.config = config = configparser.ConfigParser(
       dict_type=dict, allow_no_value=True
