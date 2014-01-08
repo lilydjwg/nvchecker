@@ -19,9 +19,10 @@ def take():
 
   s = core.Source(args.file)
   if not s.oldver or not s.newver:
-    logger.error(
-      "%s doesn't have both 'oldver' and 'newver' set, ignoring.", s
+    logger.fatal(
+      "%s doesn't have both 'oldver' and 'newver' set.", s
     )
+    sys.exit(2)
 
   oldvers = core.read_verfile(s.oldver)
   newvers = core.read_verfile(s.newver)
