@@ -1,7 +1,5 @@
 **nvchecker** (short for *new version checker*) is for checking if a new version of some software has been released.
 
-nvchecker is now **in development**.
-
 Dependency
 ==========
 - Python 3
