@@ -6,6 +6,7 @@ import logging
 import configparser
 
 from pkg_resources import parse_version
+from tornado.stack_context import ExceptionStackContext
 
 from .lib import nicelogger
 from .get_version import get_version
@@ -87,7 +88,12 @@ class Source:
       if name == '__config__':
         continue
       self.task_inc()
-      get_version(name, config[name], self.print_version_update)
+      with ExceptionStackContext(self._handle_exception):
+        get_version(name, config[name], self.print_version_update)
+
+  def _handle_exception(self, type, value, traceback):
+    self.task_dec()
+    raise value.with_traceback(traceback)
 
   def task_inc(self):
     self.tasks += 1
