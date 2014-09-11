@@ -4,7 +4,7 @@ from importlib import import_module
 logger = logging.getLogger(__name__)
 handler_precedence = (
   'github', 'aur', 'pypi', 'archpkg', 'pacman',
-  'cmd', 'gcode_hg', 'regex',
+  'cmd', 'gcode_hg', 'regex', 'manual',
 )
 
 def get_version(name, conf, callback):
