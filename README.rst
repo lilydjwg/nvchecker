@@ -112,6 +112,9 @@ Check `GitHub <https://github.com/>`_ for updates. The version returned is in da
 github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
 
+branch
+  Which branch to track? Default: ``master``.
+
 Check PyPI
 ----------
 Check `PyPI <https://pypi.python.org/>`_ for updates.

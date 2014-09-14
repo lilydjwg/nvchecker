@@ -3,11 +3,12 @@ from functools import partial
 
 from tornado.httpclient import AsyncHTTPClient
 
-GITHUB_URL = 'https://api.github.com/repos/%s/commits'
+GITHUB_URL = 'https://api.github.com/repos/%s/commits?sha=%s'
 
 def get_version(name, conf, callback):
   repo = conf.get('github')
-  url = GITHUB_URL % repo
+  br = conf.get('branch', 'master')
+  url = GITHUB_URL % (repo, br)
   AsyncHTTPClient().fetch(url, user_agent='lilydjwg/nvchecker',
                           callback=partial(_github_done, name, callback))
 
