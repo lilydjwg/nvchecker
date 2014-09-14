@@ -129,12 +129,26 @@ This is used when you run ``nvchecker`` on an Arch Linux system and the program 
 pacman
   The package name to reference to.
 
+Check Arch Linux official packages
+----------------------------------
+This enables you to track the update of `Arch Linux official packages <https://www.archlinux.org/packages/>`_, without needing of pacman and an updated local Pacman databases.
+
+archpkg
+  Name of the Arch Linux package.
+
 Check Google Code (hg repository)
 ---------------------------------
-Check a mecurial (hg) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+Check a mercurial (hg) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
 
 gcode_hg
   The name used on Google Code, e.g. ``chromium-compact-language-detector``.
+
+Manually updating
+-----------------
+This enables you to manually specify the version (maybe because you want to approve each release before it gets to the script).
+
+manual
+  The version string.
 
 Other
 -----
@@ -147,6 +161,7 @@ Bugs
 TODO
 ====
 * Support GitHub tags
+* doc for ``archpkg`` and ``manual``
 
 Footnotes
 =========
