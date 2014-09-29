@@ -3,7 +3,7 @@ from importlib import import_module
 
 logger = logging.getLogger(__name__)
 handler_precedence = (
-  'github', 'aur', 'pypi', 'archpkg', 'pacman',
+  'github', 'aur', 'pypi', 'archpkg', 'gems', 'pacman',
   'cmd', 'gcode_hg', 'regex', 'manual',
 )
 

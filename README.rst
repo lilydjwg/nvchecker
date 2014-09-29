@@ -122,6 +122,13 @@ Check `PyPI <https://pypi.python.org/>`_ for updates.
 pypi
   The name used on PyPI, e.g. ``PySide``.
 
+Check RubyGems
+--------------
+Check `RubyGems <https://rubygems.org/>`_ for updates.
+
+gems
+  The name used on RubyGems, e.g. ``sass``.
+
 Check Local Pacman Database
 ---------------------------
 This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman <https://wiki.archlinux.org/index.php/Pacman>`_.
