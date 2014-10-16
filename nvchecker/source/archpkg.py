@@ -21,5 +21,5 @@ def _pkg_done(name, callback, res):
     callback(name, None)
     return
 
-  version = [r['pkgver'] for r in info['results'] if r['repo'] != 'testing'][0]
+  version = [r['pkgver'] for r in data['results'] if r['repo'] != 'testing'][0]
   callback(name, version)
