@@ -168,7 +168,6 @@ Bugs
 TODO
 ====
 * Support GitHub tags
-* doc for ``archpkg`` and ``manual``
 
 Footnotes
 =========
