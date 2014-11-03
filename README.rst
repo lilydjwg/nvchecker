@@ -89,7 +89,7 @@ regex
   When multiple version strings are found, the maximum of those is chosen.
 
 proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>_`.
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>`_.
 
 Find with a Command
 -------------------
