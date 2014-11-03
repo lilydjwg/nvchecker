@@ -157,6 +157,13 @@ This enables you to manually specify the version (maybe because you want to appr
 manual
   The version string.
 
+Version Control System (VCS) (git, hg, svn, bzr)
+------------------------------------------------
+Check a VCS repo for new commit. The version returned is currently not related to the version of the package and will increase whenever the commit changes.
+
+vcs
+  The url of the remote VCS repo, using the same syntax with a VCS url in PKGBUILD. The first VCS url found in the source array of the PKGBUILD will be used if this is left blank. (Note: for a blank vcs setting to work correctly, the PKGBUILD has to be in a directory with the name of the package under the path where nvchecker is run. Also, all the command, if any, needed when sourcing the PKGBUILD need to be installed).
+
 Other
 -----
 More to come. Send me a patch or pull request if you can't wait and have written one yourself :-)
