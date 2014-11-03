@@ -8,22 +8,22 @@ import os.path as _path
 
 logger = logging.getLogger(__name__)
 _self_path = _path.dirname(_path.abspath(__file__))
-_cmd_prefix=['/bin/bash', _path.join(_self_path, 'vcs.sh')]
+_cmd_prefix = ['/bin/bash', _path.join(_self_path, 'vcs.sh')]
 
 PROT_VER = 1
 
 def _parse_oldver(oldver):
     if oldver is None:
-        return (PROT_VER, 0, '')
+        return PROT_VER, 0, ''
     try:
         prot_ver, count, ver = oldver.split('.', maxsplit=2)
         prot_ver = int(prot_ver)
         count = int(count)
     except:
-        return (PROT_VER, 0, '')
+        return PROT_VER, 0, ''
     if prot_ver != PROT_VER:
-        return (PROT_VER, 0, ver)
-    return (PROT_VER, count, ver)
+        return PROT_VER, 0, ver
+    return PROT_VER, count, ver
 
 def get_version(name, conf, callback):
   vcs = conf['vcs']
