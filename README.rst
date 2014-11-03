@@ -131,7 +131,7 @@ gems
 
 Check Local Pacman Database
 ---------------------------
-This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman <https://wiki.archlinux.org/index.php/Pacman>`_.
+This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman`_.
 
 pacman
   The package name to reference to.
@@ -157,6 +157,13 @@ This enables you to manually specify the version (maybe because you want to appr
 manual
   The version string.
 
+Version Control System (VCS) (git, hg, svn, bzr)
+------------------------------------------------
+Check a VCS repo for new commits. The version returned is currently not related to the version of the software and will increase whenever the referred VCS branch changes. This is mainly for Arch Linux.
+
+vcs
+  The url of the remote VCS repo, using the same syntax with a VCS url in PKGBUILD (`Pacman`_'s build script). The first VCS url found in the source array of the PKGBUILD will be used if this is left blank. (Note: for a blank ``vcs`` setting to work correctly, the PKGBUILD has to be in a directory with the name of the software under the path where nvchecker is run. Also, all the commands, if any, needed when sourcing the PKGBUILD need to be installed).
+
 Other
 -----
 More to come. Send me a patch or pull request if you can't wait and have written one yourself :-)
@@ -173,3 +180,5 @@ Footnotes
 =========
 .. [v0.3] Note: with nvchecker <= 0.2, there are one more colon each line. You can use ``sed -i 's/://' FILES...`` to remove them.
 .. [v0.4] This is added in version 0.4, and old command-line options are removed.
+
+.. _Pacman: https://wiki.archlinux.org/index.php/Pacman

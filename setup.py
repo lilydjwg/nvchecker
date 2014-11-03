@@ -16,6 +16,7 @@ setup(
       'nvcmp = nvchecker.tools:cmp',
     ],
   },
+  package_data={'nvchecker': ['source/vcs.sh']},
 
   author = 'lilydjwg',
   author_email = 'lilydjwg@gmail.com',
