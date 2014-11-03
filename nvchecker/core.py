@@ -88,8 +88,10 @@ class Source:
       if name == '__config__':
         continue
       self.task_inc()
+      conf = config[name]
+      conf['oldver'] = self.oldvers.get(name, None)
       with ExceptionStackContext(self._handle_exception):
-        get_version(name, config[name], self.print_version_update)
+        get_version(name, conf, self.print_version_update)
 
   def _handle_exception(self, type, value, traceback):
     self.task_dec()
