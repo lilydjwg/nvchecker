@@ -150,6 +150,13 @@ Check a mercurial (hg) repository on `Google Code <https://code.google.com/>`_ f
 gcode_hg
   The name used on Google Code, e.g. ``chromium-compact-language-detector``.
 
+Check Google Code (svn repository)
+---------------------------------
+Check a subversion (svn) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is the svn resivion number.
+
+gcode_svn
+  The name used on Google Code, e.g. ``cld2``.
+
 Manually updating
 -----------------
 This enables you to manually specify the version (maybe because you want to approve each release before it gets to the script).
