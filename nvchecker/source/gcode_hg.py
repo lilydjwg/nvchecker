@@ -21,7 +21,7 @@ def _gcodehg_done(name, callback, res):
   data = res.body.decode('utf-8')
   m = GCODE_HG_RE.search(data)
   if m:
-    t = time.strptime('Aug 15, 2013', '%b %d, %Y')
+    t = time.strptime(m.group(1), '%b %d, %Y')
     version = time.strftime('%Y%m%d', t)
   else:
     logger.error('%s: version not found.', name)
