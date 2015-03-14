@@ -30,6 +30,8 @@ def get_version(name, conf, callback):
       kwargs['proxy_port'] = int(port)
     else:
       logger.warn('%s: proxy set but not used because pycurl is unavailable.', name)
+  if conf.get('user_agent'):
+    kwargs['user_agent'] = conf['user_agent']
 
   httpclient.fetch(conf['url'], partial(
     _got_version, name, r, encoding, callback

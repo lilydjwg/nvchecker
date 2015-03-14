@@ -91,6 +91,9 @@ regex
 proxy
   The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>`_.
 
+user_agent
+  The ``User-Agent`` header value to use. Use something more like a tool (e.g. ``curl/7.40.0``) in Europe or the real web page won't get through because cookie policies (SourceForge has this issue).
+
 Find with a Command
 -------------------
 Use a shell command line to get the version. The output is striped first, so trailing newlines do not bother.
