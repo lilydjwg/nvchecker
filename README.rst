@@ -118,6 +118,8 @@ github
 branch
   Which branch to track? Default: ``master``.
 
+An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
+
 Check PyPI
 ----------
 Check `PyPI <https://pypi.python.org/>`_ for updates.
@@ -154,7 +156,7 @@ gcode_hg
   The name used on Google Code, e.g. ``chromium-compact-language-detector``.
 
 Check Google Code (svn repository)
----------------------------------
+----------------------------------
 Check a subversion (svn) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is the svn resivion number.
 
 gcode_svn
