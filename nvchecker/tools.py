@@ -1,6 +1,7 @@
 # vim: se sw=2:
 
 import sys
+import os
 import argparse
 import logging
 
