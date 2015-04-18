@@ -30,6 +30,10 @@ def take():
   for name in args.names:
     oldvers[name] = newvers[name]
 
+  try:
+      os.rename(s.oldver, s.oldver + '~')
+  except FileNotFoundError:
+      pass
   core.write_verfile(s.oldver, oldvers)
 
 def cmp():
