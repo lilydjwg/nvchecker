@@ -12,7 +12,10 @@ def get_version(name, conf, callback):
   url = GITHUB_URL % (repo, br)
   headers = {}
   if 'NVCHECKER_GITHUB_TOKEN' in os.environ:
-      headers = {'Authorization': 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']}
+      headers = {
+          'Authorization': 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN'],
+          'Accept': "application/vnd.github.quicksilver-preview+json"
+      }
   request = HTTPRequest(url, headers=headers)
   AsyncHTTPClient().fetch(request, user_agent='lilydjwg/nvchecker',
                           callback=partial(_github_done, name, callback))
