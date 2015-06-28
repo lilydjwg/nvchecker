@@ -120,6 +120,18 @@ branch
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
+Check GitCafe
+------------
+Check `GitCafe <https://gitcafe.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+
+gitcafe
+  The gitcafe repository, with author, e.g. ``Deepin/deepin-music``.
+
+branch
+  Which branch to track? Default: ``master``.
+
+Anonymously only. Authorization is not supported yet.
+
 Check PyPI
 ----------
 Check `PyPI <https://pypi.python.org/>`_ for updates.
