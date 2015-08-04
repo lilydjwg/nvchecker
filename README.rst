@@ -120,8 +120,18 @@ branch
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
+Check BitBucket
+---------------
+Check `BitBucket <https://bitbucket.org/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+
+bitbucket
+  The bitbucket repository, with author, e.g. ``lilydjwg/dotvim``.
+
+branch
+  Which branch to track? Default is the repository's default.
+
 Check GitCafe
-------------
+-------------
 Check `GitCafe <https://gitcafe.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
 
 gitcafe
