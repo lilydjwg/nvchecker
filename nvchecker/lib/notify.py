@@ -35,10 +35,9 @@ def set(summary=None, body=None, icon_str=None):
 
   libnotify.notify_notification_update(
     notify_st.notify,
-    c_char_p(notify_st.summary),
-    c_char_p(notify_st.body),
-    c_char_p(notify_st.icon_str),
-    c_void_p()
+    notify_st.summary,
+    notify_st.body,
+    notify_st.icon_str,
   )
 
 def show():
@@ -73,9 +72,11 @@ def init():
 
   libnotify.notify_init('pynotify')
   libnotify_inited = True
-  notify_st.notify = libnotify.notify_notification_new(
+
+  libnotify.notify_notification_new.restype = c_void_p
+  notify_st.notify = c_void_p(libnotify.notify_notification_new(
     c_void_p(), c_void_p(), c_void_p(),
-  )
+  ))
   atexit.register(uninit)
 
 def uninit():
