@@ -108,6 +108,9 @@ Check `Arch User Repository <https://aur.archlinux.org/>`_ for updates.
 aur
   The package name in AUR. If empty, use the name of software (the *section name*).
 
+strip-release
+  Strip the release part.
+
 Check GitHub
 ------------
 Check `GitHub <https://github.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
@@ -163,12 +166,18 @@ This is used when you run ``nvchecker`` on an Arch Linux system and the program 
 pacman
   The package name to reference to.
 
+strip-release
+  Strip the release part.
+
 Check Arch Linux official packages
 ----------------------------------
 This enables you to track the update of `Arch Linux official packages <https://www.archlinux.org/packages/>`_, without needing of pacman and an updated local Pacman databases.
 
 archpkg
   Name of the Arch Linux package.
+
+strip-release
+  Strip the release part.
 
 Check Google Code (hg repository)
 ---------------------------------
