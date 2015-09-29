@@ -123,15 +123,6 @@ branch
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
-Check GitHub Tags
-------------
-Check `GitHub <https://github.com/>`_ for updates of tags.
-
-github_tags
-  The github repository, with author, e.g. ``u8sand/baka-mplayer``.
-
-An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
-
 Check BitBucket
 ---------------
 Check `BitBucket <https://bitbucket.org/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
