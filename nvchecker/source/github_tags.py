@@ -2,7 +2,7 @@ import os
 import json
 from functools import partial
 
-from tornado.httpclient import AsyncHTTPClient
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
 GITHUB_TAGS_URL = 'https://api.github.com/repos/%s/tags'
 
