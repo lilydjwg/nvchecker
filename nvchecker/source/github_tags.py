@@ -14,7 +14,7 @@ def get_version(name, conf, callback):
         headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
         request = HTTPRequest(url, headers=headers, user_agent='lilydjwg/nvchecker')
         AsyncHTTPClient().fetch(request,
-                callback=partial(_github_tags_done, name, callback))
+                		callback=partial(_github_tags_done, name, callback))
 
 def _github_tags_done(name, callback, res):
     data = json.loads(res.body.decode('utf-8'))
