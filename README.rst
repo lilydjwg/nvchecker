@@ -124,7 +124,7 @@ branch
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
 github-tags
-  use ```github_tags = True``` to check the latest version in github tags
+  use ``github_tags = True`` to check the latest version in github tags
 
 Check BitBucket
 ---------------
