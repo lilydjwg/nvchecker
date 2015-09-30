@@ -5,7 +5,7 @@ from functools import partial
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
 GITHUB_URL = 'https://api.github.com/repos/%s/commits?sha=%s'
-GITHUB_RELEASES_URL = 'https://api.github.com/repos/%s/releases'
+GITHUB_RELEASES_URL = 'https://api.github.com/repos/%s/releases/latest'
 
 def get_version(name, conf, callback):
   repo = conf.get('github')
@@ -25,7 +25,7 @@ def get_version(name, conf, callback):
 def _github_done(name, use_tags, callback, res):
   data = json.loads(res.body.decode('utf-8'))
   if use_tags:
-      version = data[0]['tag_name']
+      version = data['tag_name']
   else:
       version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', '')
   callback(name, version)
