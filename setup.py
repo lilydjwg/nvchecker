@@ -9,6 +9,9 @@ setup(
   version = nvchecker.__version__,
   packages = find_packages(),
   install_requires = ['tornado', 'setuptools'],
+  tests_require=[
+    'pytest',
+  ],
   entry_points = {
     'console_scripts': [
       'nvchecker = nvchecker.main:main',
