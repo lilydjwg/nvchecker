@@ -2,5 +2,6 @@ records/
 *.egg-info/
 __pycache__/
 /build/
+.cache/
 *.pyc
 *.pyo
