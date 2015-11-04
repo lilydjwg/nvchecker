@@ -159,6 +159,13 @@ Check `RubyGems <https://rubygems.org/>`_ for updates.
 gems
   The name used on RubyGems, e.g. ``sass``.
 
+Check CPAN
+--------------
+Check `MetaCPAN <https://metacpan.org/>`_ for updates.
+
+cpan
+  The name used on CPAN, e.g. ``YAML``.
+
 Check Local Pacman Database
 ---------------------------
 This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman`_.

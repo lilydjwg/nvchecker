@@ -5,6 +5,7 @@ logger = logging.getLogger(__name__)
 handler_precedence = (
   'github', 'gitcafe', 'aur', 'pypi', 'archpkg', 'gems', 'pacman',
   'cmd', 'bitbucket', 'gcode_hg', 'gcode_svn', 'regex', 'manual', 'vcs',
+  'cpan',
 )
 
 def get_version(name, conf, callback):
