@@ -14,5 +14,5 @@ def get_version(name, conf, callback):
 
 def _cpan_done(name, callback, res):
   data = json.loads(res.body.decode('utf-8'))
-  version = data['version']
+  version = str(data['version'])
   callback(name, version)
