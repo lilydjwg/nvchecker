@@ -20,11 +20,11 @@ def get_version(name, conf, callback):
       headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
   request = HTTPRequest(url, headers=headers, user_agent='lilydjwg/nvchecker')
   AsyncHTTPClient().fetch(request,
-                          callback=partial(_github_done, name, use_tags, callback))
+                          callback=partial(_github_done, name, use_latest_release, callback))
 
-def _github_done(name, use_tags, callback, res):
+def _github_done(name, use_latest_release, callback, res):
   data = json.loads(res.body.decode('utf-8'))
-  if use_tags:
+  if use_latest_release:
       version = data['tag_name']
   else:
       version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', '')
