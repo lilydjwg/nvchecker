@@ -1,17 +1,12 @@
-import json
-from functools import partial
-
-from tornado.httpclient import AsyncHTTPClient
+from .simple_json import simple_json
 
 NPM_URL = 'https://registry.npmjs.org/%s'
 
-def get_version(name, conf, callback):
-  repo = conf.get('npm') or name
-  url = NPM_URL % repo
-  AsyncHTTPClient().fetch(url, user_agent='lilydjwg/nvchecker',
-                          callback=partial(_npm_done, name, callback))
+def _version_from_json(data):
+  return data['dist-tags']['latest']
 
-def _npm_done(name, callback, res):
-  data = json.loads(res.body.decode('utf-8'))
-  version = data['dist-tags']['latest']
-  callback(name, version)
+get_version = simple_json(
+  NPM_URL,
+  'npm',
+  _version_from_json,
+)
