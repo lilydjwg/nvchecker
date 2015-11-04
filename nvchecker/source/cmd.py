@@ -23,7 +23,7 @@ def _run_command():
     cmd_q.running = False
     return
 
-  p = tornado.process.Subprocess(cmd, shell=True, io_loop=IOLoop.instance(),
+  p = tornado.process.Subprocess(cmd, shell=True,
                                  stdout=tornado.process.Subprocess.STREAM)
   p.set_exit_callback(partial(_command_done, name, callback, p))
 
