@@ -1,6 +1,7 @@
 **nvchecker** (short for *new version checker*) is for checking if a new version of some software has been released.
 
-[![Build Status](https://travis-ci.org/lilydjwg/nvchecker.svg)](https://travis-ci.org/lilydjwg/nvchecker)
+.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg)](https://travis-ci.org/lilydjwg/nvchecker
+   :alt: Build Status
 
 Dependency
 ==========
@@ -162,14 +163,14 @@ gems
   The name used on RubyGems, e.g. ``sass``.
 
 Check NPM Registry
-----------
+------------------
 Check `NPM Registry <https://registry.npmjs.org/>`_ for updates.
 
 npm
   The name used on NPM Registry, e.g. ``coffee-script``.
 
 Check Hackage
-----------
+-------------
 Check `Hackage <https://hackage.haskell.org/>`_ for updates.
 
 hackage
