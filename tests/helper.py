@@ -1,8 +1,12 @@
-from nvchecker.get_version import get_version
+from tornado.ioloop import IOLoop
 import tornado.testing
+from nvchecker.get_version import get_version
 
 
 class ExternalVersionTestCase(tornado.testing.AsyncTestCase):
+    def get_new_ioloop(self):
+        return IOLoop.instance()
+
     def sync_get_version(self, name, config):
         def get_version_callback(name, version):
             self.stop(version)
