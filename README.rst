@@ -159,6 +159,13 @@ Check `RubyGems <https://rubygems.org/>`_ for updates.
 gems
   The name used on RubyGems, e.g. ``sass``.
 
+Check Hackage
+----------
+Check `Hackage <https://hackage.haskell.org/>`_ for updates.
+
+hackage
+  The name used on Hackage, e.g. ``pandoc``.
+
 Check Local Pacman Database
 ---------------------------
 This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman`_.
