@@ -159,6 +159,13 @@ Check `RubyGems <https://rubygems.org/>`_ for updates.
 gems
   The name used on RubyGems, e.g. ``sass``.
 
+Check NPM Registry
+----------
+Check `NPM Registry <https://registry.npmjs.org/>`_ for updates.
+
+npm
+  The name used on NPM Registry, e.g. ``coffee-script``.
+
 Check Local Pacman Database
 ---------------------------
 This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman`_.
