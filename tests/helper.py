@@ -15,9 +15,7 @@ class ExternalVersionTestCase(tornado.testing.AsyncTestCase):
         if isinstance(config, dict):
             _config = configparser.ConfigParser(dict_type=dict, allow_no_value=True)
             _config.read_dict({name: config})
-            _config = _config[name]
-        else:
-            _config = config
+            config = _config[name]
 
-        get_version(name, _config, get_version_callback)
+        get_version(name, config, get_version_callback)
         return self.wait()
