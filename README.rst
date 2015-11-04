@@ -173,6 +173,13 @@ Check `Hackage <https://hackage.haskell.org/>`_ for updates.
 hackage
   The name used on Hackage, e.g. ``pandoc``.
 
+Check CPAN
+--------------
+Check `MetaCPAN <https://metacpan.org/>`_ for updates.
+
+cpan
+  The name used on CPAN, e.g. ``YAML``.
+
 Check Local Pacman Database
 ---------------------------
 This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman`_.
