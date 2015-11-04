@@ -1,7 +1,8 @@
 **nvchecker** (short for *new version checker*) is for checking if a new version of some software has been released.
 
-.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg)](https://travis-ci.org/lilydjwg/nvchecker
+.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg
    :alt: Build Status
+   :target: https://travis-ci.org/lilydjwg/nvchecker
 
 Dependency
 ==========
