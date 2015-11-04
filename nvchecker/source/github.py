@@ -5,19 +5,27 @@ from functools import partial
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
 GITHUB_URL = 'https://api.github.com/repos/%s/commits?sha=%s'
+GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 
 def get_version(name, conf, callback):
   repo = conf.get('github')
   br = conf.get('branch', 'master')
-  url = GITHUB_URL % (repo, br)
+  use_latest_release = conf.getboolean('use_latest_release', False)
+  if use_latest_release:
+      url = GITHUB_LATEST_RELEASE % repo
+  else:
+      url = GITHUB_URL % (repo, br)
   headers = {'Accept': "application/vnd.github.quicksilver-preview+json"}
   if 'NVCHECKER_GITHUB_TOKEN' in os.environ:
       headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
   request = HTTPRequest(url, headers=headers, user_agent='lilydjwg/nvchecker')
   AsyncHTTPClient().fetch(request,
-                          callback=partial(_github_done, name, callback))
+                          callback=partial(_github_done, name, use_tags, callback))
 
-def _github_done(name, callback, res):
+def _github_done(name, use_tags, callback, res):
   data = json.loads(res.body.decode('utf-8'))
-  version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', '')
+  if use_tags:
+      version = data['tag_name']
+  else:
+      version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', '')
   callback(name, version)

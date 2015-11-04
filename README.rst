@@ -127,6 +127,11 @@ branch
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
+use_latest_release
+  Set this to ``true`` to check for the latest relase on GitHub. An annotated
+  tag creates a "release" on GitHub. It's not the same with git tags, which
+  includes both annotated tags and lightweight ones.
+
 Check BitBucket
 ---------------
 Check `BitBucket <https://bitbucket.org/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
