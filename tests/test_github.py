@@ -1,6 +1,10 @@
+import os
+import pytest
 from tests.helper import ExternalVersionTestCase
 
 
+@pytest.mark.skipif("NVCHECKER_GITHUB_TOKEN" not in os.environ,
+                    reason="requires NVCHECKER_GITHUB_TOKEN, or it fails too much")
 class GitHubTest(ExternalVersionTestCase):
     def test_github(self):
         self.assertEqual(self.sync_get_version("example", {"github": "harry-sanabria/ReleaseTestRepo"}), "20140122")
