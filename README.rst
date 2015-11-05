@@ -147,6 +147,10 @@ bitbucket
 branch
   Which branch to track? Default is the repository's default.
 
+use_max_tag
+  Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
+  sorted by ``pkg_resources.parse_version``.
+
 Check GitCafe
 -------------
 Check `GitCafe <https://gitcafe.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
