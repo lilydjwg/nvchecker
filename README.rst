@@ -180,6 +180,9 @@ use_max_tag
 host
   Hostname for self-hosted GitLab instance.
 
+token
+  GitLab authorization token used to call the API. If not specified, an environment variable ``NVCHECKER_GITLAB_TOKEN_host`` must provide that token. The ``host`` paart is the uppercased version of the ``host`` setting, with dots (``.``) and slashes (``/``) replaced by underscores (``_``).
+
 Authenticated only.
 
 Check PyPI
