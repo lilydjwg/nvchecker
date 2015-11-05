@@ -163,6 +163,25 @@ branch
 
 Anonymously only. Authorization is not supported yet.
 
+Check GitLab
+-------------
+Check `GitLab <https://gitlab.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+
+gitlab
+  The gitlab repository, with author, e.g. ``Deepin/deepin-music``.
+
+branch
+  Which branch to track? Default: ``master``.
+
+use_max_tag
+  Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
+  sorted by ``pkg_resources.parse_version``.
+
+host
+  Hostname for self-hosted GitLab instance.
+
+Authenticated only.
+
 Check PyPI
 ----------
 Check `PyPI <https://pypi.python.org/>`_ for updates.
