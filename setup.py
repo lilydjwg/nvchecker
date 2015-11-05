@@ -12,7 +12,6 @@ setup(
   tests_require=[
     'pytest',
     'flaky',
-    'pytest-runner',
   ],
   entry_points = {
     'console_scripts': [
