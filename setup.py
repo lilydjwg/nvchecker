@@ -11,6 +11,7 @@ setup(
   install_requires = ['tornado>=4.1', 'setuptools'],
   tests_require=[
     'pytest',
+    'flaky',
   ],
   entry_points = {
     'console_scripts': [
