@@ -27,7 +27,7 @@ def _parse_oldver(oldver):
 
 def get_version(name, conf, callback):
   vcs = conf['vcs']
-  oldver = conf['oldver']
+  oldver = conf.get('oldver')
   cmd = _cmd_prefix + [name, vcs]
   p = tornado.process.Subprocess(cmd, io_loop=IOLoop.instance(),
                                  stdout=tornado.process.Subprocess.STREAM)
