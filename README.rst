@@ -126,9 +126,14 @@ branch
   Which branch to track? Default: ``master``.
 
 use_latest_release
-  Set this to ``true`` to check for the latest relase on GitHub. An annotated
+  Set this to ``true`` to check for the latest release on GitHub. An annotated
   tag creates a "release" on GitHub. It's not the same with git tags, which
   includes both annotated tags and lightweight ones.
+
+use_max_tag
+  Set this to ``true`` to check for the max tag on GitHub. Unlike ``use_latest_release``,
+  this option includes both annotated tags and lightweight ones, and return the biggest one
+  sorted by ``pkg_resources.parse_version``.
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
