@@ -1,12 +1,15 @@
 from functools import partial
+import logging
 import json
 
 from tornado.httpclient import AsyncHTTPClient
 
+logger = logging.getLogger(__name__)
+
 URL = 'https://www.archlinux.org/packages/search/json/?name='
 
 def get_version(name, conf, callback):
-  pkg = conf['archpkg']
+  pkg = conf.get('archpkg') or name
   strip_release = conf.getboolean('strip-release', False)
   url = URL + pkg
   AsyncHTTPClient().fetch(
@@ -23,7 +26,7 @@ def _pkg_done(name, strip_release, callback, res):
     callback(name, None)
     return
 
-  version = [r['pkgver'] for r in data['results'] if r['repo'] != 'testing'][0]
+  version = [r['pkgver'] + "-" + r['pkgrel'] for r in data['results'] if r['repo'] != 'testing'][0]
   if strip_release and '-' in version:
     version = version.rsplit('-', 1)[0]
   callback(name, version)
