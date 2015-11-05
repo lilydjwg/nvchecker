@@ -26,7 +26,10 @@ def _pkg_done(name, strip_release, callback, res):
     callback(name, None)
     return
 
-  version = [r['pkgver'] + "-" + r['pkgrel'] for r in data['results'] if r['repo'] != 'testing'][0]
-  if strip_release and '-' in version:
-    version = version.rsplit('-', 1)[0]
+  r = [r for r in data['results'] if r['repo'] != 'testing'][0]
+  if strip_release:
+    version = r['pkgver']
+  else:
+    version = r['pkgver'] + '-' + r['pkgrel']
+
   callback(name, version)
