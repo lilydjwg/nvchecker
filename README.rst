@@ -73,7 +73,7 @@ oldver
   Specify a version record file containing the old version info.
 
 newver
-  Specify a version record file to storing the new version info.
+  Specify a version record file to store the new version info.
 
 Search in a Webpage
 -------------------
