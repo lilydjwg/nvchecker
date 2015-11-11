@@ -9,7 +9,7 @@ setup(
   version = nvchecker.__version__,
   packages = find_packages(exclude=["tests"]),
   install_requires = ['tornado>=4.1', 'setuptools'],
-  tests_require=[
+  tests_require = [
     'pytest',
     'flaky',
   ],
@@ -20,7 +20,7 @@ setup(
       'nvcmp = nvchecker.tools:cmp',
     ],
   },
-  package_data={'nvchecker': ['source/vcs.sh']},
+  package_data = {'nvchecker': ['source/vcs.sh']},
 
   author = 'lilydjwg',
   author_email = 'lilydjwg@gmail.com',
