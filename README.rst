@@ -3,6 +3,9 @@
 .. image:: https://travis-ci.org/lilydjwg/nvchecker.svg
    :alt: Build Status
    :target: https://travis-ci.org/lilydjwg/nvchecker
+.. image:: https://badge.fury.io/py/nvchecker.png
+   :alt: PyPI version
+   :target: http://badge.fury.io/py/nvchecker
 
 Dependency
 ==========
