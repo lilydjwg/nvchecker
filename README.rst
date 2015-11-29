@@ -7,6 +7,41 @@
    :alt: PyPI version
    :target: http://badge.fury.io/py/nvchecker
 
+Contents
+========
+
+* `Dependency <#dependency>`_
+* `Running <#running>`_
+* `Version Record Files <#version-record-files>`_
+
+  * `The nvtake Command <#the-nvtake-command>`_
+
+* `Version Source Files <#version-source-files>`_
+
+  * `Configuration Section <#configuration-section>`_
+  * `Search in a Webpage <#search-in-a-webpage>`_
+  * `Find with a Command <#find-with-a-command>`_
+  * `Check AUR <#check-aur>`_
+  * `Check GitHub <#check-github>`_
+  * `Check BitBucket <#check-bitbucket>`_
+  * `Check GitCafe <#check-gitcafe>`_
+  * `Check GitLab <#check-gitlab>`_
+  * `Check PyPI <#check-pypi>`_
+  * `Check RubyGems <#check-rubygems>`_
+  * `Check NPM Registry <#check-npm-registry>`_
+  * `Check Hackage <#check-hackage>`_
+  * `Check CPAN <#check-cpan>`_
+  * `Check Local Pacman Database <#check-local-pacman-database>`_
+  * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
+  * `Check Google Code (hg repository) <#check-google-code-(hg-repository)>`_
+  * `Check Google Code (svn repository) <#check-google-code-(svn-repository)>`_
+  * `Manually updating <#manually-updating>`_
+  * `Version Control System (VCS) (git, hg, svn, bzr) <#version-control-system-(vcs)-(git,-hg,-svn,-bzr)>`_
+  * `Other <#other>`_
+
+* `Bugs <#bugs>`_
+* `Footnotes <#footnotes>`_
+
 Dependency
 ==========
 - Python 3
