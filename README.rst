@@ -33,10 +33,10 @@ Contents
   * `Check CPAN <#check-cpan>`_
   * `Check Local Pacman Database <#check-local-pacman-database>`_
   * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
-  * `Check Google Code (hg repository) <#check-google-code-(hg-repository)>`_
-  * `Check Google Code (svn repository) <#check-google-code-(svn-repository)>`_
+  * `Check Google Code (hg repository) <#check-google-code-hg-repository>`_
+  * `Check Google Code (svn repository) <#check-google-code-svn-repository>`_
   * `Manually updating <#manually-updating>`_
-  * `Version Control System (VCS) (git, hg, svn, bzr) <#version-control-system-(vcs)-(git,-hg,-svn,-bzr)>`_
+  * `Version Control System (VCS) (git, hg, svn, bzr) <#version-control-system-vcs-git-hg-svn-bzr>`_
   * `Other <#other>`_
 
 * `Bugs <#bugs>`_
