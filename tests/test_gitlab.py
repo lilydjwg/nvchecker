@@ -7,7 +7,10 @@ from tests.helper import ExternalVersionTestCase
                     reason="requires NVCHECKER_GITLAB_TOKEN_GITLAB_COM")
 class GitLabTest(ExternalVersionTestCase):
     def test_gitlab(self):
-        self.assertEqual(self.sync_get_version("example", {"gitlab": "gitlab-org/gitlab-test"}), "20150825")
+        ver = self.sync_get_version("example",
+                                    {"gitlab": "gitlab-org/gitlab-test"})
+        self.assertEqual(len(ver), 8)
+        self.assertTrue(ver.isdigit())
 
     def test_gitlab_max_tag(self):
         self.assertEqual(self.sync_get_version("example", {"gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1}), "v1.1.0")
