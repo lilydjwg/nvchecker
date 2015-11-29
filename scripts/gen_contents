@@ -10,7 +10,7 @@ levels = {
 }
 
 def to_id(t):
-  return t.lower().replace(' ', '-').replace('`', '')
+  return re.sub(r'[`(),]', '', t).lower().replace(' ', '-')
 
 def to_text(t):
   return t.replace('`', '')
