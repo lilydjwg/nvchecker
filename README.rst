@@ -31,6 +31,7 @@ Contents
   * `Check NPM Registry <#check-npm-registry>`_
   * `Check Hackage <#check-hackage>`_
   * `Check CPAN <#check-cpan>`_
+  * `Check Packagist <#check-packagist>`_
   * `Check Local Pacman Database <#check-local-pacman-database>`_
   * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
   * `Check Google Code (hg repository) <#check-google-code-hg-repository>`_
@@ -257,6 +258,13 @@ Check `MetaCPAN <https://metacpan.org/>`_ for updates.
 
 cpan
   The name used on CPAN, e.g. ``YAML``.
+
+Check Packagist
+--------------
+Check `Packagist <https://packagist.org/>`_ for updates.
+
+packagist
+  The name used on Packagist, e.g. ``monolog/monolog``.
 
 Check Local Pacman Database
 ---------------------------
