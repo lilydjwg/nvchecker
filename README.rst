@@ -175,9 +175,10 @@ use_max_tag
   sorted by ``pkg_resources.parse_version``.
 
 ignored_tags
-  Ignore certain tags while sorting. Tags are separate by whitespaces. This option must be
-  used together with use_max_tag. This can be useful to avoid some known badly versioned
-  tags, so the newer tags won't be "overridden" by the old broken ones.
+  Ignore certain tags while computing the max tag. Tags are separate by
+  whitespaces. This option must be used together with ``use_max_tag``. This can
+  be useful to avoid some known badly versioned tags, so the newer tags won't
+  be "overridden" by the old broken ones.
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
@@ -196,9 +197,10 @@ use_max_tag
   sorted by ``pkg_resources.parse_version``.
 
 ignored_tags
-  Ignore certain tags while sorting. Tags are separate by whitespaces. This option must be
-  used together with use_max_tag. This can be useful to avoid some known badly versioned
-  tags, so the newer tags won't be "overridden" by the old broken ones.
+  Ignore certain tags while computing the max tag. Tags are separate by
+  whitespaces. This option must be used together with ``use_max_tag``. This can
+  be useful to avoid some known badly versioned tags, so the newer tags won't
+  be "overridden" by the old broken ones.
 
 Check GitCafe
 -------------
@@ -227,9 +229,10 @@ use_max_tag
   sorted by ``pkg_resources.parse_version``.
 
 ignored_tags
-  Ignore certain tags while sorting. Tags are separate by whitespaces. This option must be
-  used together with use_max_tag. This can be useful to avoid some known badly versioned
-  tags, so the newer tags won't be "overridden" by the old broken ones.
+  Ignore certain tags while computing the max tag. Tags are separate by
+  whitespaces. This option must be used together with ``use_max_tag``. This can
+  be useful to avoid some known badly versioned tags, so the newer tags won't
+  be "overridden" by the old broken ones.
 
 host
   Hostname for self-hosted GitLab instance.
