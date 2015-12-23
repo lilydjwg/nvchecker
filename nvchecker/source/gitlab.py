@@ -17,6 +17,7 @@ def get_version(name, conf, callback):
   br = conf.get('branch', 'master')
   host = conf.get('host', "gitlab.com")
   use_max_tag = conf.getboolean('use_max_tag', False)
+  ignored_tags = conf.get("ignored_tags", "").split()
 
   env_name = "NVCHECKER_GITLAB_TOKEN_" + host.upper().replace(".", "_").replace("/", "_")
   token = conf.get('token', os.environ.get(env_name, None))
@@ -33,13 +34,14 @@ def get_version(name, conf, callback):
   headers = {"PRIVATE-TOKEN": token}
   request = HTTPRequest(url, headers=headers, user_agent='lilydjwg/nvchecker')
   AsyncHTTPClient().fetch(request,
-                          callback=partial(_gitlab_done, name, use_max_tag, callback))
+                          callback=partial(_gitlab_done, name, use_max_tag, ignored_tags, callback))
 
-def _gitlab_done(name, use_max_tag, callback, res):
+def _gitlab_done(name, use_max_tag, ignored_tags, callback, res):
   data = json.loads(res.body.decode('utf-8'))
   if use_max_tag:
-    data.sort(key=lambda tag: parse_version(tag["name"]))
-    version = data[-1]["name"]
+    data = [tag["name"] for tag in data if tag["name"] not in ignored_tags]
+    data.sort(key=parse_version)
+    version = data[-1]
   else:
     version = data[0]['created_at'].split('T', 1)[0].replace('-', '')
   callback(name, version)

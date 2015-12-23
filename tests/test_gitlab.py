@@ -14,3 +14,6 @@ class GitLabTest(ExternalVersionTestCase):
 
     def test_gitlab_max_tag(self):
         self.assertEqual(self.sync_get_version("example", {"gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1}), "v1.1.0")
+
+    def test_gitlab_max_tag_with_ignored_tags(self):
+        self.assertEqual(self.sync_get_version("example", {"gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1, "ignored_tags": "v1.1.0"}), "v1.0.0")

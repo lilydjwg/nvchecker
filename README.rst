@@ -174,6 +174,11 @@ use_max_tag
   this option includes both annotated tags and lightweight ones, and return the biggest one
   sorted by ``pkg_resources.parse_version``.
 
+ignored_tags
+  Ignore certain tags while sorting. Tags are separate by whitespaces. This option must be
+  used together with use_max_tag. This can be useful to avoid some known badly versioned
+  tags, so the newer tags won't be "overridden" by the old broken ones.
+
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
 Check BitBucket
@@ -189,6 +194,11 @@ branch
 use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
   sorted by ``pkg_resources.parse_version``.
+
+ignored_tags
+  Ignore certain tags while sorting. Tags are separate by whitespaces. This option must be
+  used together with use_max_tag. This can be useful to avoid some known badly versioned
+  tags, so the newer tags won't be "overridden" by the old broken ones.
 
 Check GitCafe
 -------------
@@ -215,6 +225,11 @@ branch
 use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
   sorted by ``pkg_resources.parse_version``.
+
+ignored_tags
+  Ignore certain tags while sorting. Tags are separate by whitespaces. This option must be
+  used together with use_max_tag. This can be useful to avoid some known badly versioned
+  tags, so the newer tags won't be "overridden" by the old broken ones.
 
 host
   Hostname for self-hosted GitLab instance.

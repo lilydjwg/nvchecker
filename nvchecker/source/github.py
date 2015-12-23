@@ -14,6 +14,7 @@ def get_version(name, conf, callback):
   br = conf.get('branch', 'master')
   use_latest_release = conf.getboolean('use_latest_release', False)
   use_max_tag = conf.getboolean('use_max_tag', False)
+  ignored_tags = conf.get("ignored_tags", "").split()
   if use_latest_release:
       url = GITHUB_LATEST_RELEASE % repo
   elif use_max_tag:
@@ -25,15 +26,16 @@ def get_version(name, conf, callback):
       headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
   request = HTTPRequest(url, headers=headers, user_agent='lilydjwg/nvchecker')
   AsyncHTTPClient().fetch(request,
-                          callback=partial(_github_done, name, use_latest_release, use_max_tag, callback))
+                          callback=partial(_github_done, name, use_latest_release, use_max_tag, ignored_tags, callback))
 
-def _github_done(name, use_latest_release, use_max_tag, callback, res):
+def _github_done(name, use_latest_release, use_max_tag, ignored_tags, callback, res):
   data = json.loads(res.body.decode('utf-8'))
   if use_latest_release:
       version = data['tag_name']
   elif use_max_tag:
-      data.sort(key=lambda tag: parse_version(tag["name"]))
-      version = data[-1]["name"]
+      data = [tag["name"] for tag in data if tag["name"] not in ignored_tags]
+      data.sort(key=parse_version)
+      version = data[-1]
   else:
       version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', '')
   callback(name, version)
