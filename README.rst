@@ -278,7 +278,7 @@ cpan
   The name used on CPAN, e.g. ``YAML``.
 
 Check Packagist
---------------
+---------------
 Check `Packagist <https://packagist.org/>`_ for updates.
 
 packagist
