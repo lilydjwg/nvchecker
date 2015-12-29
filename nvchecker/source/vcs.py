@@ -4,6 +4,8 @@ from functools import partial
 import tornado.process
 from tornado.ioloop import IOLoop
 
+from pkg_resources import parse_version
+
 import os.path as _path
 
 logger = logging.getLogger(__name__)
@@ -27,19 +29,34 @@ def _parse_oldver(oldver):
 
 def get_version(name, conf, callback):
   vcs = conf['vcs']
+  use_max_tag = conf.getboolean('use_max_tag', False)
+  ignored_tags = conf.get("ignored_tags", "").split()
   oldver = conf.get('oldver')
   cmd = _cmd_prefix + [name, vcs]
+  if use_max_tag:
+    cmd += ["get_tags"]
   p = tornado.process.Subprocess(cmd, io_loop=IOLoop.instance(),
                                  stdout=tornado.process.Subprocess.STREAM)
-  p.set_exit_callback(partial(_command_done, name, oldver, callback, p))
+  p.set_exit_callback(partial(_command_done, name, oldver, use_max_tag, ignored_tags, callback, p))
 
-def _command_done(name, oldver, callback, process, status):
+def _command_done(name, oldver, use_max_tag, ignored_tags, callback, process, status):
   if status != 0:
     logger.error('%s: command exited with %d.', name, status)
     callback(name, None)
   else:
-    process.stdout.read_until_close(partial(_got_version_from_cmd,
-                                            callback, name, oldver))
+    if use_max_tag:
+      process.stdout.read_until_close(partial(_got_tags_from_cmd,
+                                              callback, name, ignored_tags))
+    else:
+      process.stdout.read_until_close(partial(_got_version_from_cmd,
+                                              callback, name, oldver))
+
+def _got_tags_from_cmd(callback, name, ignored_tags, output):
+  output = output.strip().decode('latin1')
+  data = [tag for tag in output.split("\n") if tag not in ignored_tags]
+  data.sort(key=parse_version)
+  version = data[-1]
+  callback(name, version)
 
 def _got_version_from_cmd(callback, name, oldver_str, output):
   output = output.strip().decode('latin1')

@@ -5,6 +5,7 @@ exec >&2
 
 dir=$1
 vcs=$2
+get_tags=$3
 
 parse_vcs_url() {
     local _url=$1
@@ -101,6 +102,15 @@ bzr_get_version() {
     bzr revno -q "${_extra_arg[@]}" "${_url}"
 }
 
+git_get_tags() {
+    local _url=$1
+    git ls-remote "$_url" | grep -oP '(?<=refs/tags/)[^^]*$'
+}
+
 cd "${dir}"
 get_vcs "${vcs}" components || exit 1
-eval "${components[0]}_get_version"' ${components[@]:1}' >&3
+if [[ "x$get_tags" == "xget_tags" ]]; then
+  eval "${components[0]}_get_tags"' ${components[@]:1}' >&3
+else
+  eval "${components[0]}_get_version"' ${components[@]:1}' >&3
+fi
