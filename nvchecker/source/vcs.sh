@@ -25,7 +25,7 @@ get_vcs() {
     local _vcs=$1
     local _out_var=$2
     if [[ -z $_vcs ]]; then
-        _vcs=$(. PKGBUILD &> /dev/null
+        _vcs=$(. "${dir}"/PKGBUILD &> /dev/null
                for src in "${source[@]}"; do
                    parse_vcs_url "$src" _ && {
                        echo "$src"
@@ -107,7 +107,6 @@ git_get_tags() {
     git ls-remote "$_url" | grep -oP '(?<=refs/tags/)[^^]*$'
 }
 
-cd "${dir}"
 get_vcs "${vcs}" components || exit 1
 if [[ "x$get_tags" == "xget_tags" ]]; then
   eval "${components[0]}_get_tags"' ${components[@]:1}' >&3
