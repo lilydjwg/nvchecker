@@ -5,7 +5,7 @@ import logging
 from tornado.httpclient import AsyncHTTPClient
 from tornado.escape import url_escape
 
-AUR_URL = 'https://aur.archlinux.org/rpc.php?type=info&arg='
+AUR_URL = 'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ def _aur_done(name, strip_release, callback, res):
     callback(name, None)
     return
 
-  version = data['results']['Version']
+  version = data['results'][0]['Version']
   if strip_release and '-' in version:
     version = version.rsplit('-', 1)[0]
   callback(name, version)
