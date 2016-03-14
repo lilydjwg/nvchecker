@@ -39,5 +39,5 @@ def _github_done(name, use_latest_release, use_max_tag, ignored_tags, callback, 
   else:
     # YYYYMMDD.HHMMSS
     version = data[0]['commit']['committer']['date'] \
-        .replace('-', '').replace(':', '').replace('T', '.')
+        .rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
   callback(name, version)

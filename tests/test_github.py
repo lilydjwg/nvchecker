@@ -7,7 +7,7 @@ from tests.helper import ExternalVersionTestCase
                     reason="requires NVCHECKER_GITHUB_TOKEN, or it fails too much")
 class GitHubTest(ExternalVersionTestCase):
     def test_github(self):
-        self.assertEqual(self.sync_get_version("example", {"github": "harry-sanabria/ReleaseTestRepo"}), "20140122")
+        self.assertEqual(self.sync_get_version("example", {"github": "harry-sanabria/ReleaseTestRepo"}), "20140122.012101")
 
     def test_github_latest_release(self):
         self.assertEqual(self.sync_get_version("example", {"github": "harry-sanabria/ReleaseTestRepo", "use_latest_release": 1}), "release3")
