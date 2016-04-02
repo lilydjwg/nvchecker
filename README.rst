@@ -180,6 +180,11 @@ ignored_tags
   be useful to avoid some known badly versioned tags, so the newer tags won't
   be "overridden" by the old broken ones.
 
+sort_version_key
+  Sort the version string using this key function. Choose between ``parse_version`` and 
+  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
+  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
+
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
 Check BitBucket
