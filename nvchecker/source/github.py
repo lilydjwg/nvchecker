@@ -1,36 +1,18 @@
 import os
 import json
-from functools import partial
+from functools import partial, cmp_to_key
 
 from pkg_resources import parse_version
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
-try:
-  import pyalpm
-  def cmp_to_key(mycmp):
-    'Convert a cmp= function into a key= function'
-    class K(object):
-      def __init__(self, obj, *args):
-        self.obj = obj
-      def __lt__(self, other):
-        return mycmp(self.obj, other.obj) < 0
-      def __gt__(self, other):
-        return mycmp(self.obj, other.obj) > 0
-      def __eq__(self, other):
-        return mycmp(self.obj, other.obj) == 0
-      def __le__(self, other):
-        return mycmp(self.obj, other.obj) <= 0
-      def __ge__(self, other):
-        return mycmp(self.obj, other.obj) >= 0
-      def __ne__(self, other):
-        return mycmp(self.obj, other.obj) != 0
-  vercmp = cmp_to_key(pyalpm.vercmp)
-except ImportError:
-  vercmp = None
+import pyalpm
+vercmp = cmp_to_key(pyalpm.vercmp)
 
 GITHUB_URL = 'https://api.github.com/repos/%s/commits?sha=%s'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
+
+SORT_KEYS={"parse_version": parse_version, "vercmp": vercmp}
 
 def get_version(name, conf, callback):
   repo = conf.get('github')
@@ -38,7 +20,7 @@ def get_version(name, conf, callback):
   use_latest_release = conf.getboolean('use_latest_release', False)
   use_max_tag = conf.getboolean('use_max_tag', False)
   ignored_tags = conf.get("ignored_tags", "").split()
-  sort_version_key = {"parse_version": parse_version, "vercmp": vercmp}[conf.get("sort_version_key", "parse_version")]
+  sort_version_key = SORT_KEYS[conf.get("sort_version_key", "parse_version")]
   if use_latest_release:
     url = GITHUB_LATEST_RELEASE % repo
   elif use_max_tag:
