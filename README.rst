@@ -114,6 +114,12 @@ oldver
 newver
   Specify a version record file to store the new version info.
 
+sort_version_key
+  Sort the version string using this key function. Choose between ``parse_version`` and 
+  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
+  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
+
+
 Search in a Webpage
 -------------------
 Search through a specific webpage for the version string. This type of version finding has these fields:
@@ -136,6 +142,11 @@ proxy
 
 user_agent
   The ``User-Agent`` header value to use. Use something more like a tool (e.g. ``curl/7.40.0``) in Europe or the real web page won't get through because cookie policies (SourceForge has this issue).
+
+sort_version_key
+  Sort the version string using this key function. Choose between ``parse_version`` and 
+  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
+  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
 
 Find with a Command
 -------------------
@@ -207,6 +218,11 @@ ignored_tags
   be useful to avoid some known badly versioned tags, so the newer tags won't
   be "overridden" by the old broken ones.
 
+sort_version_key
+  Sort the version string using this key function. Choose between ``parse_version`` and 
+  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
+  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
+
 Check GitCafe
 -------------
 Check `GitCafe <https://gitcafe.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
@@ -238,6 +254,11 @@ ignored_tags
   whitespaces. This option must be used together with ``use_max_tag``. This can
   be useful to avoid some known badly versioned tags, so the newer tags won't
   be "overridden" by the old broken ones.
+
+sort_version_key
+  Sort the version string using this key function. Choose between ``parse_version`` and 
+  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
+  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
 
 host
   Hostname for self-hosted GitLab instance.
