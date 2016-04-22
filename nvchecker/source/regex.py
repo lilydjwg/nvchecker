@@ -7,7 +7,7 @@ from functools import partial
 from tornado.httpclient import AsyncHTTPClient
 
 from .base import pycurl
-from ..lib.sortversion import sort_version_keys
+from ..sortversion import sort_version_keys
 
 logger = logging.getLogger(__name__)
 

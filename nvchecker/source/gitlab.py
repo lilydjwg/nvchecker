@@ -6,7 +6,7 @@ import urllib.parse
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
-from ..lib.sortversion import sort_version_keys
+from ..sortversion import sort_version_keys
 
 GITLAB_URL = 'https://%s/api/v3/projects/%s/repository/commits?ref_name=%s'
 GITLAB_MAX_TAG = 'https://%s/api/v3/projects/%s/repository/tags'

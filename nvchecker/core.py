@@ -9,7 +9,7 @@ from tornado.stack_context import ExceptionStackContext
 
 from .lib import nicelogger
 from .get_version import get_version
-from .lib.sortversion import sort_version_keys
+from .sortversion import sort_version_keys
 
 from . import __version__
 

@@ -4,7 +4,7 @@ from functools import partial
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
-from ..lib.sortversion import sort_version_keys
+from ..sortversion import sort_version_keys
 
 GITHUB_URL = 'https://api.github.com/repos/%s/commits?sha=%s'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'

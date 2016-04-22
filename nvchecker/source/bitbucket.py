@@ -4,7 +4,7 @@ from functools import partial
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
-from ..lib.sortversion import sort_version_keys
+from ..sortversion import sort_version_keys
 
 # doc: https://confluence.atlassian.com/display/BITBUCKET/commits+or+commit+Resource
 BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
