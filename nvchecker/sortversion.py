@@ -16,7 +16,7 @@ try:
   vercmp = cmp_to_key(pyalpm.vercmp)
 except ImportError:
   def vercmp(k):
-    raise NotImplemented("Using vercmp but pyalpm can not be imported!")
+    raise NotImplementedError("Using vercmp but pyalpm can not be imported!")
 
 sort_version_keys = {"parse_version": parse_version, "vercmp": vercmp}
 
