@@ -24,7 +24,6 @@ Contents
   * `Check AUR <#check-aur>`_
   * `Check GitHub <#check-github>`_
   * `Check BitBucket <#check-bitbucket>`_
-  * `Check GitCafe <#check-gitcafe>`_
   * `Check GitLab <#check-gitlab>`_
   * `Check PyPI <#check-pypi>`_
   * `Check RubyGems <#check-rubygems>`_
@@ -222,18 +221,6 @@ sort_version_key
   Sort the version string using this key function. Choose between ``parse_version`` and 
   ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
   ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
-
-Check GitCafe
--------------
-Check `GitCafe <https://gitcafe.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
-
-gitcafe
-  The gitcafe repository, with author, e.g. ``Deepin/deepin-music``.
-
-branch
-  Which branch to track? Default: ``master``.
-
-Anonymously only. Authorization is not supported yet.
 
 Check GitLab
 -------------
