@@ -3,6 +3,7 @@ records/
 __pycache__/
 /build/
 .cache/
+.eggs/
 *.pyc
 *.pyo
 .travis.pub
