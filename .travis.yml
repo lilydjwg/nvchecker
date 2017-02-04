@@ -5,7 +5,8 @@ python:
   - "3.5"
   - "3.6"
   - "nightly"
-  - "pypy3"
+  # ptr requires Python >= 3.3 but pypy3 reports 3.2
+  # - "pypy3"
 install: pip install -U pytest pytest-runner
 script: python setup.py ptr
 env:
