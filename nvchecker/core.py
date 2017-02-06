@@ -9,7 +9,6 @@ from tornado.stack_context import ExceptionStackContext
 
 from .lib import nicelogger
 from .get_version import get_version
-from .sortversion import sort_version_keys
 
 from . import __version__
 
@@ -62,7 +61,6 @@ class Source:
   started = False
   tasks = 0
   oldver = newver = None
-  sort_version_key = None
   def __init__(self, file):
     self.config = config = configparser.ConfigParser(
       dict_type=dict, allow_no_value=True
@@ -74,7 +72,6 @@ class Source:
       d = os.path.dirname(file.name)
       self.oldver = os.path.expandvars(os.path.expanduser(os.path.join(d, c.get('oldver'))))
       self.newver = os.path.expandvars(os.path.expanduser(os.path.join(d, c.get('newver'))))
-      self.sort_version_key = sort_version_keys[c.get("sort_version_key", "parse_version")]
 
   def check(self):
     self.started = True
@@ -115,7 +112,7 @@ class Source:
         return
 
       oldver = self.oldvers.get(name, None)
-      if not oldver or self.sort_version_key(oldver) < self.sort_version_key(version):
+      if not oldver or oldver != version:
         logger.info('%s updated version %s', name, version)
         self.curvers[name] = version
         self.on_update(name, version, oldver)

@@ -113,12 +113,6 @@ oldver
 newver
   Specify a version record file to store the new version info.
 
-sort_version_key
-  Sort the version string using this key function. Choose between ``parse_version`` and 
-  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
-  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
-
-
 Search in a Webpage
 -------------------
 Search through a specific webpage for the version string. This type of version finding has these fields:
