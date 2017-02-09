@@ -189,6 +189,9 @@ sort_version_key
   ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
   ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
 
+proxy
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>`_.
+
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
 Check BitBucket
@@ -283,6 +286,9 @@ Check `MetaCPAN <https://metacpan.org/>`_ for updates.
 
 cpan
   The name used on CPAN, e.g. ``YAML``.
+
+proxy
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>`_.
 
 Check Packagist
 ---------------
