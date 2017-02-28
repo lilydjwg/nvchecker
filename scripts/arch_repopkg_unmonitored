@@ -1,4 +1,6 @@
 #!/bin/bash -e
+# MIT licensed
+# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 if [[ $# -ne 2 || ! -r $1 || -z $2 ]]; then
   echo >&2 "usage: arch_repopkg_unmonitored config.ini pkg_list or repository_name"

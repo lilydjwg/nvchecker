@@ -1,4 +1,6 @@
 # vim: se sw=2:
+# MIT licensed
+# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import sys
 import os

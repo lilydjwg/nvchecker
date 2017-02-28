@@ -1,3 +1,6 @@
+# MIT licensed
+# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+
 from .simple_json import simple_json
 
 HACKAGE_URL = 'https://hackage.haskell.org/package/%s/preferred.json'

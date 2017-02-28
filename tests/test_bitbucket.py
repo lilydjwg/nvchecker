@@ -1,5 +1,7 @@
-from tests.helper import ExternalVersionTestCase
+# MIT licensed
+# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
+from tests.helper import ExternalVersionTestCase
 
 class BitBucketTest(ExternalVersionTestCase):
     def test_bitbucket(self):

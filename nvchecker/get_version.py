@@ -1,3 +1,6 @@
+# MIT licensed
+# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+
 import logging
 from importlib import import_module
 

@@ -1,3 +1,6 @@
+# MIT licensed
+# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+
 '''
 Sort versions using pkg_resource.parse_version or pyalpm.vercmp
 '''
