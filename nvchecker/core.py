@@ -6,11 +6,11 @@ import os
 import sys
 import logging
 import configparser
-
-from tornado.stack_context import ExceptionStackContext
+import asyncio
 
 from .lib import nicelogger
 from .get_version import get_version
+from .source import session
 
 from . import __version__
 
@@ -60,9 +60,8 @@ def write_verfile(file, versions):
   safe_overwrite(file, data, method='writelines')
 
 class Source:
-  started = False
-  tasks = 0
   oldver = newver = None
+
   def __init__(self, file):
     self.config = config = configparser.ConfigParser(
       dict_type=dict, allow_no_value=True
@@ -72,61 +71,50 @@ class Source:
     if '__config__' in config:
       c = config['__config__']
       d = os.path.dirname(file.name)
-      self.oldver = os.path.expandvars(os.path.expanduser(os.path.join(d, c.get('oldver'))))
-      self.newver = os.path.expandvars(os.path.expanduser(os.path.join(d, c.get('newver'))))
+      self.oldver = os.path.expandvars(os.path.expanduser(
+        os.path.join(d, c.get('oldver'))))
+      self.newver = os.path.expandvars(os.path.expanduser(
+        os.path.join(d, c.get('newver'))))
 
-  def check(self):
-    self.started = True
+      session.nv_config = config["__config__"]
 
+  async def check(self):
     if self.oldver:
       self.oldvers = read_verfile(self.oldver)
     else:
       self.oldvers = {}
     self.curvers = self.oldvers.copy()
 
+    futures = []
     config = self.config
     for name in config.sections():
       if name == '__config__':
         continue
-      self.task_inc()
       conf = config[name]
       conf['oldver'] = self.oldvers.get(name, None)
-      with ExceptionStackContext(self._handle_exception):
-        get_version(name, conf, self.print_version_update)
+      futures.append(get_version(name, conf))
 
-  def _handle_exception(self, type, value, traceback):
-    self.task_dec()
-    raise value.with_traceback(traceback)
+    for fu in asyncio.as_completed(futures):
+      try:
+        name, version = await fu
+        if version is not None:
+          self.print_version_update(name, version)
+      except Exception:
+        logger.exception('error happened dealing with %s', name)
 
-  def task_inc(self):
-    self.tasks += 1
-
-  def task_dec(self):
-    self.tasks -= 1
-    if self.tasks == 0 and self.started:
-      if self.newver:
-        write_verfile(self.newver, self.curvers)
-      self.on_finish()
+    if self.newver:
+      write_verfile(self.newver, self.curvers)
 
   def print_version_update(self, name, version):
-    try:
-      if version is None:
-        return
-
-      oldver = self.oldvers.get(name, None)
-      if not oldver or oldver != version:
-        logger.info('%s updated version %s', name, version)
-        self.curvers[name] = version
-        self.on_update(name, version, oldver)
-      else:
-        logger.debug('%s current version %s', name, version)
-    finally:
-      self.task_dec()
+    oldver = self.oldvers.get(name, None)
+    if not oldver or oldver != version:
+      logger.info('%s updated to %s', name, version)
+      self.curvers[name] = version
+      self.on_update(name, version, oldver)
+    else:
+      logger.debug('%s current %s', name, version)
 
   def on_update(self, name, version, oldver):
-    pass
-
-  def on_finish(self):
     pass
 
   def __repr__(self):

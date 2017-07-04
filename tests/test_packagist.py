@@ -1,9 +1,8 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from tests.helper import ExternalVersionTestCase
+import pytest
+pytestmark = pytest.mark.asyncio
 
-
-class PackagistTest(ExternalVersionTestCase):
-    def test_packagist(self):
-        self.assertEqual(self.sync_get_version("butterfly/example-web-application", {"packagist": None}), "1.2.0")
+async def test_packagist(get_version):
+    assert await get_version("butterfly/example-web-application", {"packagist": None}) == "1.2.0"

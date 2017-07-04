@@ -2,19 +2,15 @@
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
-import json
-from functools import partial
 
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
-
-from .base import pycurl
+from . import session
 from ..sortversion import sort_version_keys
 
 GITHUB_URL = 'https://api.github.com/repos/%s/commits?sha=%s'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
 
-def get_version(name, conf, callback):
+async def get_version(name, conf):
   repo = conf.get('github')
   br = conf.get('branch', 'master')
   use_latest_release = conf.getboolean('use_latest_release', False)
@@ -33,17 +29,9 @@ def get_version(name, conf, callback):
 
   kwargs = {}
   if conf.get('proxy'):
-    if pycurl:
-      kwargs['proxy_host'] = "".join(conf['proxy'].split(':')[:-1])
-      kwargs['proxy_port'] = int(conf['proxy'].split(':')[-1])
-    else:
-      logger.warn('%s: proxy set but not used because pycurl is unavailable.', name)
-  request = HTTPRequest(url, headers=headers, user_agent='lilydjwg/nvchecker', **kwargs)
-  AsyncHTTPClient().fetch(request,
-                          callback=partial(_github_done, name, use_latest_release, use_max_tag, ignored_tags, sort_version_key, callback))
-
-def _github_done(name, use_latest_release, use_max_tag, ignored_tags, sort_version_key, callback, res):
-  data = json.loads(res.body.decode('utf-8'))
+    kwargs["proxy"] = conf.get("proxy")
+  async with session.get(url, headers=headers, **kwargs) as res:
+    data = await res.json()
   if use_latest_release:
     version = data['tag_name']
   elif use_max_tag:
@@ -54,4 +42,4 @@ def _github_done(name, use_latest_release, use_max_tag, ignored_tags, sort_versi
     # YYYYMMDD.HHMMSS
     version = data[0]['commit']['committer']['date'] \
         .rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
-  callback(name, version)
+  return name, version

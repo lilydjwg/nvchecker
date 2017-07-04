@@ -1,13 +1,12 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from tests.helper import ExternalVersionTestCase
+import pytest
+pytestmark = pytest.mark.asyncio
 
-
-class RegexTest(ExternalVersionTestCase):
-    def test_regex(self):
-        self.assertEqual(self.sync_get_version("example", {
-            "url": "https://httpbin.org/get",
-            "regex": '"User-Agent": "(\w+)"',
-            "user_agent": "Meow",
-        }), "Meow")
+async def test_regex(get_version):
+    assert await get_version("example", {
+        "url": "https://httpbin.org/get",
+        "regex": '"User-Agent": "(\w+)"',
+        "user_agent": "Meow",
+    }) == "Meow"

@@ -5,7 +5,7 @@
 import logging
 import argparse
 
-from tornado.ioloop import IOLoop
+import asyncio
 
 from .lib import notify
 from . import core
@@ -21,9 +21,6 @@ class Source(core.Source):
       notifications.append(msg)
       notify.update('nvchecker', '\n'.join(notifications))
 
-  def on_finish(self):
-    IOLoop.instance().stop()
-
 def main():
   global args
 
@@ -37,11 +34,11 @@ def main():
 
   if not args.file:
     return
+
   s = Source(args.file)
 
-  ioloop = IOLoop.instance()
-  ioloop.add_callback(s.check)
-  ioloop.start()
+  ioloop = asyncio.get_event_loop()
+  ioloop.run_until_complete(s.check())
 
 if __name__ == '__main__':
   main()

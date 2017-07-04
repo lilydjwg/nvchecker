@@ -3,15 +3,14 @@
 
 from . import cmd
 
-def get_version(name, conf, callback):
+async def get_version(name, conf):
   referree = conf.get('pacman') or name
   c = "LANG=C pacman -Si %s | grep -F Version | awk '{print $3}'" % referree
   conf['cmd'] = c
+  strip_release = conf.getboolean('strip-release', False)
 
-  def callback_wrapper(name, version):
-    strip_release = conf.getboolean('strip-release', False)
-    if strip_release and '-' in version:
-      version = version.rsplit('-', 1)[0]
-    callback(name, version)
+  _, version = await cmd.get_version(name, conf)
 
-  cmd.get_version(name, conf, callback_wrapper)
+  if strip_release and '-' in version:
+    version = version.rsplit('-', 1)[0]
+  return name, version

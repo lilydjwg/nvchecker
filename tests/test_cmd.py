@@ -1,9 +1,11 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from tests.helper import ExternalVersionTestCase
+import pytest
+pytestmark = pytest.mark.asyncio
 
+async def test_cmd(get_version):
+    assert await get_version("example", {"cmd": "echo Meow"}) == "Meow"
 
-class CMDTest(ExternalVersionTestCase):
-    def test_cmd(self):
-        self.assertEqual(self.sync_get_version("example", {"cmd": "echo Meow"}), "Meow")
+async def test_cmd_complex(get_version):
+    assert await get_version("example", {"cmd": "echo Meow | sed 's/meow/woof/i'"}) == "woof"

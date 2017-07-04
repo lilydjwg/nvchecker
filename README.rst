@@ -45,9 +45,8 @@ Contents
 
 Dependency
 ==========
-- Python 3
-- Tornado
-- Optional pycurl
+- Python 3.5+
+- aiohttp
 - All commands used in your version source files
 
 Running
@@ -132,7 +131,7 @@ regex
   When multiple version strings are found, the maximum of those is chosen.
 
 proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>`_.
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
 user_agent
   The ``User-Agent`` header value to use. Use something more like a tool (e.g. ``curl/7.40.0``) in Europe or the real web page won't get through because cookie policies (SourceForge has this issue).
@@ -191,7 +190,7 @@ sort_version_key
   ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
 
 proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>`_.
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
 
@@ -289,7 +288,7 @@ cpan
   The name used on CPAN, e.g. ``YAML``.
 
 proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``. This requires `pycurl <http://pycurl.sourceforge.net/>`_.
+  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
 Check Packagist
 ---------------

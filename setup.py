@@ -18,9 +18,11 @@ setup(
   zip_safe = True,
 
   packages = find_packages(exclude=["tests"]),
-  install_requires = ['tornado>=4.1', 'setuptools'],
+  install_requires = ['aiohttp', 'setuptools'],
   tests_require = [
     'pytest',
+    'pytest-asyncio',
+    'pytest-xdist',
     'flaky',
   ],
   entry_points = {
@@ -42,8 +44,8 @@ setup(
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
     "Topic :: Internet",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development",

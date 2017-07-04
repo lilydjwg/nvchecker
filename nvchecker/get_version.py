@@ -11,12 +11,11 @@ handler_precedence = (
   'cratesio', 'npm', 'hackage', 'cpan', 'gitlab', 'packagist'
 )
 
-def get_version(name, conf, callback):
+async def get_version(name, conf):
   for key in handler_precedence:
     if key in conf:
       func = import_module('.source.' + key, __package__).get_version
-      func(name, conf, callback)
-      break
+      return await func(name, conf)
   else:
     logger.error('%s: no idea to get version info.', name)
-    callback(name, None)
+    return name, None
