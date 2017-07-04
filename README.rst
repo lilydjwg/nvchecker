@@ -33,6 +33,7 @@ Contents
   * `Check Packagist <#check-packagist>`_
   * `Check Local Pacman Database <#check-local-pacman-database>`_
   * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
+  * `Check Debian Linux official packages <#check-debian-linux-official-packages>`_
   * `Check Google Code (hg repository) <#check-google-code-hg-repository>`_
   * `Check Google Code (svn repository) <#check-google-code-svn-repository>`_
   * `Manually updating <#manually-updating>`_
