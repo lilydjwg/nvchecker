@@ -317,6 +317,19 @@ archpkg
 strip-release
   Strip the release part.
 
+Check Debian Linux official packages
+----------------------------------
+This enables you to track the update of `Debian Linux official packages <https://packages.debian.org>`_, without needing of apt and an updated local APT database.
+
+debianpkg
+  Name of the Debian Linux source package.
+
+suite
+  Name of the Debian release (jessie, wheezy, etc, defaults to sid)
+
+strip-release
+  Strip the release part.
+
 Check Google Code (hg repository)
 ---------------------------------
 Check a mercurial (hg) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
