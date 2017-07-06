@@ -6,7 +6,7 @@ from importlib import import_module
 
 logger = logging.getLogger(__name__)
 handler_precedence = (
-  'github', 'aur', 'pypi', 'archpkg', 'debianpkg', 'gems', 'pacman',
+  'github', 'aur', 'pypi', 'archpkg', 'debianpkg', 'ubuntupkg', 'gems', 'pacman',
   'cmd', 'bitbucket', 'gcode_hg', 'gcode_svn', 'regex', 'manual', 'vcs',
   'cratesio', 'npm', 'hackage', 'cpan', 'gitlab', 'packagist'
 )

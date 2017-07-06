@@ -34,6 +34,7 @@ Contents
   * `Check Local Pacman Database <#check-local-pacman-database>`_
   * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
   * `Check Debian Linux official packages <#check-debian-linux-official-packages>`_
+  * `Check Ubuntu Linux official packages <#check-ubuntu-linux-official-packages>`_
   * `Check Google Code (hg repository) <#check-google-code-hg-repository>`_
   * `Check Google Code (svn repository) <#check-google-code-svn-repository>`_
   * `Manually updating <#manually-updating>`_
@@ -329,6 +330,19 @@ debianpkg
 
 suite
   Name of the Debian release (jessie, wheezy, etc, defaults to sid)
+
+strip-release
+  Strip the release part.
+
+Check Ubuntu Linux official packages
+----------------------------------
+This enables you to track the update of `Ubuntu Linux official packages <https://packages.ubuntu.com/>`_, without needing of apt and an updated local APT database.
+
+ubuntupkg
+  Name of the Ubuntu Linux source package.
+
+suite
+  Name of the Ubuntu release (xenial, zesty, etc, defaults to None, which means no limit on suite)
 
 strip-release
   Strip the release part.
