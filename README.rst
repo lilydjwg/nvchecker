@@ -35,8 +35,6 @@ Contents
   * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
   * `Check Debian Linux official packages <#check-debian-linux-official-packages>`_
   * `Check Ubuntu Linux official packages <#check-ubuntu-linux-official-packages>`_
-  * `Check Google Code (hg repository) <#check-google-code-hg-repository>`_
-  * `Check Google Code (svn repository) <#check-google-code-svn-repository>`_
   * `Manually updating <#manually-updating>`_
   * `Version Control System (VCS) (git, hg, svn, bzr) <#version-control-system-vcs-git-hg-svn-bzr>`_
   * `Other <#other>`_
@@ -346,20 +344,6 @@ suite
 
 strip-release
   Strip the release part.
-
-Check Google Code (hg repository)
----------------------------------
-Check a mercurial (hg) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
-
-gcode_hg
-  The name used on Google Code, e.g. ``chromium-compact-language-detector``.
-
-Check Google Code (svn repository)
-----------------------------------
-Check a subversion (svn) repository on `Google Code <https://code.google.com/>`_ for updates. The version returned is the svn resivion number.
-
-gcode_svn
-  The name used on Google Code, e.g. ``cld2``.
 
 Manually updating
 -----------------
