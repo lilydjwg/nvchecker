@@ -5,7 +5,7 @@
    :target: https://travis-ci.org/lilydjwg/nvchecker
 .. image:: https://badge.fury.io/py/nvchecker.svg
    :alt: PyPI version
-   :target: http://badge.fury.io/py/nvchecker
+   :target: https://badge.fury.io/py/nvchecker
 
 Contents
 ========
