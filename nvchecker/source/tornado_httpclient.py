@@ -59,5 +59,9 @@ class ResponseManager:
 async def json_response(self):
   return json.loads(self.body.decode('utf-8'))
 
+async def read(self):
+  return self.body
+
 HTTPResponse.json = json_response
+HTTPResponse.read = read
 session = Session()

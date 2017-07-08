@@ -28,12 +28,10 @@ async def get_version(name, conf):
   sort_version_key = sort_version_keys[conf.get("sort_version_key", "parse_version")]
 
   async with session.get(conf['url'], headers=headers, **kwargs) as res:
-    version = None
+    body = (await res.read()).decode(encoding)
     try:
-      body = (await res.read()).decode(encoding)
-      try:
-        version = max(regex.findall(body), key=sort_version_key)
-      except ValueError:
-        logger.error('%s: version string not found.', name)
-    finally:
-      return name, version
+      version = max(regex.findall(body), key=sort_version_key)
+    except ValueError:
+      version = None
+      logger.error('%s: version string not found.', name)
+    return name, version
