@@ -15,6 +15,6 @@ def simple_json(urlpat, confkey, version_from_json):
     async with session.get(url, **kwargs) as res:
       data = await res.json()
     version = version_from_json(data)
-    return name, version
+    return version
 
   return get_version

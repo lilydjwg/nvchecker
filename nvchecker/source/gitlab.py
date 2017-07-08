@@ -25,7 +25,7 @@ async def get_version(name, conf):
   token = conf.get('token', os.environ.get(env_name, None))
   if token is None:
     logger.error('%s: No gitlab token specified.', name)
-    return name, None
+    return
 
   if use_max_tag:
     url = GITLAB_MAX_TAG % (host, repo)
@@ -41,4 +41,4 @@ async def get_version(name, conf):
     version = data[-1]
   else:
     version = data[0]['created_at'].split('T', 1)[0].replace('-', '')
-  return name, version
+  return version

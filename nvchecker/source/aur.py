@@ -16,9 +16,9 @@ async def get_version(name, conf):
 
   if not data['results']:
     logger.error('AUR upstream not found for %s', name)
-    return name, None
+    return
 
   version = data['results'][0]['Version']
   if strip_release and '-' in version:
     version = version.rsplit('-', 1)[0]
-  return name, version
+  return version

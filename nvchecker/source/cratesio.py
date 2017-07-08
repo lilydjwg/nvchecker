@@ -11,4 +11,4 @@ async def get_version(name, conf):
   async with session.get(API_URL % name) as res:
     data = await res.json()
   version = [v['num'] for v in data['versions'] if not v['yanked']][0]
-  return name, version
+  return version

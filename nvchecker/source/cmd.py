@@ -13,6 +13,6 @@ async def get_version(name, conf):
   output = (await p.communicate())[0].strip().decode('latin1')
   if p.returncode != 0:
     logger.error('%s: command exited with %d.', name, p.returncode)
-    return name, None
+    return
 
-  return name, output
+  return output

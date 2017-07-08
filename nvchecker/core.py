@@ -122,7 +122,7 @@ class Source:
   def future_done(self, fu):
     name = fu.name
     try:
-      _, version = fu.result()
+      version = fu.result()
       if version is not None:
         self.print_version_update(name, version)
     except Exception:

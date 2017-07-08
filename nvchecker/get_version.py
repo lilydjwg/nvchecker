@@ -19,4 +19,3 @@ async def get_version(name, conf):
       return await func(name, conf)
   else:
     logger.error('%s: no idea to get version info.', name)
-    return name, None

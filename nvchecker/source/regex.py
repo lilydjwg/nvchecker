@@ -15,7 +15,7 @@ async def get_version(name, conf):
     regex = re.compile(conf['regex'])
   except sre_constants.error:
     logger.warn('%s: bad regex, skipped.', name, exc_info=True)
-    return name, None
+    return
 
   encoding = conf.get('encoding', 'latin1')
 
@@ -34,4 +34,4 @@ async def get_version(name, conf):
     except ValueError:
       version = None
       logger.error('%s: version string not found.', name)
-    return name, version
+    return version

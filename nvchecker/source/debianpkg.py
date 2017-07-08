@@ -18,7 +18,7 @@ async def get_version(name, conf):
 
   if not data.get('versions'):
     logger.error('Debian package not found: %s', name)
-    return name, None
+    return
 
   r = data['versions'][0]
   if strip_release:
@@ -26,4 +26,4 @@ async def get_version(name, conf):
   else:
     version = r['version']
 
-  return name, version
+  return version

@@ -28,4 +28,4 @@ async def get_version(name, conf):
     version = data[-1]
   else:
     version = data['values'][0]['date'].split('T', 1)[0].replace('-', '')
-  return name, version
+  return version

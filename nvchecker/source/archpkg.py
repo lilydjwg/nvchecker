@@ -16,7 +16,7 @@ async def get_version(name, conf):
 
   if not data['results']:
     logger.error('Arch package not found: %s', name)
-    return name, None
+    return
 
   r = [r for r in data['results'] if r['repo'] != 'testing'][0]
   if strip_release:
@@ -24,4 +24,4 @@ async def get_version(name, conf):
   else:
     version = r['pkgver'] + '-' + r['pkgrel']
 
-  return name, version
+  return version

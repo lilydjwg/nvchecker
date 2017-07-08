@@ -42,4 +42,4 @@ async def get_version(name, conf):
     # YYYYMMDD.HHMMSS
     version = data[0]['commit']['committer']['date'] \
         .rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
-  return name, version
+  return version

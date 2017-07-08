@@ -9,8 +9,8 @@ async def get_version(name, conf):
   conf['cmd'] = c
   strip_release = conf.getboolean('strip-release', False)
 
-  _, version = await cmd.get_version(name, conf)
+  version = await cmd.get_version(name, conf)
 
   if strip_release and '-' in version:
     version = version.rsplit('-', 1)[0]
-  return name, version
+  return version

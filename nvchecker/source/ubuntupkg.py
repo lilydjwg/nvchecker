@@ -25,7 +25,7 @@ async def get_version(name, conf):
 
     if not data.get('entries'):
       logger.error('Ubuntu package not found: %s', name)
-      return name, None
+      return
 
     releases = [r for r in data["entries"] if r["status"] == "Published"]
 
@@ -39,10 +39,11 @@ async def get_version(name, conf):
 
   if not releases:
     logger.error('Ubuntu package not found: %s', name)
+    return
 
   if strip_release:
     version = releases[0]['source_package_version'].split("-")[0]
   else:
     version = releases[0]['source_package_version']
 
-  return name, version
+  return version

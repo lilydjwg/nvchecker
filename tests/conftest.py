@@ -13,7 +13,7 @@ async def get_version():
             _config.read_dict({name: config})
             config = _config[name]
 
-        return (await _get_version(name, config))[1]
+        return await _get_version(name, config)
 
     return __call__
 

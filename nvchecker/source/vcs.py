@@ -39,16 +39,16 @@ async def get_version(name, conf):
   output = (await p.communicate())[0].strip().decode('latin1')
   if p.returncode != 0:
     logger.error('%s: command exited with %d.', name, p.returncode)
-    return name, None
+    return
   else:
     if use_max_tag:
       data = [tag for tag in output.split("\n") if tag not in ignored_tags]
       data.sort(key=parse_version)
       version = data[-1]
-      return name, version
+      return version
     else:
       oldver = _parse_oldver(oldver)
       if output == oldver[2]:
-        return name, None
+        return
       else:
-        return name, "%d.%d.%s" % (oldver[0], oldver[1] + 1, output)
+        return "%d.%d.%s" % (oldver[0], oldver[1] + 1, output)
