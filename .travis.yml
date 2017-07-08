@@ -6,7 +6,7 @@ python:
   - "nightly"
   # ptr requires Python >= 3.3 but pypy3 reports 3.2
   # - "pypy3"
-install: pip install -U aiohttp pytest pytest-asyncio pytest-xdist flaky
+install: pip install -U $DEPS pytest pytest-asyncio pytest-xdist flaky
 script: pytest
 env:
   global:
@@ -14,3 +14,7 @@ env:
     - secure: "JNuxbHbO+Qj88r0So+FKp8GBVmobGlBNi0hkZIyOH4cBXtuiM1Jo6FtRYInfTUH5TcgfMQml1a8p9g8n1fbRcTsxPt3kkT0ZleW1fJNudOHJFOmDooM4gC2/A+6aMl3xdnLCQ9cXxqsXjIUBie3GhqC4ufInU7VshxOn7KZADbI3zDuLuw9gdsBQf/OADY4oO3y1URxdnWjssP8pwfDFRSEkuLKNDtsYrhkmp3jRAq5DMtMXTEyHly9CJHow7yMyoBHa6Q/J7+C57pI4JsO8c0nJWy/wQUnqw9EeLE/9gAHY1sHlEpjZtJrV45kRd+KC6x4FtoFjvngxymK2A0zmecBI3DRTWBAZedPPVatAD9nlDmwAacBtwvuZJkt6fMUBWMY1I1NEiwdYxceBiqrnvU48FfNOylXE6KuarCQZik/VWk8olIQjXIukMu8EQ58pnEuLZB7wbwNzMLheomuVMEK1nfLOltKaytztl/7cKlsx6SmxY5rQI/x7QInd+rq9OxDDwCo+jEofPKvAcCbUJj6SqfB7QAUxJwwD/ER4/Bji9KSz3BoCu+x7h/ILcskNqLlg4LDCcpxqMOyxePk7A30sSop1E5YLWo0lmS9s88mEz89tzCWSDVIzwQrdMghNBe6JFMzOoKDRDhEkMrs3MAK+FUJkbteGhHrdC86EidU="
     # gitlab
     - secure: "ZmD5E59cLbGylhId+uYsuaM7HCcuP7E3DVZUHtSKQ7ZtiDIPG2EFCl+WlcPBS2JhdyEJ1v7PbxSCq6/jkSK2EGVcWaHMDIyZRu8TFY+l8mqghHi18l0jeegE7FSqkW2JMWmB3y6jsv7EV6YffrSuvHiNgHyZhhIRkbV/B4N9KvJwNYoyVxGYGoJRe5yuvE+2Xkwc9y0ddxh/p+nILU+Vt0i3Z+yVfg4jul7zN1KhK8I8ax4wpAq+0V1PpWbF6/4UK5Xc/1UMEyWE0f8aEzn4kdC6UetOKacWycq7ag3W1vWKVYJvXyRKjGWmef+Al7z8KbwBkU6KR0Hb2OZWKF3SsCvv8bQEjbqcIeGKQT9J2LTgqTxgFtCMmKWXM3BxLASac/WEdQyyZmQq3XHI/OyJ/1hsSLCgvpexIueITo68LkOigrRRiobSER6KK1CaA1AQFWnPnEwrC3QCtzYUIHPT70nTy1Dx0PiOeQrG/stUoPQ9V0FCBf2tKYg2tUDlJbk7avt8rsmLht1uGx8I75qgg3Di/03N19wEBf6V50H9T23wYXRJ/q2mqPiBCBWIlHwE8NbLZgRfBvCFyUBRvggNAyvZaEOmWRl3U9JEipcqrAQtddzDP1dUbr6SYJChR6yfMkWXXsUvy3FxrOOILeaBT2j0goSaye8aLncUqArgWSw="
+  matrix:
+    - DEPS=aiohttp
+    - DEPS=tornado pycurl
+    - DEPS=tornado
