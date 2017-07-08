@@ -73,11 +73,14 @@ class Source:
     config.read_file(file)
     if '__config__' in config:
       c = config['__config__']
-      d = os.path.dirname(file.name)
-      self.oldver = os.path.expandvars(os.path.expanduser(
-        os.path.join(d, c.get('oldver'))))
-      self.newver = os.path.expandvars(os.path.expanduser(
-        os.path.join(d, c.get('newver'))))
+
+      if 'oldver' in c and 'newver' in c:
+        d = os.path.dirname(file.name)
+        self.oldver = os.path.expandvars(os.path.expanduser(
+          os.path.join(d, c.get('oldver'))))
+        self.newver = os.path.expandvars(os.path.expanduser(
+          os.path.join(d, c.get('newver'))))
+
       self.max_concurrent = c.getint('max_concurrent', 20)
       session.nv_config = config["__config__"]
 
