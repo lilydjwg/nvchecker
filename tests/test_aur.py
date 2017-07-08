@@ -5,10 +5,10 @@ from flaky import flaky
 import pytest
 pytestmark = pytest.mark.asyncio
 
-@flaky(max_runs=5)
+@flaky
 async def test_aur(get_version):
     assert await get_version("asciidoc-fake", {"aur": None}) == "1.0-1"
 
-@flaky(max_runs=5)
+@flaky
 async def test_aur_strip_release(get_version):
     assert await get_version("asciidoc-fake", {"aur": None, "strip-release": 1}) == "1.0"
