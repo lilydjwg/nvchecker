@@ -78,8 +78,11 @@ class Source:
         os.path.join(d, c.get('oldver'))))
       self.newver = os.path.expandvars(os.path.expanduser(
         os.path.join(d, c.get('newver'))))
-
+      self.max_concurrent = c.getint('max_concurrent', 20)
       session.nv_config = config["__config__"]
+
+    else:
+      self.max_concurrent = 20
 
   async def check(self):
     if self.oldver:
@@ -99,7 +102,7 @@ class Source:
       fu.name = name
       futures.add(fu)
 
-      if len(futures) >= 20: # TODO: use __config__
+      if len(futures) >= self.max_concurrent:
         (done, futures) = await asyncio.wait(
           futures, return_when = asyncio.FIRST_COMPLETED)
         for fu in done:

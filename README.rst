@@ -120,6 +120,9 @@ newver
 proxy
   The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
+max_concurrent
+  Max number of concurrent jobs. Default: 20.
+
 Search in a Webpage
 -------------------
 Search through a specific webpage for the version string. This type of version finding has these fields:
