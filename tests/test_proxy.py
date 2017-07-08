@@ -15,7 +15,6 @@ pytestmark = [
 ]
 
 async def test_proxy(get_version, monkeypatch):
-  sys.modules['nvchecker.source'] = sys.modules['nvchecker.source.aiohttp_httpclient']
   from nvchecker.source import session
 
   async def fake_request(*args, proxy, **kwargs):
