@@ -88,25 +88,39 @@ class Source:
       self.oldvers = {}
     self.curvers = self.oldvers.copy()
 
-    futures = []
+    futures = set()
     config = self.config
     for name in config.sections():
       if name == '__config__':
         continue
       conf = config[name]
       conf['oldver'] = self.oldvers.get(name, None)
-      futures.append(get_version(name, conf))
+      fu = asyncio.ensure_future(get_version(name, conf))
+      fu.name = name
+      futures.add(fu)
 
-    for fu in asyncio.as_completed(futures):
-      try:
-        name, version = await fu
-        if version is not None:
-          self.print_version_update(name, version)
-      except Exception:
-        logger.exception('error happened dealing with %s', name)
+      if len(futures) >= 20: # TODO: use __config__
+        (done, futures) = await asyncio.wait(
+          futures, return_when = asyncio.FIRST_COMPLETED)
+        for fu in done:
+          self.future_done(fu)
+
+    if futures:
+      (done, _) = await asyncio.wait(futures)
+      for fu in done:
+        self.future_done(fu)
 
     if self.newver:
       write_verfile(self.newver, self.curvers)
+
+  def future_done(self, fu):
+    name = fu.name
+    try:
+      _, version = fu.result()
+      if version is not None:
+        self.print_version_update(name, version)
+    except Exception:
+      logger.exception('unexpected error happened with %s', name)
 
   def print_version_update(self, name, version):
     oldver = self.oldvers.get(name, None)
