@@ -23,7 +23,10 @@ async def get_version(name, conf):
     url = GITHUB_MAX_TAG % repo
   else:
     url = GITHUB_URL % (repo, br)
-  headers = {'Accept': "application/vnd.github.quicksilver-preview+json"}
+  headers = {
+    'Accept': 'application/vnd.github.quicksilver-preview+json',
+    'User-Agent': 'lilydjwg/nvchecker',
+  }
   if 'NVCHECKER_GITHUB_TOKEN' in os.environ:
     headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
 
