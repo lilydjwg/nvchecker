@@ -1,8 +1,7 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from aiohttp import request
-
+from . import session
 from ..sortversion import sort_version_keys
 
 # doc: https://confluence.atlassian.com/display/BITBUCKET/commits+or+commit+Resource
@@ -19,8 +18,10 @@ async def get_version(name, conf):
     url = BITBUCKET_MAX_TAG % repo
   else:
     url = BITBUCKET_URL % (repo, br)
-  async with request("GET", url) as res:
+
+  async with session.get(url) as res:
     data = await res.json()
+
   if use_max_tag:
     data = [tag for tag in data if tag not in ignored_tags]
     data.sort(key=sort_version_key)
