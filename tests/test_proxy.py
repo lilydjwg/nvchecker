@@ -11,7 +11,8 @@ except ImportError:
 import pytest
 pytestmark = [
   pytest.mark.asyncio,
-  pytest.mark.skipif(not aiohttp, reason="requires aiohttp"),
+  pytest.mark.skipif('nvchecker.source.aiohttp_httpclient' not in sys.modules,
+                     reason='aiohttp no chosen'),
 ]
 
 async def test_proxy(get_version, monkeypatch):
