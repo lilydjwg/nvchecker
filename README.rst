@@ -45,7 +45,12 @@ Contents
 Dependency
 ==========
 - Python 3.5+
-- aiohttp
+- One of these (ordered by preference):
+
+  * tornado + pycurl
+  * aiohttp
+  * tornado
+
 - All commands used in your version source files
 
 Running
