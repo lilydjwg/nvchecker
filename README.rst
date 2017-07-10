@@ -67,7 +67,7 @@ You normally will like to specify some "version record files"; see below.
 
 Version Record Files
 ====================
-Version record files record which version of the software you know or is available. They are simple key-value pairs of ``(name, version)`` seperated by a space\ [v0.3]_::
+Version record files record which version of the software you know or is available. They are simple key-value pairs of ``(name, version)`` separated by a space\ [v0.3]_::
 
   fcitx 4.2.7
   google-chrome 27.0.1453.93-200836
