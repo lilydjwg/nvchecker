@@ -9,7 +9,8 @@ handler_precedence = (
   'github', 'aur', 'pypi', 'archpkg', 'debianpkg', 'ubuntupkg',
   'gems', 'pacman',
   'cmd', 'bitbucket', 'regex', 'manual', 'vcs',
-  'cratesio', 'npm', 'hackage', 'cpan', 'gitlab', 'packagist'
+  'cratesio', 'npm', 'hackage', 'cpan', 'gitlab', 'packagist',
+  'anitya',
 )
 
 async def get_version(name, conf):
