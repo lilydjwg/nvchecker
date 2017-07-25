@@ -35,6 +35,7 @@ Contents
   * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
   * `Check Debian Linux official packages <#check-debian-linux-official-packages>`_
   * `Check Ubuntu Linux official packages <#check-ubuntu-linux-official-packages>`_
+  * `Check Anitya (release-monitoring.org) <#check-anitya>`_
   * `Manually updating <#manually-updating>`_
   * `Version Control System (VCS) (git, hg, svn, bzr) <#version-control-system-vcs-git-hg-svn-bzr>`_
   * `Other <#other>`_
@@ -341,7 +342,7 @@ strip-release
   Strip the release part.
 
 Check Ubuntu Linux official packages
-----------------------------------
+------------------------------------
 This enables you to track the update of `Ubuntu Linux official packages <https://packages.ubuntu.com/>`_, without needing of apt and an updated local APT database.
 
 ubuntupkg
@@ -352,6 +353,13 @@ suite
 
 strip-release
   Strip the release part.
+
+Check Anitya
+------------
+This enables you to track updates from `Anitya <https://release-monitoring.org/>`_ (release-monitoring.org).
+
+anitya
+  ``distro/package``, where ``distro`` can be a lot of things like "fedora", "arch linux", "gentoo", etc. ``package`` is the package name of the chosen distribution.
 
 Manually updating
 -----------------
