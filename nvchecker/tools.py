@@ -31,7 +31,13 @@ def take():
   newvers = core.read_verfile(s.newver)
 
   for name in args.names:
-    oldvers[name] = newvers[name]
+    try:
+      oldvers[name] = newvers[name]
+    except KeyError:
+      logger.fatal(
+        "%s doesn't exist in 'newver' set.", name
+      )
+      sys.exit(2)
 
   try:
       os.rename(s.oldver, s.oldver + '~')
