@@ -17,6 +17,7 @@ async def get_version(name, conf):
   for key in handler_precedence:
     if key in conf:
       func = import_module('.source.' + key, __package__).get_version
-      return await func(name, conf)
+      version = await func(name, conf)
+      return version.replace('\n', ' ')
   else:
     logger.error('%s: no idea to get version info.', name)
