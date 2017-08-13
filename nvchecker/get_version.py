@@ -18,6 +18,8 @@ async def get_version(name, conf):
     if key in conf:
       func = import_module('.source.' + key, __package__).get_version
       version = await func(name, conf)
-      return version.replace('\n', ' ')
+      if version:
+        version.replace('\n', ' ')
+      return version
   else:
     logger.error('%s: no idea to get version info.', name)
