@@ -11,7 +11,7 @@ async def test_ubuntupkg(get_version):
 
 @flaky
 async def test_ubuntupkg_strip_release(get_version):
-    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None, "strip-release": 1}) == "0.1.3"
+    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None, "strip-release": 1}) == "0.1.5"
 
 @flaky
 async def test_ubuntupkg_suite(get_version):
