@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 def take():
   parser = argparse.ArgumentParser(description='update version records of nvchecker')
   core.add_common_arguments(parser)
+  parser.add_argument('--all', action='store_true',
+                      help='take all updates')
   parser.add_argument('names', metavar='NAME', nargs='*',
                       help='software name to be updated')
   args = parser.parse_args()
@@ -30,14 +32,17 @@ def take():
   oldvers = core.read_verfile(s.oldver)
   newvers = core.read_verfile(s.newver)
 
-  for name in args.names:
-    try:
-      oldvers[name] = newvers[name]
-    except KeyError:
-      logger.fatal(
-        "%s doesn't exist in 'newver' set.", name
-      )
-      sys.exit(2)
+  if args.all:
+    oldvers.update(newvers)
+  else:
+    for name in args.names:
+      try:
+        oldvers[name] = newvers[name]
+      except KeyError:
+        logger.fatal(
+          "%s doesn't exist in 'newver' set.", name
+        )
+        sys.exit(2)
 
   try:
       os.rename(s.oldver, s.oldver + '~')
