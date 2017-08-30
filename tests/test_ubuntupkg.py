@@ -7,7 +7,7 @@ pytestmark = pytest.mark.asyncio
 
 @flaky
 async def test_ubuntupkg(get_version):
-    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None}) == "0.1.3-1"
+    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None}) == "0.1.5-1"
 
 @flaky
 async def test_ubuntupkg_strip_release(get_version):
