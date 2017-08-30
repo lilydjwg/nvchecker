@@ -49,10 +49,13 @@ def safe_overwrite(fname, data, *, method='write', mode='w', encoding=None):
 
 def read_verfile(file):
   v = {}
-  with open(file) as f:
-    for l in f:
-      name, ver = l.rstrip().split(None, 1)
-      v[name] = ver
+  try:
+    with open(file) as f:
+      for l in f:
+        name, ver = l.rstrip().split(None, 1)
+        v[name] = ver
+  except FileNotFoundError:
+    pass
   return v
 
 def write_verfile(file, versions):
