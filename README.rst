@@ -134,7 +134,7 @@ prefix
 
 from_pattern, to_pattern
   Both are Python-compatible regular expressions. If ``from_pattern`` is found
-  in the version string, it will be replaced with ``to_pattern``
+  in the version string, it will be replaced with ``to_pattern``.
 
 Search in a Webpage
 -------------------
