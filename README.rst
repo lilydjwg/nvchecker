@@ -19,6 +19,7 @@ Contents
 * `Version Source Files <#version-source-files>`_
 
   * `Configuration Section <#configuration-section>`_
+  * `Global Optons <#global-options>`_
   * `Search in a Webpage <#search-in-a-webpage>`_
   * `Find with a Command <#find-with-a-command>`_
   * `Check AUR <#check-aur>`_
