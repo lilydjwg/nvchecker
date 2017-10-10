@@ -124,6 +124,17 @@ proxy
 max_concurrent
   Max number of concurrent jobs. Default: 20.
 
+Global Options
+--------------
+The following options applies to all checkers.
+
+prefix
+  Strip the prefix string if the version string starts with it.
+
+from_pattern, to_pattern
+  Both are Python-compatible regular expressions. If ``from_pattern`` is found
+  in the version string, it will be replaced with ``to_pattern``
+
 Search in a Webpage
 -------------------
 Search through a specific webpage for the version string. This type of version finding has these fields:
