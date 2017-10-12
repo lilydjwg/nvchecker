@@ -43,7 +43,10 @@ async def get_version(name, conf):
       version = await func(name, conf)
       if version:
         version = version.replace('\n', ' ')
-        version = substitute_version(version, name, conf)
+        try:
+          version = substitute_version(version, name, conf)
+        except (ValueError, re.error):
+          logger.exception('error occured in version substitutions for %s', name)
       return version
   else:
     logger.error('%s: no idea to get version info.', name)
