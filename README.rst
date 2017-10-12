@@ -19,6 +19,7 @@ Contents
 * `Version Source Files <#version-source-files>`_
 
   * `Configuration Section <#configuration-section>`_
+  * `Global Optons <#global-options>`_
   * `Search in a Webpage <#search-in-a-webpage>`_
   * `Find with a Command <#find-with-a-command>`_
   * `Check AUR <#check-aur>`_
@@ -123,6 +124,24 @@ proxy
 
 max_concurrent
   Max number of concurrent jobs. Default: 20.
+
+Global Options
+--------------
+The following options apply to all checkers.
+
+prefix
+  Strip the prefix string if the version string starts with it. Otherwise the
+  version string is returned as-is.
+
+from_pattern, to_pattern
+  Both are Python-compatible regular expressions. If ``from_pattern`` is found
+  in the version string, it will be replaced with ``to_pattern``.
+
+If both ``prefix`` and ``from_pattern``/``to_pattern`` are used,
+``from_pattern``/``to_pattern`` are ignored. If you want to strip the prefix
+and then do something special, just use ``from_pattern```/``to_pattern``. For
+example, the transformation of ``v1_1_0`` => ``1.1.0`` can be achieved with
+``from_pattern = v(\d+)_(\d+)_(\d+)`` and ``to_pattern = \1.\2.\3``.
 
 Search in a Webpage
 -------------------
