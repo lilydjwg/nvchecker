@@ -17,16 +17,7 @@ handler_precedence = (
 def substitute_version(version, name, conf):
   '''
   Substitute the version string via defined rules in the configuration file.
-  Accepted rules are:
-
-  * from_pattern, to_pattern: Both should be Python regular expressions.
-    `from_pattern` found in the version string will be substituted to
-    `to_pattern`.
-  * prefix: If the version string starts with `prefix`, the prefix is removed.
-    Otherwise the version string is returned as-is.
-
-  If both prefix and from_pattern/to_pattern are used, from_pattern/to_pattern
-  are ignored.
+  See README.rst#global-options for details.
   '''
   prefix = conf.get('prefix')
   if prefix:

@@ -15,3 +15,6 @@ async def test_substitute_regex(get_version):
 
 async def test_substitute_regex_missing_ok(get_version):
     assert await get_version("example", {"manual": "r15", "from_pattern": r"r(\d+)([a-z])", "to_pattern": r"r\1.\2"}) == "r15"
+
+async def test_substitute_prefix_has_higher_priority(get_version):
+    assert await get_version("example", {"manual": "r15", "prefix": "r", "from_pattern": "r(\d+)", "to_pattern": "R\1"}) == "15"
