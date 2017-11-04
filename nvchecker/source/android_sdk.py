@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2017 Yen Chi Hsuan <yan12125 at gmail dot com>
 
 import os
 import re
@@ -7,19 +7,33 @@ from xml.etree import ElementTree
 
 from . import session
 
-ANDROID_REPO_MANIFESTS = {
+_ANDROID_REPO_MANIFESTS = {
   'addon': 'https://dl.google.com/android/repository/addon2-1.xml',
   'package': 'https://dl.google.com/android/repository/repository2-1.xml',
 }
 
-async def get_version(name, conf):
-  repo_xml_url = ANDROID_REPO_MANIFESTS[conf['repo']]
-  pkg_path_prefix = conf['android_sdk']
+_repo_manifests_cache = {}
+
+async def _get_repo_manifest(repo):
+  if repo in _repo_manifests_cache:
+    return _repo_manifests_cache[repo]
+
+  repo_xml_url = _ANDROID_REPO_MANIFESTS[repo]
 
   async with session.get(repo_xml_url) as res:
     data = (await res.read()).decode('utf-8')
 
   repo_manifest = ElementTree.fromstring(data)
+  _repo_manifests_cache[repo] = repo_manifest
+
+  return repo_manifest
+
+async def get_version(name, conf):
+  repo = conf['repo']
+  pkg_path_prefix = conf['android_sdk']
+
+  repo_manifest = await _get_repo_manifest(repo)
+
   for pkg in repo_manifest.findall('.//remotePackage'):
     if not pkg.attrib['path'].startswith(pkg_path_prefix):
       continue

@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2017 Yen Chi Hsuan <yan12125 at gmail dot com>
 
 import pytest
 pytestmark = pytest.mark.asyncio
