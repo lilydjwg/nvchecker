@@ -1,6 +1,7 @@
 # MIT licensed
 # Copyright (c) 2017 Yen Chi Hsuan <yan12125 at gmail dot com>
 
+from asyncio.locks import Lock
 import os
 import re
 from xml.etree import ElementTree
@@ -13,20 +14,25 @@ _ANDROID_REPO_MANIFESTS = {
 }
 
 _repo_manifests_cache = {}
+_repo_manifests_locks = {}
+
+for repo in _ANDROID_REPO_MANIFESTS.keys():
+  _repo_manifests_locks[repo] = Lock()
 
 async def _get_repo_manifest(repo):
-  if repo in _repo_manifests_cache:
-    return _repo_manifests_cache[repo]
+  with (await _repo_manifests_locks[repo]):
+    if repo in _repo_manifests_cache:
+      return _repo_manifests_cache[repo]
 
-  repo_xml_url = _ANDROID_REPO_MANIFESTS[repo]
+    repo_xml_url = _ANDROID_REPO_MANIFESTS[repo]
 
-  async with session.get(repo_xml_url) as res:
-    data = (await res.read()).decode('utf-8')
+    async with session.get(repo_xml_url) as res:
+      data = (await res.read()).decode('utf-8')
 
-  repo_manifest = ElementTree.fromstring(data)
-  _repo_manifests_cache[repo] = repo_manifest
+    repo_manifest = ElementTree.fromstring(data)
+    _repo_manifests_cache[repo] = repo_manifest
 
-  return repo_manifest
+    return repo_manifest
 
 async def get_version(name, conf):
   repo = conf['repo']
