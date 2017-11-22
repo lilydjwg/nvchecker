@@ -2,7 +2,6 @@
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import json
-import asyncio
 from urllib.parse import urlencode
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
@@ -18,9 +17,17 @@ except ImportError:
 __all__ = ['session']
 
 client = AsyncHTTPClient()
+HTTP2_AVAILABLE = None if pycurl else False
 
 def try_use_http2(curl):
-  if pycurl:
+  global HTTP2_AVAILABLE
+  if HTTP2_AVAILABLE is None:
+    try:
+      curl.setopt(pycurl.HTTP_VERSION, 4)
+      HTTP2_AVAILABLE = True
+    except pycurl.error:
+      HTTP2_AVAILABLE = False
+  elif HTTP2_AVAILABLE:
     curl.setopt(pycurl.HTTP_VERSION, 4)
 
 class Session:
