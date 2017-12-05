@@ -6,7 +6,7 @@ from . import session
 
 logger = logging.getLogger(__name__)
 
-URL = 'https://sources.debian.net/api/src/%(pkgname)s/?suite=%(suite)s'
+URL = 'https://sources.debian.org/api/src/%(pkgname)s/?suite=%(suite)s'
 
 async def get_version(name, conf):
   pkg = conf.get('debianpkg') or name
