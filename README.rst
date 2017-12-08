@@ -70,7 +70,7 @@ You normally will like to specify some "version record files"; see below.
 
 Version Record Files
 ====================
-Version record files record which version of the software you know or is available. They are simple key-value pairs of ``(name, version)`` separated by a space\ [v0.3]_::
+Version record files record which version of the software you know or is available. They are simple key-value pairs of ``(name, version)`` separated by a space::
 
   fcitx 4.2.7
   google-chrome 27.0.1453.93-200836
@@ -108,7 +108,7 @@ See ``sample_source.ini`` for an example.
 
 Configuration Section
 ---------------------
-A special section named ``__config__`` is special, it provides some configuration options\ [v0.4]_.
+A special section named ``__config__`` is special, it provides some configuration options.
 
 Relative path are relative to the source files, and ``~`` and environmental variables are expanded.
 
@@ -425,7 +425,5 @@ Bugs
 
 Footnotes
 =========
-.. [v0.3] Note: with nvchecker <= 0.2, there are one more colon each line. You can use ``sed -i 's/://' FILES...`` to remove them.
-.. [v0.4] This is added in version 0.4, and old command-line options are removed.
 
 .. _Pacman: https://wiki.archlinux.org/index.php/Pacman
