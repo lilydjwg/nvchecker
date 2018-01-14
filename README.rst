@@ -386,7 +386,7 @@ Check Android SDK
 This enables you to track updates of Android SDK packages listed in ``sdkmanager --list``.
 
 android_sdk
-  The package path prefix. This value is matched against the ``path`` attribute in all <remotePackage> nodes in an SDK manifest XML. The first match is used for version comparisions.
+  The package path prefix. This value is matched against the ``path`` attribute in all <remotePackage> nodes in an SDK manifest XML. The first match is used for version comparisons.
 
 repo
   Should be one of ``addon`` or ``package``. Packages in ``addon2-1.xml`` use ``addon`` and packages in ``repository2-1.xml`` use ``package``.
