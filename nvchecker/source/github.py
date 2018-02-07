@@ -7,7 +7,7 @@ import logging
 from . import session
 from ..sortversion import sort_version_keys
 
-GITHUB_URL = 'https://api.github.com/repos/%s/commits?sha=%s'
+GITHUB_URL = 'https://api.github.com/repos/%s/commits'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 async def get_version(name, conf):
   repo = conf.get('github')
-  br = conf.get('branch', 'master')
+  br = conf.get('branch')
   use_latest_release = conf.getboolean('use_latest_release', False)
   use_max_tag = conf.getboolean('use_max_tag', False)
   ignored_tags = conf.get("ignored_tags", "").split()
@@ -25,7 +25,9 @@ async def get_version(name, conf):
   elif use_max_tag:
     url = GITHUB_MAX_TAG % repo
   else:
-    url = GITHUB_URL % (repo, br)
+    url = GITHUB_URL % repo
+    if br:
+      url += '?sha=' + br
   headers = {
     'Accept': 'application/vnd.github.quicksilver-preview+json',
     'User-Agent': 'lilydjwg/nvchecker',
