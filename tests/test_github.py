@@ -11,7 +11,7 @@ async def test_github(get_version):
     assert await get_version("example", {"github": "harry-sanabria/ReleaseTestRepo"}) == "20140122.012101"
 
 async def test_github_default_not_master(get_version):
-    assert await get_version("example", {"github": "repos/MariaDB"}) is not None
+    assert await get_version("example", {"github": "MariaDB/server"}) is not None
 
 async def test_github_latest_release(get_version):
     assert await get_version("example", {"github": "harry-sanabria/ReleaseTestRepo", "use_latest_release": 1}) == "release3"
