@@ -46,7 +46,7 @@ async def get_version(name, conf):
         try:
           version = substitute_version(version, name, conf)
         except (ValueError, re.error):
-          logger.exception('error occured in version substitutions for %s', name)
+          logger.exception('error occurred in version substitutions for %s', name)
       return version
   else:
     logger.error('%s: no idea to get version info.', name)
