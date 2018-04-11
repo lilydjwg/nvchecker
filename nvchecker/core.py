@@ -1,25 +1,30 @@
 # vim: se sw=2:
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2018 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
 import sys
-import logging
 import configparser
 import asyncio
+import logging
+import structlog
 
 from .lib import nicelogger
 from .get_version import get_version
 from .source import session
+from . import slogconf
 
 from . import __version__
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 def add_common_arguments(parser):
   parser.add_argument('-l', '--logging',
                       choices=('debug', 'info', 'warning', 'error'), default='info',
                       help='logging level (default: info)')
+  parser.add_argument('--logger', choices=['stdlib', 'structlog'],
+                      default='stdlib',
+                      help='select which logger to use')
   parser.add_argument('-V', '--version', action='store_true',
                       help='show version and exit')
   parser.add_argument('file', metavar='FILE', nargs='?', type=open,
@@ -27,7 +32,27 @@ def add_common_arguments(parser):
 
 def process_common_arguments(args):
   '''return True if should stop'''
-  nicelogger.enable_pretty_logging(getattr(logging, args.logging.upper()))
+  if args.logger == 'stdlib':
+    slogconf.fix_logging()
+    nicelogger.enable_pretty_logging(
+      getattr(logging, args.logging.upper()))
+    structlog.configure(
+      processors=[
+        slogconf.exc_info,
+        slogconf.stdlib_renderer,
+      ],
+      logger_factory=structlog.PrintLoggerFactory(
+        file=open(os.devnull, 'w')),
+    )
+  else:
+    structlog.configure(
+      processors=[
+        slogconf.exc_info,
+        structlog.processors.format_exc_info,
+        slogconf.json_renderer,
+      ],
+      logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
+    )
 
   if args.version:
     progname = os.path.basename(sys.argv[0])
@@ -129,16 +154,16 @@ class Source:
       if version is not None:
         self.print_version_update(name, version)
     except Exception:
-      logger.exception('unexpected error happened with %s', name)
+      logger.exception('unexpected error happened', name=name)
 
   def print_version_update(self, name, version):
     oldver = self.oldvers.get(name, None)
     if not oldver or oldver != version:
-      logger.info('%s updated to %s', name, version)
+      logger.info('updated', name=name, version=version, old_version=oldver)
       self.curvers[name] = version
       self.on_update(name, version, oldver)
     else:
-      logger.debug('%s current %s', name, version)
+      logger.debug('up-to-date', name=name, version=version)
 
   def on_update(self, name, version, oldver):
     pass

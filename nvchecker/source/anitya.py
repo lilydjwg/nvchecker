@@ -1,10 +1,11 @@
 # MIT licensed
 # Copyright (c) 2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import logging
+import structlog
+
 from . import session
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://release-monitoring.org/api/project/{pkg}'
 

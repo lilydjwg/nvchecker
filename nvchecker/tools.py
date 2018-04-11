@@ -5,11 +5,11 @@
 import sys
 import os
 import argparse
-import logging
+import structlog
 
 from . import core
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 def take():
   parser = argparse.ArgumentParser(description='update version records of nvchecker')
@@ -25,7 +25,7 @@ def take():
   s = core.Source(args.file)
   if not s.oldver or not s.newver:
     logger.fatal(
-      "%s doesn't have both 'oldver' and 'newver' set.", s
+      "doesn't have both 'oldver' and 'newver' set.", source=s,
     )
     sys.exit(2)
 
@@ -40,7 +40,7 @@ def take():
         oldvers[name] = newvers[name]
       except KeyError:
         logger.fatal(
-          "%s doesn't exist in 'newver' set.", name
+          "doesn't exist in 'newver' set.", name=name,
         )
         sys.exit(2)
 

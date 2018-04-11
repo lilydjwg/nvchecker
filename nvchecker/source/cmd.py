@@ -1,10 +1,11 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import logging
 import asyncio
 
-logger = logging.getLogger(__name__)
+import structlog
+
+logger = structlog.get_logger(logger_name=__name__)
 
 async def get_version(name, conf):
   cmd = conf['cmd']
@@ -12,7 +13,8 @@ async def get_version(name, conf):
 
   output = (await p.communicate())[0].strip().decode('latin1')
   if p.returncode != 0:
-    logger.error('%s: command exited with %d.', name, p.returncode)
+    logger.error('command exited with error',
+                 name=name, returncode=p.returncode)
     return
 
   return output

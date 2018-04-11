@@ -3,18 +3,19 @@
 
 import re
 import sre_constants
-import logging
+
+import structlog
 
 from . import session
 from ..sortversion import sort_version_keys
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 async def get_version(name, conf):
   try:
     regex = re.compile(conf['regex'])
   except sre_constants.error:
-    logger.warn('%s: bad regex, skipped.', name, exc_info=True)
+    logger.warn('bad regex, skipped.', name=name, exc_info=True)
     return
 
   encoding = conf.get('encoding', 'latin1')
@@ -33,5 +34,5 @@ async def get_version(name, conf):
       version = max(regex.findall(body), key=sort_version_key)
     except ValueError:
       version = None
-      logger.error('%s: version string not found.', name)
+      logger.error('version string not found.', name=name)
     return version

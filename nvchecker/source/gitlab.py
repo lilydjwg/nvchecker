@@ -2,16 +2,17 @@
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
-import logging
 import urllib.parse
+
+import structlog
 
 from . import session
 from ..sortversion import sort_version_keys
 
+logger = structlog.get_logger(logger_name=__name__)
+
 GITLAB_URL = 'https://%s/api/v3/projects/%s/repository/commits?ref_name=%s'
 GITLAB_MAX_TAG = 'https://%s/api/v3/projects/%s/repository/tags'
-
-logger = logging.getLogger(__name__)
 
 async def get_version(name, conf):
   repo = urllib.parse.quote_plus(conf.get('gitlab'))
@@ -24,7 +25,7 @@ async def get_version(name, conf):
   env_name = "NVCHECKER_GITLAB_TOKEN_" + host.upper().replace(".", "_").replace("/", "_")
   token = conf.get('token', os.environ.get(env_name, None))
   if token is None:
-    logger.error('%s: No gitlab token specified.', name)
+    logger.error('No gitlab token specified.', name=name)
     return
 
   if use_max_tag:

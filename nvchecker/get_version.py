@@ -1,11 +1,13 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import logging
 import re
 from importlib import import_module
 
-logger = logging.getLogger(__name__)
+import structlog
+
+logger = structlog.get_logger(logger_name=__name__)
+
 handler_precedence = (
   'github', 'aur', 'pypi', 'archpkg', 'debianpkg', 'ubuntupkg',
   'gems', 'pacman',
@@ -46,7 +48,7 @@ async def get_version(name, conf):
         try:
           version = substitute_version(version, name, conf)
         except (ValueError, re.error):
-          logger.exception('error occurred in version substitutions for %s', name)
+          logger.exception('error occurred in version substitutions', name=name)
       return version
   else:
-    logger.error('%s: no idea to get version info.', name)
+    logger.error('no idea to get version info.', name=name)
