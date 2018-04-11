@@ -126,8 +126,11 @@ class Source:
 
     async def worker(name, conf):
       await token_q.get()
-      ret = await get_version(name, conf)
-      return name, ret
+      try:
+        ret = await get_version(name, conf)
+        return name, ret
+      except Exception as e:
+        return name, e
 
     async def token_filler(n):
       for _ in range(n):
@@ -147,12 +150,11 @@ class Source:
     filler_fu = asyncio.ensure_future(token_filler(len(futures)))
 
     for fu in asyncio.as_completed(futures):
-      try:
-        name, version = await fu
-        if version is not None:
-          self.print_version_update(name, version)
-      except Exception:
-        logger.exception('unexpected error happened', name=name)
+      name, result = await fu
+      if isinstance(result, Exception):
+        logger.error('unexpected error happened', name=name, exc_info=result)
+      elif result is not None:
+        self.print_version_update(name, result)
 
     await filler_fu
 
