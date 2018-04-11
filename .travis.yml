@@ -6,7 +6,7 @@ python:
   # aiohttp requires idna-ssl which requires Python '<3.7.0'
   # - "nightly"
   - "pypy3"
-install: pip install -U $DEPS pytest pytest-asyncio pytest-xdist flaky
+install: pip install -U $DEPS pytest pytest-asyncio pytest-xdist flaky structlog
 script: pytest
 env:
   global:
