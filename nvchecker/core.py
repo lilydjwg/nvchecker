@@ -22,8 +22,8 @@ def add_common_arguments(parser):
   parser.add_argument('-l', '--logging',
                       choices=('debug', 'info', 'warning', 'error'), default='info',
                       help='logging level (default: info)')
-  parser.add_argument('--logger', choices=['stdlib', 'structlog'],
-                      default='stdlib',
+  parser.add_argument('--logger', choices=['pretty', 'json'],
+                      default='pretty',
                       help='select which logger to use')
   parser.add_argument('-V', '--version', action='store_true',
                       help='show version and exit')
@@ -32,7 +32,7 @@ def add_common_arguments(parser):
 
 def process_common_arguments(args):
   '''return True if should stop'''
-  if args.logger == 'stdlib':
+  if args.logger == 'pretty':
     slogconf.fix_logging()
     nicelogger.enable_pretty_logging(
       getattr(logging, args.logging.upper()))
