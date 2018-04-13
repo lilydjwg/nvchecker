@@ -1,12 +1,13 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import logging
+import structlog
+
 from . import session
 
-AUR_URL = 'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
+logger = structlog.get_logger(logger_name=__name__)
 
-logger = logging.getLogger(__name__)
+AUR_URL = 'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
 
 async def get_version(name, conf):
   aurname = conf.get('aur') or name
@@ -15,7 +16,7 @@ async def get_version(name, conf):
     data = await res.json()
 
   if not data['results']:
-    logger.error('AUR upstream not found for %s', name)
+    logger.error('AUR upstream not found', name=name)
     return
 
   version = data['results'][0]['Version']

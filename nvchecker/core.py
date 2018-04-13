@@ -1,25 +1,34 @@
 # vim: se sw=2:
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2018 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
 import sys
-import logging
 import configparser
 import asyncio
+import logging
+
+import structlog
 
 from .lib import nicelogger
 from .get_version import get_version
 from .source import session
+from . import slogconf
 
 from . import __version__
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 def add_common_arguments(parser):
   parser.add_argument('-l', '--logging',
                       choices=('debug', 'info', 'warning', 'error'), default='info',
                       help='logging level (default: info)')
+  parser.add_argument('--logger', default='pretty',
+                      choices=['pretty', 'json', 'both'],
+                      help='select which logger to use')
+  parser.add_argument('--json-log-fd',
+                      type=lambda fd: os.fdopen(int(fd), mode='w'),
+                      help='specify fd to send json logs to. stderr by default')
   parser.add_argument('-V', '--version', action='store_true',
                       help='show version and exit')
   parser.add_argument('file', metavar='FILE', nargs='?', type=open,
@@ -27,7 +36,34 @@ def add_common_arguments(parser):
 
 def process_common_arguments(args):
   '''return True if should stop'''
-  nicelogger.enable_pretty_logging(getattr(logging, args.logging.upper()))
+  processors = [
+    slogconf.exc_info,
+  ]
+  logger_factory = None
+
+  if args.logger in ['pretty', 'both']:
+    slogconf.fix_logging()
+    nicelogger.enable_pretty_logging(
+      getattr(logging, args.logging.upper()))
+    processors.append(slogconf.stdlib_renderer)
+    if args.logger == 'pretty':
+      logger_factory=structlog.PrintLoggerFactory(
+        file=open(os.devnull, 'w'),
+      )
+  if args.logger in ['json', 'both']:
+    processors.extend([
+      structlog.processors.format_exc_info,
+      slogconf.json_renderer,
+    ])
+
+  if logger_factory is None:
+    logfile = args.json_log_fd or sys.stderr
+    logger_factory = structlog.PrintLoggerFactory(file=logfile)
+
+  structlog.configure(
+    processors = processors,
+    logger_factory = logger_factory,
+  )
 
   if args.version:
     progname = os.path.basename(sys.argv[0])
@@ -97,48 +133,53 @@ class Source:
       self.oldvers = {}
     self.curvers = self.oldvers.copy()
 
-    futures = set()
+    token_q = asyncio.Queue(maxsize=self.max_concurrent)
+
+    async def worker(name, conf):
+      await token_q.get()
+      try:
+        ret = await get_version(name, conf)
+        return name, ret
+      except Exception as e:
+        return name, e
+
+    async def token_filler(n):
+      for _ in range(n):
+        await token_q.put(True)
+
     config = self.config
+    futures = []
     for name in config.sections():
       if name == '__config__':
         continue
+
       conf = config[name]
       conf['oldver'] = self.oldvers.get(name, None)
-      fu = asyncio.ensure_future(get_version(name, conf))
-      fu.name = name
-      futures.add(fu)
+      fu = asyncio.ensure_future(worker(name, conf))
+      futures.append(fu)
 
-      if len(futures) >= self.max_concurrent:
-        (done, futures) = await asyncio.wait(
-          futures, return_when = asyncio.FIRST_COMPLETED)
-        for fu in done:
-          self.future_done(fu)
+    filler_fu = asyncio.ensure_future(token_filler(len(futures)))
 
-    if futures:
-      (done, _) = await asyncio.wait(futures)
-      for fu in done:
-        self.future_done(fu)
+    for fu in asyncio.as_completed(futures):
+      name, result = await fu
+      if isinstance(result, Exception):
+        logger.error('unexpected error happened', name=name, exc_info=result)
+      elif result is not None:
+        self.print_version_update(name, result)
+
+    await filler_fu
 
     if self.newver:
       write_verfile(self.newver, self.curvers)
 
-  def future_done(self, fu):
-    name = fu.name
-    try:
-      version = fu.result()
-      if version is not None:
-        self.print_version_update(name, version)
-    except Exception:
-      logger.exception('unexpected error happened with %s', name)
-
   def print_version_update(self, name, version):
     oldver = self.oldvers.get(name, None)
     if not oldver or oldver != version:
-      logger.info('%s updated to %s', name, version)
+      logger.info('updated', name=name, version=version, old_version=oldver)
       self.curvers[name] = version
       self.on_update(name, version, oldver)
     else:
-      logger.debug('%s current %s', name, version)
+      logger.debug('up-to-date', name=name, version=version)
 
   def on_update(self, name, version, oldver):
     pass

@@ -1,13 +1,13 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import logging
 import asyncio
-from pkg_resources import parse_version
-
 import os.path as _path
 
-logger = logging.getLogger(__name__)
+from pkg_resources import parse_version
+import structlog
+
+logger = structlog.get_logger(logger_name=__name__)
 _self_path = _path.dirname(_path.abspath(__file__))
 _cmd_prefix = ['/bin/bash', _path.join(_self_path, 'vcs.sh')]
 
@@ -38,7 +38,8 @@ async def get_version(name, conf):
 
   output = (await p.communicate())[0].strip().decode('latin1')
   if p.returncode != 0:
-    logger.error('%s: command exited with %d.', name, p.returncode)
+    logger.error('command exited with error',
+                 name=name, returncode=p.returncode)
     return
   else:
     if use_max_tag:

@@ -7,11 +7,7 @@ Sort versions using pkg_resource.parse_version or pyalpm.vercmp
 
 __all__ = ["sort_version_keys"]
 
-import logging
-
 from functools import cmp_to_key
-
-logger = logging.getLogger(__name__)
 
 from pkg_resources import parse_version
 try:

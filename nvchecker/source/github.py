@@ -2,16 +2,17 @@
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
-import logging
+
+import structlog
 
 from . import session
 from ..sortversion import sort_version_keys
 
+logger = structlog.get_logger(logger_name=__name__)
+
 GITHUB_URL = 'https://api.github.com/repos/%s/commits'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
-
-logger = logging.getLogger(__name__)
 
 async def get_version(name, conf):
   repo = conf.get('github')
@@ -42,14 +43,16 @@ async def get_version(name, conf):
     data = await res.json()
   if use_latest_release:
     if 'tag_name' not in data:
-      logger.error('%s: No tag found in upstream repository.', name)
+      logger.error('No tag found in upstream repository.',
+                   name=name)
       return
     version = data['tag_name']
   elif use_max_tag:
     data = [tag["name"] for tag in data if tag["name"] not in ignored_tags]
     data.sort(key=sort_version_key)
     if not len(data):
-      logger.error('%s: No tag found in upstream repository.', name)
+      logger.error('No tag found in upstream repository.',
+                   name=name)
       return
     version = data[-1]
   else:

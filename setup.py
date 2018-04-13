@@ -18,7 +18,7 @@ setup(
   zip_safe = True,
 
   packages = find_packages(exclude=["tests"]),
-  install_requires = ['setuptools'],
+  install_requires = ['setuptools', 'structlog'],
   tests_require = [
     'pytest',
     'pytest-asyncio',

@@ -1,10 +1,11 @@
 # MIT licensed
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
-import logging
+import structlog
+
 from . import session
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=%s&exact_match=true'
 
@@ -24,7 +25,7 @@ async def get_version(name, conf):
       data = await res.json()
 
     if not data.get('entries'):
-      logger.error('Ubuntu package not found: %s', name)
+      logger.error('Ubuntu package not found', name=name)
       return
 
     releases = [r for r in data["entries"] if r["status"] == "Published"]
@@ -38,7 +39,7 @@ async def get_version(name, conf):
     url = data["next_collection_link"]
 
   if not releases:
-    logger.error('Ubuntu package not found: %s', name)
+    logger.error('Ubuntu package not found', name=name)
     return
 
   if strip_release:

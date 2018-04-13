@@ -1,10 +1,11 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import logging
+import structlog
+
 from . import session
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://www.archlinux.org/packages/search/json/'
 
@@ -15,7 +16,7 @@ async def get_version(name, conf):
     data = await res.json()
 
   if not data['results']:
-    logger.error('Arch package not found: %s', name)
+    logger.error('Arch package not found', name=name)
     return
 
   r = [r for r in data['results'] if r['repo'] != 'testing'][0]

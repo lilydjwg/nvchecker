@@ -48,7 +48,8 @@ Contents
 Dependency
 ==========
 - Python 3.5+
-- One of these (ordered by preference):
+- Python library: structlog
+- One of these Python library combinations (ordered by preference):
 
   * tornado + pycurl
   * aiohttp

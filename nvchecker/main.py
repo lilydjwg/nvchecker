@@ -2,15 +2,16 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import logging
 import argparse
-
 import asyncio
+
+import structlog
 
 from .lib import notify
 from . import core
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
+
 notifications = []
 args = None
 

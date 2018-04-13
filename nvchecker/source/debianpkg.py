@@ -1,10 +1,11 @@
 # MIT licensed
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
-import logging
+import structlog
+
 from . import session
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://sources.debian.org/api/src/%(pkgname)s/?suite=%(suite)s'
 
@@ -17,7 +18,7 @@ async def get_version(name, conf):
     data = await res.json()
 
   if not data.get('versions'):
-    logger.error('Debian package not found: %s', name)
+    logger.error('Debian package not found', name=name)
     return
 
   r = data['versions'][0]
