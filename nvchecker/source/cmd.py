@@ -17,7 +17,7 @@ async def get_version(name, conf):
 
   output, error = await p.communicate()
   output = output.strip().decode('latin1')
-  error = output.strip().decode(errors='replace')
+  error = error.strip().decode(errors='replace')
   if p.returncode != 0:
     logger.error('command exited with error',
                  cmd=cmd, error=error,
