@@ -19,4 +19,4 @@ async def test_ubuntupkg_suite(get_version):
 
 @flaky
 async def test_ubuntupkg_suite_with_paging(get_version):
-    assert await get_version("ffmpeg", {"ubuntupkg": None, "suite": "xenial"}) == "7:2.8.11-0ubuntu0.16.04.1"
+    assert await get_version("ffmpeg", {"ubuntupkg": None, "suite": "xenial"}) == "7:2.8.14-0ubuntu0.16.04.1"
