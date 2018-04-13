@@ -35,17 +35,19 @@ def exc_info(logger, level, event):
   return event
 
 def stdlib_renderer(logger, level, event):
-  event = _console_msg(event)
-  logger = logging.getLogger(event.get('logger_name'))
-  msg = event.pop('msg', event['event'])
-  exc_info = event.pop('exc_info', None)
+  # return event unchanged for further processing
+  std_event = _console_msg(event.copy())
+  logger = logging.getLogger(std_event.get('logger_name'))
+  msg = std_event.pop('msg', std_event['event'])
+  exc_info = std_event.pop('exc_info', None)
   getattr(logger, level)(
-    msg, exc_info = exc_info, extra=event,
+    msg, exc_info = exc_info, extra=std_event,
   )
-  return ''
+  return event
 
 _renderer = structlog.processors.JSONRenderer(ensure_ascii=False)
 def json_renderer(logger, level, event):
+  event['level'] = level
   return _renderer(logger, level, event)
 
 class _Logger(logging.Logger):

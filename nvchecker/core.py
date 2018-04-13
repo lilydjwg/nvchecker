@@ -7,6 +7,7 @@ import sys
 import configparser
 import asyncio
 import logging
+
 import structlog
 
 from .lib import nicelogger
@@ -22,9 +23,12 @@ def add_common_arguments(parser):
   parser.add_argument('-l', '--logging',
                       choices=('debug', 'info', 'warning', 'error'), default='info',
                       help='logging level (default: info)')
-  parser.add_argument('--logger', choices=['pretty', 'json'],
-                      default='pretty',
+  parser.add_argument('--logger', default='pretty',
+                      choices=['pretty', 'json', 'both'],
                       help='select which logger to use')
+  parser.add_argument('--json-log-fd',
+                      type=lambda fd: os.fdopen(int(fd), mode='w'),
+                      help='specify fd to send json logs to. stderr by default')
   parser.add_argument('-V', '--version', action='store_true',
                       help='show version and exit')
   parser.add_argument('file', metavar='FILE', nargs='?', type=open,
@@ -32,27 +36,34 @@ def add_common_arguments(parser):
 
 def process_common_arguments(args):
   '''return True if should stop'''
-  if args.logger == 'pretty':
+  processors = [
+    slogconf.exc_info,
+  ]
+  logger_factory = None
+
+  if args.logger in ['pretty', 'both']:
     slogconf.fix_logging()
     nicelogger.enable_pretty_logging(
       getattr(logging, args.logging.upper()))
-    structlog.configure(
-      processors=[
-        slogconf.exc_info,
-        slogconf.stdlib_renderer,
-      ],
+    processors.append(slogconf.stdlib_renderer)
+    if args.logger == 'pretty':
       logger_factory=structlog.PrintLoggerFactory(
-        file=open(os.devnull, 'w')),
-    )
-  else:
-    structlog.configure(
-      processors=[
-        slogconf.exc_info,
-        structlog.processors.format_exc_info,
-        slogconf.json_renderer,
-      ],
-      logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
-    )
+        file=open(os.devnull, 'w'),
+      )
+  if args.logger in ['json', 'both']:
+    processors.extend([
+      structlog.processors.format_exc_info,
+      slogconf.json_renderer,
+    ])
+
+  if logger_factory is None:
+    logfile = args.json_log_fd or sys.stderr
+    logger_factory = structlog.PrintLoggerFactory(file=logfile)
+
+  structlog.configure(
+    processors = processors,
+    logger_factory = logger_factory,
+  )
 
   if args.version:
     progname = os.path.basename(sys.argv[0])
