@@ -28,7 +28,7 @@ def add_common_arguments(parser):
                       help='select which logger to use')
   parser.add_argument('--json-log-fd',
                       type=lambda fd: os.fdopen(int(fd), mode='w'),
-                      help='specify fd to send json logs to. stderr by default')
+                      help='specify fd to send json logs to. stdout by default')
   parser.add_argument('-V', '--version', action='store_true',
                       help='show version and exit')
   parser.add_argument('file', metavar='FILE', nargs='?', type=open,
@@ -57,7 +57,7 @@ def process_common_arguments(args):
     ])
 
   if logger_factory is None:
-    logfile = args.json_log_fd or sys.stderr
+    logfile = args.json_log_fd or sys.stdout
     logger_factory = structlog.PrintLoggerFactory(file=logfile)
 
   structlog.configure(
