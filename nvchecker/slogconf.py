@@ -50,6 +50,9 @@ def json_renderer(logger, level, event):
   event['level'] = level
   return _renderer(logger, level, event)
 
+def null_renderer(logger, level, event):
+  return ''
+
 class _Logger(logging.Logger):
   _my_srcfile = os.path.normcase(
     stdlib_renderer.__code__.co_filename)

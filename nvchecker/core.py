@@ -50,6 +50,7 @@ def process_common_arguments(args):
       logger_factory=structlog.PrintLoggerFactory(
         file=open(os.devnull, 'w'),
       )
+      processors.append(slogconf.null_renderer)
   if args.logger in ['json', 'both']:
     processors.extend([
       structlog.processors.format_exc_info,
