@@ -210,6 +210,10 @@ use_max_tag
   this option includes both annotated tags and lightweight ones, and return the biggest one
   sorted by ``pkg_resources.parse_version``.
 
+include_tags_pattern
+  Only include tags matching this pattern. This option must be used together
+  with ``use_max_tag``.
+
 ignored_tags
   Ignore certain tags while computing the max tag. Tags are separate by
   whitespaces. This option must be used together with ``use_max_tag``. This can
@@ -224,11 +228,13 @@ sort_version_key
 proxy
   The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
-An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth token in order to request more frequently than anonymously.
+An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth
+token in order to request more frequently than anonymously.
 
 Check BitBucket
 ---------------
-Check `BitBucket <https://bitbucket.org/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+Check `BitBucket <https://bitbucket.org/>`_ for updates. The version returned
+is in date format ``%Y%m%d``, e.g. ``20130701``.
 
 bitbucket
   The bitbucket repository, with author, e.g. ``lilydjwg/dotvim``.
