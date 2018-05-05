@@ -9,7 +9,7 @@ logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://www.archlinux.org/packages/search/json/'
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   pkg = conf.get('archpkg') or name
   strip_release = conf.getboolean('strip-release', False)
   async with session.get(URL, params={"name": pkg}) as res:

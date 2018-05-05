@@ -9,7 +9,7 @@ logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://release-monitoring.org/api/project/{pkg}'
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   pkg = conf.get('anitya')
   url = URL.format(pkg = pkg)
 

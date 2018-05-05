@@ -11,7 +11,7 @@ from ..sortversion import sort_version_keys
 
 logger = structlog.get_logger(logger_name=__name__)
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   try:
     regex = re.compile(conf['regex'])
   except sre_constants.error:

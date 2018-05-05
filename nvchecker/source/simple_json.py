@@ -5,7 +5,7 @@ from . import session
 
 def simple_json(urlpat, confkey, version_from_json):
 
-  async def get_version(name, conf):
+  async def get_version(name, conf, **kwargs):
     repo = conf.get(confkey) or name
     url = urlpat % repo
     kwargs = {}

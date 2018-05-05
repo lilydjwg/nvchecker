@@ -14,7 +14,7 @@ logger = structlog.get_logger(logger_name=__name__)
 GITLAB_URL = 'https://%s/api/v3/projects/%s/repository/commits?ref_name=%s'
 GITLAB_MAX_TAG = 'https://%s/api/v3/projects/%s/repository/tags'
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   repo = urllib.parse.quote_plus(conf.get('gitlab'))
   br = conf.get('branch', 'master')
   host = conf.get('host', "gitlab.com")

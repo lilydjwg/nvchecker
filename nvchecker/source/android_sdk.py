@@ -34,7 +34,7 @@ async def _get_repo_manifest(repo):
 
     return repo_manifest
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   repo = conf['repo']
   pkg_path_prefix = conf['android_sdk']
 

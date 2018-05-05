@@ -16,7 +16,7 @@ GITHUB_URL = 'https://api.github.com/repos/%s/commits'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   repo = conf.get('github')
   br = conf.get('branch')
   use_latest_release = conf.getboolean('use_latest_release', False)

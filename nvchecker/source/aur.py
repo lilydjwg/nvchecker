@@ -9,7 +9,7 @@ logger = structlog.get_logger(logger_name=__name__)
 
 AUR_URL = 'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   aurname = conf.get('aur') or name
   strip_release = conf.getboolean('strip-release', False)
   async with session.get(AUR_URL, params={"v": 5, "type": "info", "arg[]": aurname}) as res:

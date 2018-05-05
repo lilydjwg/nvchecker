@@ -7,7 +7,7 @@ import structlog
 
 logger = structlog.get_logger(logger_name=__name__)
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   cmd = conf['cmd']
   p = await asyncio.create_subprocess_shell(
     cmd,
