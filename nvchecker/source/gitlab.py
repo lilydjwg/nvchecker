@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2018 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
 import urllib.parse
@@ -23,7 +23,12 @@ async def get_version(name, conf, **kwargs):
   sort_version_key = sort_version_keys[conf.get("sort_version_key", "parse_version")]
 
   env_name = "NVCHECKER_GITLAB_TOKEN_" + host.upper().replace(".", "_").replace("/", "_")
-  token = conf.get('token', os.environ.get(env_name, None))
+  global_key = os.environ.get(env_name)
+  if not global_key:
+    key_name = 'gitlab_' + host.lower().replace('.', '_')
+    global_key = kwargs['keyman'].get_key(key_name)
+
+  token = conf.get('token', global_key)
   if token is None:
     logger.error('No gitlab token specified.', name=name)
     return
