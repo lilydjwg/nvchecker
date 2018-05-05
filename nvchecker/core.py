@@ -198,7 +198,7 @@ class KeyManager:
   def __init__(self, file):
     self.config = config = configparser.ConfigParser(dict_type=dict)
     if file is not None:
-      config.read_file(file)
+      config.read([file])
 
   def get_key(self, name):
     return self.config.get('keys', name)
