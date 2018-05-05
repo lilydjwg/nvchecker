@@ -114,17 +114,19 @@ class Source:
     if '__config__' in config:
       c = config['__config__']
 
+      d = os.path.dirname(file.name)
       if 'oldver' in c and 'newver' in c:
-        d = os.path.dirname(file.name)
         self.oldver = os.path.expandvars(os.path.expanduser(
           os.path.join(d, c.get('oldver'))))
         self.newver = os.path.expandvars(os.path.expanduser(
           os.path.join(d, c.get('newver'))))
 
-      self.max_concurrent = c.getint('max_concurrent', 20)
       keyfile = c.get('keyfile')
       if keyfile:
-        keyfile = os.path.expanduser(keyfile)
+        keyfile = os.path.expandvars(os.path.expanduser(
+          os.path.join(d, c.get('keyfile'))))
+
+      self.max_concurrent = c.getint('max_concurrent', 20)
       self.keymanager = KeyManager(keyfile)
       session.nv_config = config["__config__"]
 
