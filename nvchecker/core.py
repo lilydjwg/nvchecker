@@ -145,7 +145,7 @@ class Source:
     async def worker(name, conf):
       await token_q.get()
       try:
-        ret = await get_version(name, conf)
+        ret = await get_version(name, conf, keyman=self.keymanager)
         return name, ret
       except Exception as e:
         return name, e

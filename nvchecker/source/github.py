@@ -38,6 +38,10 @@ async def get_version(name, conf, **kwargs):
   }
   if 'NVCHECKER_GITHUB_TOKEN' in os.environ:
     headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
+  else:
+    key = kwargs['keyman'].get_key('github')
+    if key:
+      headers['Authorization'] = 'token %s' % key
 
   kwargs = {}
   if conf.get('proxy'):
