@@ -122,6 +122,10 @@ class Source:
           os.path.join(d, c.get('newver'))))
 
       self.max_concurrent = c.getint('max_concurrent', 20)
+      keyfile = c.get('keyfile')
+      if keyfile:
+        keyfile = os.path.expanduser(keyfile)
+      self.keymanager = KeyManager(keyfile)
       session.nv_config = config["__config__"]
 
     else:
@@ -187,3 +191,12 @@ class Source:
 
   def __repr__(self):
     return '<Source from %r>' % self.name
+
+class KeyManager:
+  def __init__(self, file):
+    self.config = config = configparser.ConfigParser(dict_type=dict)
+    if file is not None:
+      config.read_file(file)
+
+  def get_key(self, name):
+    return self.config.get('keys', name)
