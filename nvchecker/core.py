@@ -203,4 +203,4 @@ class KeyManager:
       config.add_section('keys')
 
   def get_key(self, name):
-    return self.config.get('keys', name)
+    return self.config.get('keys', name, fallback=None)
