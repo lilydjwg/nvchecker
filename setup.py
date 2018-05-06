@@ -15,7 +15,7 @@ setup(
   url = 'https://github.com/lilydjwg/nvchecker',
   long_description = open('README.rst', encoding='utf-8').read(),
   platforms = 'any',
-  zip_safe = True,
+  zip_safe = False,
 
   packages = find_packages(exclude=["tests"]),
   install_requires = ['setuptools', 'structlog'],
