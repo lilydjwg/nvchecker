@@ -199,6 +199,8 @@ class KeyManager:
     self.config = config = configparser.ConfigParser(dict_type=dict)
     if file is not None:
       config.read([file])
+    else:
+      config.add_section('keys')
 
   def get_key(self, name):
     return self.config.get('keys', name)
