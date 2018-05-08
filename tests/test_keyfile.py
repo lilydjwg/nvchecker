@@ -37,13 +37,13 @@ async def test_keyfile_invalid(run_source):
 github = xxx
             ''')
     f.flush()
-    test_conf = f'''\
+    test_conf = '''\
 [example]
 github = harry-sanabria/ReleaseTestRepo
 
 [__config__]
-keyfile = {f.name}
-      '''
+keyfile = {name}
+'''.format(name=f.name)
 
     try:
       version = await run_source(test_conf)
