@@ -3,6 +3,8 @@
 
 import tempfile
 
+from nvchecker.source import HTTPError
+
 import pytest
 pytestmark = [pytest.mark.asyncio]
 
@@ -31,5 +33,5 @@ keyfile = {f.name}
 
     try:
       await run_source(test_conf)
-    except Exception as e:
+    except HTTPError as e:
       assert e.code == 401
