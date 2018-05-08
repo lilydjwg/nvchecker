@@ -20,6 +20,8 @@ async def test_proxy(get_version, monkeypatch):
 
   async def fake_request(*args, proxy, **kwargs):
     class fake_response():
+      status = 200
+
       async def read():
         return proxy.encode("ascii")
 
