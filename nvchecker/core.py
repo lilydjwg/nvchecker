@@ -170,7 +170,9 @@ class Source:
     for fu in asyncio.as_completed(futures):
       name, result = await fu
       if isinstance(result, Exception):
-        logger.error('unexpected error happened', name=name, exc_info=result)
+        logger.error('unexpected error happened',
+                     name=name, exc_info=result)
+        self.on_exception(name, result)
       elif result is not None:
         self.print_version_update(name, result)
 
@@ -189,6 +191,9 @@ class Source:
       logger.debug('up-to-date', name=name, version=version)
 
   def on_update(self, name, version, oldver):
+    pass
+
+  def on_exception(self, name, exc):
     pass
 
   def __repr__(self):
