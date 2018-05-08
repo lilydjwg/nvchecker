@@ -60,18 +60,18 @@ keyfile = {f.name}
 async def test_keyfile_valid(run_source):
   with tempfile.NamedTemporaryFile(mode='w') as f, \
     unset_github_token_env() as token:
-    f.write(f'''\
+    f.write('''\
 [keys]
 github = {token}
-            ''')
+            '''.format(token=token))
     f.flush()
 
-    test_conf = f'''\
+    test_conf = '''\
 [example]
 github = harry-sanabria/ReleaseTestRepo
 
 [__config__]
-keyfile = {f.name}
-      '''
+keyfile = {name}
+      '''.format(name=f.name)
 
     assert await run_source(test_conf) == '20140122.012101'
