@@ -19,7 +19,8 @@ env:
     - DEPS=tornado pycurl
     - DEPS=tornado
 matrix:
-  exclude:
+  fast_finish: true
+  allow_failures:
     # doesn't work well, see https://travis-ci.org/lilydjwg/nvchecker/jobs/376326582
     python: pypy3
     env: DEPS=aiohttp
