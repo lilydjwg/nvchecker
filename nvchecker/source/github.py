@@ -55,6 +55,8 @@ async def get_version(name, conf, **kwargs):
     )
 
   async with session.get(url, headers=headers, **kwargs) as res:
+    logger.debug('X-RateLimit-Remaining',
+                  n=res.headers.get('X-RateLimit-Remaining'))
     data = await res.json()
 
   if use_latest_release:
@@ -80,6 +82,8 @@ async def max_tag(
   while True:
     async with getter(url) as res:
       links = res.headers.get('Link')
+      logger.debug('X-RateLimit-Remaining',
+                   n=res.headers.get('X-RateLimit-Remaining'))
       data = await res.json()
 
     data = [tag["name"] for tag in data if tag["name"] not in ignored_tags]

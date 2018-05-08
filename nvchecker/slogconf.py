@@ -40,6 +40,7 @@ def stdlib_renderer(logger, level, event):
   logger = logging.getLogger(std_event.get('logger_name'))
   msg = std_event.pop('msg', std_event['event'])
   exc_info = std_event.pop('exc_info', None)
+  # msg = f'{msg} {std_event!r}'
   getattr(logger, level)(
     msg, exc_info = exc_info, extra=std_event,
   )
