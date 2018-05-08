@@ -3,11 +3,12 @@
 
 import os
 import re
+import time
 from functools import partial
 
 import structlog
 
-from . import session
+from . import session, HTTPError
 from ..sortversion import sort_version_keys
 
 logger = structlog.get_logger(logger_name=__name__)
@@ -17,6 +18,12 @@ GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
 
 async def get_version(name, conf, **kwargs):
+  try:
+    return await get_version_real(name, conf, **kwargs)
+  except HTTPError as e:
+    check_ratelimit(e, name)
+
+async def get_version_real(name, conf, **kwargs):
   repo = conf.get('github')
   br = conf.get('branch')
   use_latest_release = conf.getboolean('use_latest_release', False)
@@ -81,9 +88,9 @@ async def max_tag(
 
   while True:
     async with getter(url) as res:
-      links = res.headers.get('Link')
       logger.debug('X-RateLimit-Remaining',
-                   n=res.headers.get('X-RateLimit-Remaining'))
+                    n=res.headers.get('X-RateLimit-Remaining'))
+      links = res.headers.get('Link')
       data = await res.json()
 
     data = [tag["name"] for tag in data if tag["name"] not in ignored_tags]
@@ -112,3 +119,16 @@ def get_next_page_url(links):
     return
 
   return next_link[0].split('>', 1)[0][1:]
+
+def check_ratelimit(exc, name):
+  res = exc.response
+  n = int(res.headers.get('X-RateLimit-Remaining'))
+  if n == 0:
+    reset = int(res.headers.get('X-RateLimit-Reset'))
+    logger.error('rate limited, resetting at %s. '
+                 'Or get an API token to increase the allowance if not yet'
+                 % time.ctime(reset),
+                 name = name,
+                 reset = reset)
+  else:
+    raise

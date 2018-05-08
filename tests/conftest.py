@@ -14,6 +14,9 @@ class TestSource(Source):
     def on_update(self, name, version, oldver):
         self._future.set_result(version)
 
+    def on_no_result(self, name):
+        self._future.set_result(None)
+
     def on_exception(self, name, exc):
         self._future.set_exception(exc)
 

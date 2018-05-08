@@ -8,9 +8,10 @@ connector = aiohttp.TCPConnector(limit=20)
 __all__ = ['session', 'HTTPError']
 
 class HTTPError(Exception):
-    def __init__(self, code, message):
+    def __init__(self, code, message, response):
         self.code = code
         self.message = message
+        self.response = response
 
 class BetterClientSession(aiohttp.ClientSession):
     async def _request(self, *args, **kwargs):
@@ -20,7 +21,7 @@ class BetterClientSession(aiohttp.ClientSession):
         res = await super(BetterClientSession, self)._request(
             *args, **kwargs)
         if res.status >= 400:
-            raise HTTPError(res.status, res.reason)
+            raise HTTPError(res.status, res.reason, res)
         return res
 
 session = BetterClientSession(connector=connector, read_timeout=10, conn_timeout=5)

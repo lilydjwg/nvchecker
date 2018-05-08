@@ -176,6 +176,8 @@ class Source:
         self.on_exception(name, result)
       elif result is not None:
         self.print_version_update(name, result)
+      else:
+        self.on_no_result(name)
 
     await filler_fu
 
@@ -192,6 +194,9 @@ class Source:
       logger.debug('up-to-date', name=name, version=version)
 
   def on_update(self, name, version, oldver):
+    pass
+
+  def on_no_result(self, name, oldver):
     pass
 
   def on_exception(self, name, exc):
