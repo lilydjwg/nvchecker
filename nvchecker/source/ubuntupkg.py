@@ -9,7 +9,7 @@ logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=%s&exact_match=true'
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   pkg = conf.get('ubuntupkg') or name
   strip_release = conf.getboolean('strip-release', False)
   suite = conf.get('suite')

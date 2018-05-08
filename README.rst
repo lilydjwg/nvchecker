@@ -127,6 +127,9 @@ proxy
 max_concurrent
   Max number of concurrent jobs. Default: 20.
 
+keyfile
+  Specify an ini config file containing key (token) information. This file should contain a ``keys`` section, mapping key names to key values. See specific source for the key name(s) to use.
+
 Global Options
 --------------
 The following options apply to all checkers.
@@ -228,8 +231,9 @@ sort_version_key
 proxy
   The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
-An environment variable ``NVCHECKER_GITHUB_TOKEN`` can be set to a GitHub OAuth
-token in order to request more frequently than anonymously.
+An environment variable ``NVCHECKER_GITHUB_TOKEN`` or a key named ``github``
+can be set to a GitHub OAuth token in order to request more frequently than
+anonymously.
 
 Check BitBucket
 ---------------
@@ -286,9 +290,19 @@ host
   Hostname for self-hosted GitLab instance.
 
 token
-  GitLab authorization token used to call the API. If not specified, an environment variable ``NVCHECKER_GITLAB_TOKEN_host`` must provide that token. The ``host`` part is the uppercased version of the ``host`` setting, with dots (``.``) and slashes (``/``) replaced by underscores (``_``), e.g. ``NVCHECKER_GITLAB_TOKEN_GITLAB_COM``.
-
+  GitLab authorization token used to call the API.
+  
 Authenticated only.
+
+To set a authorization token, you can set:
+
+- a key named ``gitlab_{host}`` in the keyfile (where ``host`` is formed the
+  same as the environment variable, but all lowercased).
+- an environment variable ``NVCHECKER_GITLAB_TOKEN_{host}`` must provide that
+  token. The ``host`` part is the uppercased version of the ``host`` setting,
+  with dots (``.``) and slashes (``/``) replaced by underscores (``_``), e.g.
+  ``NVCHECKER_GITLAB_TOKEN_GITLAB_COM``.
+- the token option
 
 Check PyPI
 ----------

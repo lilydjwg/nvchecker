@@ -8,7 +8,7 @@ from ..sortversion import sort_version_keys
 BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
 BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/1.0/repositories/%s/tags'
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   repo = conf.get('bitbucket')
   br = conf.get('branch', '')
   use_max_tag = conf.getboolean('use_max_tag', False)

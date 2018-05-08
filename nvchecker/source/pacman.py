@@ -3,7 +3,7 @@
 
 from . import cmd
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   referree = conf.get('pacman') or name
   c = "LANG=C pacman -Si %s | grep -F Version | awk '{print $3}'" % referree
   conf['cmd'] = c

@@ -114,18 +114,25 @@ class Source:
     if '__config__' in config:
       c = config['__config__']
 
+      d = os.path.dirname(file.name)
       if 'oldver' in c and 'newver' in c:
-        d = os.path.dirname(file.name)
         self.oldver = os.path.expandvars(os.path.expanduser(
           os.path.join(d, c.get('oldver'))))
         self.newver = os.path.expandvars(os.path.expanduser(
           os.path.join(d, c.get('newver'))))
 
+      keyfile = c.get('keyfile')
+      if keyfile:
+        keyfile = os.path.expandvars(os.path.expanduser(
+          os.path.join(d, c.get('keyfile'))))
+
       self.max_concurrent = c.getint('max_concurrent', 20)
+      self.keymanager = KeyManager(keyfile)
       session.nv_config = config["__config__"]
 
     else:
       self.max_concurrent = 20
+      self.keymanager = KeyManager(None)
 
   async def check(self):
     if self.oldver:
@@ -139,7 +146,7 @@ class Source:
     async def worker(name, conf):
       await token_q.get()
       try:
-        ret = await get_version(name, conf)
+        ret = await get_version(name, conf, keyman=self.keymanager)
         return name, ret
       except Exception as e:
         return name, e
@@ -164,9 +171,13 @@ class Source:
     for fu in asyncio.as_completed(futures):
       name, result = await fu
       if isinstance(result, Exception):
-        logger.error('unexpected error happened', name=name, exc_info=result)
+        logger.error('unexpected error happened',
+                     name=name, exc_info=result)
+        self.on_exception(name, result)
       elif result is not None:
         self.print_version_update(name, result)
+      else:
+        self.on_no_result(name)
 
     await filler_fu
 
@@ -185,5 +196,22 @@ class Source:
   def on_update(self, name, version, oldver):
     pass
 
+  def on_no_result(self, name, oldver):
+    pass
+
+  def on_exception(self, name, exc):
+    pass
+
   def __repr__(self):
     return '<Source from %r>' % self.name
+
+class KeyManager:
+  def __init__(self, file):
+    self.config = config = configparser.ConfigParser(dict_type=dict)
+    if file is not None:
+      config.read([file])
+    else:
+      config.add_section('keys')
+
+  def get_key(self, name):
+    return self.config.get('keys', name, fallback=None)

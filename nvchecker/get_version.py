@@ -38,11 +38,11 @@ def substitute_version(version, name, conf):
   # No substitution rules found. Just return the original version string.
   return version
 
-async def get_version(name, conf):
+async def get_version(name, conf, **kwargs):
   for key in handler_precedence:
     if key in conf:
       func = import_module('.source.' + key, __package__).get_version
-      version = await func(name, conf)
+      version = await func(name, conf, **kwargs)
       if version:
         version = version.replace('\n', ' ')
         try:

@@ -5,6 +5,7 @@ import json
 from urllib.parse import urlencode
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
+from tornado.httpclient import HTTPError
 from tornado.platform.asyncio import AsyncIOMainLoop, to_asyncio_future
 AsyncIOMainLoop().install()
 
@@ -14,7 +15,7 @@ try:
 except ImportError:
   pycurl = None
 
-__all__ = ['session']
+__all__ = ['session', 'HTTPError']
 
 client = AsyncHTTPClient()
 HTTP2_AVAILABLE = None if pycurl else False
