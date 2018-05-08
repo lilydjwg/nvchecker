@@ -132,6 +132,7 @@ class Source:
 
     else:
       self.max_concurrent = 20
+      self.keymanager = KeyManager(None)
 
   async def check(self):
     if self.oldver:
