@@ -177,6 +177,7 @@ class Source:
       elif result is not None:
         self.print_version_update(name, result)
       else:
+        logger.warn('no-result', name=name)
         self.on_no_result(name)
 
     await filler_fu
