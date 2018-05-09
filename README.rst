@@ -12,6 +12,9 @@ Contents
 
 * `Dependency <#dependency>`_
 * `Running <#running>`_
+
+  * `JSON logging <#json-logging>`_
+
 * `Version Record Files <#version-record-files>`_
 
   * `The nvtake Command <#the-nvtake-command>`_
@@ -68,6 +71,30 @@ Run with one or more software version source files::
   ./nvchecker source_file
 
 You normally will like to specify some "version record files"; see below.
+
+JSON logging
+------------
+With ``--logger=json`` or ``--logger=both``, you can get a structured logging
+for programmatically consuming. You can use ``--json-log-fd=N`` to specify the
+file descriptor to send logs to (take care to do line buffering). The logging
+level option (``-l`` or ``--logging``) doesn't take effect with this.
+
+The JSON log is one JSON string per line. The following documented events and
+fields are stable, undocumented ones may change without notice.
+
+event=updated
+  An update is detected. Fields ``name``, ``old_version`` and ``version`` are
+  available. ``old_version`` maybe ``null``.
+
+event=up-to-date
+  There is no update. Fields ``name`` and ``version`` are available.
+
+event=no-result
+  No version is detected. There may be an error. Fields ``name`` is available.
+
+level=error
+  There is an error. Fields ``name`` and ``exc_info`` may be available to give
+  further information.
 
 Version Record Files
 ====================
