@@ -197,7 +197,7 @@ class Source:
   def on_update(self, name, version, oldver):
     pass
 
-  def on_no_result(self, name, oldver):
+  def on_no_result(self, name):
     pass
 
   def on_exception(self, name, exc):
