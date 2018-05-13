@@ -13,11 +13,13 @@ def _console_msg(event):
   evt = event['event']
   if evt == 'up-to-date':
     msg = 'up-to-date, version %s' % event['version']
+    del event['version']
   elif evt == 'updated':
     if event.get('old_version'):
       msg = 'updated from %(old_version)s to %(version)s' % event
     else:
       msg = 'updated to %(version)s' % event
+    del event['version'], event['old_version']
   else:
     msg = evt
 
@@ -37,10 +39,12 @@ def exc_info(logger, level, event):
 def stdlib_renderer(logger, level, event):
   # return event unchanged for further processing
   std_event = _console_msg(event.copy())
-  logger = logging.getLogger(std_event.get('logger_name'))
-  msg = std_event.pop('msg', std_event['event'])
+  try:
+    logger = logging.getLogger(std_event.pop('logger_name'))
+  except KeyError:
+    logger = logging.getLogger()
+  msg = std_event.pop('msg', std_event.pop('event'))
   exc_info = std_event.pop('exc_info', None)
-  # msg = f'{msg} {std_event!r}'
   getattr(logger, level)(
     msg, exc_info = exc_info, extra=std_event,
   )
