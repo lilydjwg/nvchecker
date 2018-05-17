@@ -48,8 +48,8 @@ async def get_version(name, conf, **kwargs):
       version = data[-1]
       return version
     else:
-      oldver = _parse_oldver(oldver)
-      if output == oldver[2]:
+      oldvers = _parse_oldver(oldver)
+      if output == oldvers[2]:
         return oldver
       else:
-        return "%d.%d.%s" % (oldver[0], oldver[1] + 1, output)
+        return "%d.%d.%s" % (oldvers[0], oldvers[1] + 1, output)
