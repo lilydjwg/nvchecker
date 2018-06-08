@@ -11,8 +11,8 @@ from ..sortversion import sort_version_keys
 
 logger = structlog.get_logger(logger_name=__name__)
 
-GITLAB_URL = 'https://%s/api/v3/projects/%s/repository/commits?ref_name=%s'
-GITLAB_MAX_TAG = 'https://%s/api/v3/projects/%s/repository/tags'
+GITLAB_URL = 'https://%s/api/v4/projects/%s/repository/commits?ref_name=%s'
+GITLAB_MAX_TAG = 'https://%s/api/v4/projects/%s/repository/tags'
 
 async def get_version(name, conf, **kwargs):
   repo = urllib.parse.quote_plus(conf.get('gitlab'))
