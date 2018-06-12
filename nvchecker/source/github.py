@@ -122,7 +122,8 @@ def get_next_page_url(links):
 
 def check_ratelimit(exc, name):
   res = exc.response
-  n = int(res.headers.get('X-RateLimit-Remaining'))
+  # default -1 is used to re-raise the exception
+  n = int(res.headers.get('X-RateLimit-Remaining', -1))
   if n == 0:
     reset = int(res.headers.get('X-RateLimit-Reset'))
     logger.error('rate limited, resetting at %s. '
