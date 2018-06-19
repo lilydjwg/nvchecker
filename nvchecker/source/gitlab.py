@@ -62,7 +62,11 @@ async def get_version_real(name, conf, **kwargs):
 
 def check_ratelimit(exc, name):
   res = exc.response
-  n = int(res.headers.get('RateLimit-Remaining'))
+  if not res:
+    raise
+
+  # default -1 is used to re-raise the exception
+  n = int(res.headers.get('RateLimit-Remaining'), -1)
   if n == 0:
     logger.error('rate limited, resetting at (unknown). '
                  'Or get an API token to increase the allowance if not yet',
