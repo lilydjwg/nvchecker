@@ -53,7 +53,8 @@ Dependency
 - Python 3.5+
 - Python library: structlog
 - One of these Python library combinations (ordered by preference):
-
+  
+  * requests
   * tornado + pycurl
   * aiohttp
   * tornado
