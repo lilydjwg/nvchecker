@@ -18,7 +18,10 @@ setup(
   zip_safe = False,
 
   packages = find_packages(exclude=["tests"]),
-  install_requires = ['setuptools', 'structlog'],
+  install_requires = ['setuptools', 'structlog', 'tornado>=5', 'pycurl'],
+  extras_require = {
+    'vercmp': ['pyalpm'],
+  },
   tests_require = [
     'pytest',
     'pytest-asyncio',
