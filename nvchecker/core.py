@@ -143,6 +143,9 @@ class Source:
 
     token_q = asyncio.Queue(maxsize=self.max_concurrent)
 
+    for _ in range(self.max_concurrent):
+      await token_q.put(True)
+
     async def worker(name, conf):
       await token_q.get()
       try:
@@ -150,9 +153,7 @@ class Source:
         return name, ret
       except Exception as e:
         return name, e
-
-    async def token_filler(n):
-      for _ in range(n):
+      finally:
         await token_q.put(True)
 
     config = self.config
@@ -166,8 +167,6 @@ class Source:
       fu = asyncio.ensure_future(worker(name, conf))
       futures.append(fu)
 
-    filler_fu = asyncio.ensure_future(token_filler(len(futures)))
-
     for fu in asyncio.as_completed(futures):
       name, result = await fu
       if isinstance(result, Exception):
@@ -179,8 +178,6 @@ class Source:
       else:
         logger.warn('no-result', name=name)
         self.on_no_result(name)
-
-    await filler_fu
 
     if self.newver:
       write_verfile(self.newver, self.curvers)
