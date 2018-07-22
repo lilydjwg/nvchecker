@@ -11,7 +11,7 @@ AsyncIOMainLoop().install()
 
 try:
   import pycurl
-  AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
+  AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient", max_clients=20)
 except ImportError:
   pycurl = None
 
