@@ -4,6 +4,7 @@ cache: pip
 python:
   - "3.5"
   - "3.6"
+  - "3.7"
   - "nightly"
   - "pypy3"
 install: pip install -U $DEPS pytest pytest-asyncio pytest-xdist flaky structlog
