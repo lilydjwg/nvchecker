@@ -18,7 +18,7 @@ setup(
   zip_safe = False,
 
   packages = find_packages(exclude=["tests"]),
-  install_requires = ['setuptools', 'structlog', 'tornado>=5', 'pycurl'],
+  install_requires = ['setuptools', 'structlog', 'tornado', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
   },
