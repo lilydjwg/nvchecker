@@ -7,7 +7,7 @@ python:
   - "3.7"
   - "nightly"
   - "pypy3"
-install: pip install -U $DEPS pytest pytest-asyncio pytest-xdist flaky structlog
+install: pip install -U $DEPS 'pytest<3.7' pytest-asyncio pytest-xdist flaky structlog
 script: pytest
 env:
   global:
