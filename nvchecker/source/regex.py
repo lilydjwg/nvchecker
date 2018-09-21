@@ -34,5 +34,6 @@ async def get_version(name, conf, **kwargs):
       version = max(regex.findall(body), key=sort_version_key)
     except ValueError:
       version = None
-      logger.error('version string not found.', name=name)
+      if not conf.getboolean('missing_ok', False):
+        logger.error('version string not found.', name=name)
     return version

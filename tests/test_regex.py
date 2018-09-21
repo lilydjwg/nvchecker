@@ -18,3 +18,10 @@ async def test_regex(get_version):
         "url": "https://example.net/",
         "regex": 'for (\w+) examples',
     }) == "illustrative"
+
+async def test_missing_ok(get_version, raise_on_logger_msg):
+    assert await get_version("example", {
+        "url": "https://example.net/",
+        "regex": "foobar",
+        "missing_ok": True,
+    }) is None

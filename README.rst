@@ -177,6 +177,10 @@ from_pattern, to_pattern
   Both are Python-compatible regular expressions. If ``from_pattern`` is found
   in the version string, it will be replaced with ``to_pattern``.
 
+missing_ok
+  Suppress warnings and errors if a version checking module finds nothing.
+  Currently only ``regex`` supports it.
+
 If both ``prefix`` and ``from_pattern``/``to_pattern`` are used,
 ``from_pattern``/``to_pattern`` are ignored. If you want to strip the prefix
 and then do something special, just use ``from_pattern```/``to_pattern``. For
