@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# vim:fileencoding=utf-8
 
 from setuptools import setup, find_packages
 import nvchecker
@@ -49,6 +48,7 @@ setup(
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
     "Topic :: Internet",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development",
