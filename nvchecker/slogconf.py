@@ -62,6 +62,8 @@ class _Logger(logging.Logger):
   _my_srcfile = os.path.normcase(
     stdlib_renderer.__code__.co_filename)
 
+  _structlog_dir = os.path.dirname(structlog.__file__)
+
   def findCaller(self, stack_info=False):
     """
     Find the stack frame of the caller so that we can note the source
@@ -76,7 +78,8 @@ class _Logger(logging.Logger):
     while hasattr(f, "f_code"):
       co = f.f_code
       filename = os.path.normcase(co.co_filename)
-      if filename in [logging._srcfile, self._my_srcfile]:
+      if filename in [logging._srcfile, self._my_srcfile] \
+         or filename.startswith(self._structlog_dir):
         f = f.f_back
         continue
       sinfo = None
