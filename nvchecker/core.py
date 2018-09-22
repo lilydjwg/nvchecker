@@ -176,6 +176,7 @@ class Source:
       elif result is not None:
         self.print_version_update(name, result)
       else:
+        conf = config[name]
         if not conf.getboolean('missing_ok', False):
           logger.warn('no-result', name=name)
         self.on_no_result(name)
