@@ -24,7 +24,7 @@ def take():
 
   s = core.Source(args.file)
   if not s.oldver or not s.newver:
-    logger.fatal(
+    logger.critical(
       "doesn't have both 'oldver' and 'newver' set.", source=s,
     )
     sys.exit(2)
@@ -39,7 +39,7 @@ def take():
       try:
         oldvers[name] = newvers[name]
       except KeyError:
-        logger.fatal(
+        logger.critical(
           "doesn't exist in 'newver' set.", name=name,
         )
         sys.exit(2)
