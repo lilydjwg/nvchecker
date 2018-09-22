@@ -41,7 +41,8 @@ def substitute_version(version, name, conf):
 _cache = {}
 
 async def get_version(name, conf, **kwargs):
-  cache_key = tuple(sorted(conf.items()))
+  cache_key = sorted(conf.items()) + sorted(kwargs.items())
+  cache_key = tuple(cache_key)
   if cache_key in _cache:
     return _cache[cache_key]
 
