@@ -38,7 +38,18 @@ def substitute_version(version, name, conf):
   # No substitution rules found. Just return the original version string.
   return version
 
+_cache = {}
+
 async def get_version(name, conf, **kwargs):
+  cache_key = tuple(sorted(conf.items()))
+  if cache_key in _cache:
+    return _cache[cache_key]
+
+  version = await _get_version_real(name, conf, **kwargs)
+  _cache[cache_key] = version
+  return version
+
+async def _get_version_real(name, conf, **kwargs):
   for key in handler_precedence:
     if key in conf:
       func = import_module('.source.' + key, __package__).get_version
