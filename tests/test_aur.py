@@ -12,3 +12,7 @@ async def test_aur(get_version):
 @flaky(max_runs=10)
 async def test_aur_strip_release(get_version):
     assert await get_version("ssed", {"aur": None, "strip-release": 1}) == "3.62"
+
+@flaky(max_runs=10)
+async def test_aur_use_last_modified(get_version):
+    assert await get_version("ssed", {"aur": None, 'use_last_modified': True}) == "3.62-2-20150725052412"
