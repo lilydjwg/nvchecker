@@ -16,6 +16,8 @@ def take():
   core.add_common_arguments(parser)
   parser.add_argument('--all', action='store_true',
                       help='take all updates')
+  parser.add_argument('--ignore-nonexistent', action='store_true',
+                      help='ignore nonexistent names')
   parser.add_argument('names', metavar='NAME', nargs='*',
                       help='software name to be updated')
   args = parser.parse_args()
@@ -39,6 +41,9 @@ def take():
       try:
         oldvers[name] = newvers[name]
       except KeyError:
+        if args.ignore_nonexistent:
+          continue
+
         logger.critical(
           "doesn't exist in 'newver' set.", name=name,
         )
