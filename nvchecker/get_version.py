@@ -42,13 +42,16 @@ async def get_version(name, conf, **kwargs):
   for key in handler_precedence:
     if key in conf:
       func = import_module('.source.' + key, __package__).get_version
-      version = await func(name, conf, **kwargs)
-      if version:
-        version = version.replace('\n', ' ')
-        try:
-          version = substitute_version(version, name, conf)
-        except (ValueError, re.error):
-          logger.exception('error occurred in version substitutions', name=name)
-      return version
+      break
   else:
     logger.error('no idea to get version info.', name=name)
+    return
+
+  version = await func(name, conf, **kwargs)
+  if version:
+    version = version.replace('\n', ' ')
+    try:
+      version = substitute_version(version, name, conf)
+    except (ValueError, re.error):
+      logger.exception('error occurred in version substitutions', name=name)
+  return version

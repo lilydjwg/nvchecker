@@ -2,7 +2,6 @@
 # Copyright (c) 2013-2018 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
-import time
 import urllib.parse
 
 import structlog
@@ -66,7 +65,7 @@ def check_ratelimit(exc, name):
     raise
 
   # default -1 is used to re-raise the exception
-  n = int(res.headers.get('RateLimit-Remaining'), -1)
+  n = int(res.headers.get('RateLimit-Remaining', -1))
   if n == 0:
     logger.error('rate limited, resetting at (unknown). '
                  'Or get an API token to increase the allowance if not yet',
