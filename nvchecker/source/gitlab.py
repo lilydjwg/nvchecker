@@ -44,7 +44,7 @@ async def get_version_real(name, conf, **kwargs):
     key_name = 'gitlab_' + host.lower().replace('.', '_').replace("/", "_")
     token = kwargs['keyman'].get_key(key_name)
 
-  # Set private token if token is exist.
+  # Set private token if token exists.
   headers = {}
   if token:
     headers["PRIVATE-TOKEN"] = token
