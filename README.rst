@@ -232,6 +232,9 @@ aur
 strip-release
   Strip the release part.
 
+use_last_modified
+  Append last modified time to the version.
+
 Check GitHub
 ------------
 Check `GitHub <https://github.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
