@@ -20,7 +20,7 @@ for repo in _ANDROID_REPO_MANIFESTS.keys():
   _repo_manifests_locks[repo] = Lock()
 
 async def _get_repo_manifest(repo):
-  with (await _repo_manifests_locks[repo]):
+  async with _repo_manifests_locks[repo]:
     if repo in _repo_manifests_cache:
       return _repo_manifests_cache[repo]
 
