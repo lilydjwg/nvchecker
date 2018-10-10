@@ -5,6 +5,7 @@ import io
 import structlog
 
 from nvchecker.get_version import get_version as _get_version
+from nvchecker.get_version import _cache
 from nvchecker.core import Source
 
 class TestSource(Source):
@@ -22,7 +23,10 @@ class TestSource(Source):
     self._future.set_exception(exc)
 
 @pytest.fixture(scope="module")
-async def run_source():
+async def run_source(*, clear_cache=False):
+  if clear_cache:
+    _cache.clear()
+
   async def __call__(conf):
     future = asyncio.Future()
     file = io.StringIO(conf)

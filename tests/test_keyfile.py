@@ -46,7 +46,7 @@ keyfile = {name}
 '''.format(name=f.name)
 
     try:
-      version = await run_source(test_conf)
+      version = await run_source(test_conf, clear_cache=True)
       assert version is None # out of allowance
       return
     except HTTPError as e:
