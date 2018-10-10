@@ -11,7 +11,7 @@ def _version_from_json(data):
   if len(data):
     return max(data, key=lambda version: data[version]["time"])
 
-get_version = simple_json(
+get_version, get_cacheable_conf = simple_json(
   PACKAGIST_URL,
   'packagist',
   _version_from_json,

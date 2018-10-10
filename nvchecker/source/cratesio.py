@@ -1,10 +1,11 @@
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2018 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import os
-from . import session
+from . import session, conf_cacheable_with_name
 
 API_URL = 'https://crates.io/api/v1/crates/%s'
+
+get_cacheable_conf = conf_cacheable_with_name('cratesio')
 
 async def get_version(name, conf, **kwargs):
   name = conf.get('cratesio') or name

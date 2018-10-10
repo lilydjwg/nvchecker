@@ -9,7 +9,7 @@ CPAN_URL = 'https://fastapi.metacpan.org/release/%s'
 def _version_from_json(data):
   return str(data['version'])
 
-get_version = simple_json(
+get_version, get_cacheable_conf = simple_json(
   CPAN_URL,
   'cpan',
   _version_from_json,

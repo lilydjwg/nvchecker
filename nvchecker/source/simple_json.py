@@ -1,7 +1,7 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from . import session
+from . import session, conf_cacheable_with_name
 
 def simple_json(urlpat, confkey, version_from_json):
 
@@ -17,4 +17,6 @@ def simple_json(urlpat, confkey, version_from_json):
     version = version_from_json(data)
     return version
 
-  return get_version
+  get_cacheable_conf = conf_cacheable_with_name(confkey)
+
+  return get_version, get_cacheable_conf

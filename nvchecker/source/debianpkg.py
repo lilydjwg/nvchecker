@@ -3,11 +3,13 @@
 
 import structlog
 
-from . import session
+from . import session, conf_cacheable_with_name
 
 logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://sources.debian.org/api/src/%(pkgname)s/?suite=%(suite)s'
+
+get_cacheable_conf = conf_cacheable_with_name('debianpkg')
 
 async def get_version(name, conf, **kwargs):
   pkg = conf.get('debianpkg') or name

@@ -38,14 +38,26 @@ def substitute_version(version, name, conf):
   # No substitution rules found. Just return the original version string.
   return version
 
+_cache = {}
+
 async def get_version(name, conf, **kwargs):
   for key in handler_precedence:
     if key in conf:
-      func = import_module('.source.' + key, __package__).get_version
+      mod = import_module('.source.' + key, __package__)
+      func = mod.get_version
+      get_cacheable_conf = getattr(mod, 'get_cacheable_conf', lambda name, conf: conf)
       break
   else:
     logger.error('no idea to get version info.', name=name)
     return
+
+  cacheable_conf = get_cacheable_conf(name, conf)
+  cache_key = tuple(sorted(cacheable_conf.items()))
+  if cache_key in _cache:
+    version = _cache[cache_key]
+    logger.debug('cache hit', name=name,
+                 cache_key=cache_key, cached=version)
+    return version
 
   version = await func(name, conf, **kwargs)
   if version:
@@ -54,4 +66,7 @@ async def get_version(name, conf, **kwargs):
       version = substitute_version(version, name, conf)
     except (ValueError, re.error):
       logger.exception('error occurred in version substitutions', name=name)
+
+  if version is not None:
+    _cache[cache_key] = version
   return version

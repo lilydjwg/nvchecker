@@ -3,11 +3,13 @@
 
 import structlog
 
-from . import session
+from . import session, conf_cacheable_with_name
 
 logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://www.archlinux.org/packages/search/json/'
+
+get_cacheable_conf = conf_cacheable_with_name('archpkg')
 
 async def get_version(name, conf, **kwargs):
   pkg = conf.get('archpkg') or name

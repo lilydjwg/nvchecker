@@ -4,11 +4,13 @@
 import structlog
 from datetime import datetime
 
-from . import session
+from . import session, conf_cacheable_with_name
 
 logger = structlog.get_logger(logger_name=__name__)
 
 AUR_URL = 'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
+
+get_cacheable_conf = conf_cacheable_with_name('aur')
 
 async def get_version(name, conf, **kwargs):
   aurname = conf.get('aur') or name
