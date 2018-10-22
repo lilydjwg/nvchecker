@@ -9,6 +9,7 @@ python:
   - "pypy3"
 install: pip install -U $DEPS 'pytest<3.7' pytest-asyncio pytest-xdist flaky structlog
 script: pytest
+dist: xenial
 env:
   global:
     # github
@@ -27,4 +28,3 @@ matrix:
     # doesn't work well, see https://travis-ci.org/lilydjwg/nvchecker/jobs/376326582
     - python: pypy3
       env: DEPS=aiohttp
-    - python: "3.7"
