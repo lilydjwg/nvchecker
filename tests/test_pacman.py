@@ -8,7 +8,7 @@ pytestmark = [pytest.mark.asyncio,
                                  reason="requires pacman command")]
 
 async def test_pacman(get_version):
-    assert await get_version("ipw2100-fw", {"pacman": None}) == "1.3-8"
+    assert await get_version("ipw2100-fw", {"pacman": None}) == "1.3-9"
 
 async def test_pacman_strip_release(get_version):
     assert await get_version("ipw2100-fw", {"pacman": None, "strip-release": 1}) == "1.3"
