@@ -412,7 +412,7 @@ strip-release
   Strip the release part.
 
 Check Debian Linux official packages
-----------------------------------
+------------------------------------
 This enables you to track the update of `Debian Linux official packages <https://packages.debian.org>`_, without needing of apt and an updated local APT database.
 
 debianpkg

@@ -3,6 +3,9 @@
 from setuptools import setup, find_packages
 import nvchecker
 
+# The complex upload command:
+# rm -rf dist && python setup.py sdist && twine check dist/* && twine upload -s dist/*
+
 setup(
   name = 'nvchecker',
   version = nvchecker.__version__,
@@ -13,6 +16,7 @@ setup(
   keywords = 'new version build check',
   url = 'https://github.com/lilydjwg/nvchecker',
   long_description = open('README.rst', encoding='utf-8').read(),
+  long_description_content_type = 'text/x-rst',
   platforms = 'any',
   zip_safe = False,
 
