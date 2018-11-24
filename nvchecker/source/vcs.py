@@ -27,7 +27,7 @@ def _parse_oldver(oldver):
     return PROT_VER, count, ver
 
 async def get_version(name, conf, **kwargs):
-  vcs = conf['vcs']
+  vcs = conf['vcs'] or ''
   use_max_tag = conf.getboolean('use_max_tag', False)
   ignored_tags = conf.get("ignored_tags", "").split()
   oldver = conf.get('oldver')
