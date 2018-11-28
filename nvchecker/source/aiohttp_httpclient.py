@@ -2,6 +2,7 @@
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import atexit
+import asyncio
 import aiohttp
 connector = aiohttp.TCPConnector(limit=20)
 
@@ -24,5 +25,9 @@ class BetterClientSession(aiohttp.ClientSession):
             raise HTTPError(res.status, res.reason, res)
         return res
 
-session = BetterClientSession(connector=connector, read_timeout=10, conn_timeout=5)
-atexit.register(session.close)
+session = BetterClientSession(connector=connector)
+
+@atexit.register
+def cleanup():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(session.close())
