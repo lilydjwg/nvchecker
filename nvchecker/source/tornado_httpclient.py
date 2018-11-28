@@ -64,7 +64,7 @@ class ResponseManager:
   async def __aexit__(self, exc_type, exc, tb):
     pass
 
-async def json_response(self):
+async def json_response(self, **kwargs):
   return json.loads(self.body.decode('utf-8'))
 
 async def read(self):

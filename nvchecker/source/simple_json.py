@@ -13,7 +13,7 @@ def simple_json(urlpat, confkey, version_from_json):
       kwargs["proxy"] = conf.get('proxy')
 
     async with session.get(url, **kwargs) as res:
-      data = await res.json()
+      data = await res.json(content_type=None)
     version = version_from_json(data)
     return version
 
