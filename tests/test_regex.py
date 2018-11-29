@@ -15,13 +15,13 @@ async def test_regex_httpbin(get_version):
 
 async def test_regex(get_version):
     assert await get_version("example", {
-        "url": "https://example.net/",
+        "url": "http://example.net/",
         "regex": 'for (\w+) examples',
     }) == "illustrative"
 
 async def test_missing_ok(get_version, raise_on_logger_msg):
     assert await get_version("example", {
-        "url": "https://example.net/",
+        "url": "http://example.net/",
         "regex": "foobar",
         "missing_ok": True,
     }) is None
