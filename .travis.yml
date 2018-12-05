@@ -7,7 +7,7 @@ python:
   - "3.6"
   - "3.7"
   - "nightly"
-  - "pypy3"
+  - "pypy3.5"
 install: pip install -U $DEPS pytest pytest-asyncio pytest-xdist flaky structlog
 script: pytest
 env:
@@ -26,6 +26,5 @@ matrix:
   fast_finish: true
   allow_failures:
     # doesn't work well, see https://travis-ci.org/lilydjwg/nvchecker/jobs/376326582
-    - python: pypy3
+    - python: pypy3.5
       env: DEPS=aiohttp
-    - python: "3.7"
