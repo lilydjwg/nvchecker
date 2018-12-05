@@ -15,8 +15,6 @@ async def test_git(get_version):
 
 @pytest.mark.skipif(shutil.which("hg") is None,
                     reason="requires hg command")
-@pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
-                    reason="Travis-CI chooses the obsolete TLS 1.0 protocol")
 async def test_mercurial(get_version):
     os.path.exists("example") or os.mkdir("example")
     assert await get_version("example", {"vcs": "hg+https://bitbucket.org/pil0t/testrepo"}) == "1.1.84679e29c7d9"
