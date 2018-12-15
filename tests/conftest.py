@@ -62,7 +62,7 @@ def event_loop(request):
 @pytest.fixture(scope="session", autouse=True)
 def raise_on_logger_msg():
   def proc(logger, method_name, event_dict):
-    if method_name in ('warn', 'error'):
+    if method_name in ('warning', 'error'):
       if 'exc_info' in event_dict:
         raise event_dict['exc_info']
       raise RuntimeError(event_dict['event'])

@@ -42,7 +42,7 @@ def take():
         oldvers[name] = newvers[name]
       except KeyError:
         if args.ignore_nonexistent:
-          logger.warn('nonexistent in newver, ignored', name=name)
+          logger.warning('nonexistent in newver, ignored', name=name)
           continue
 
         logger.critical(

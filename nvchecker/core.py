@@ -189,7 +189,7 @@ class Source:
       else:
         conf = config[name]
         if not conf.getboolean('missing_ok', False):
-          logger.warn('no-result', name=name)
+          logger.warning('no-result', name=name)
         self.on_no_result(name)
 
     if self.newver:

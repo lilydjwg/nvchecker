@@ -14,7 +14,7 @@ async def get_version(name, conf, **kwargs):
   try:
     regex = re.compile(conf['regex'])
   except sre_constants.error:
-    logger.warn('bad regex, skipped.', name=name, exc_info=True)
+    logger.warning('bad regex, skipped.', name=name, exc_info=True)
     return
 
   encoding = conf.get('encoding', 'latin1')
