@@ -7,11 +7,15 @@ import os.path as _path
 from pkg_resources import parse_version
 import structlog
 
+from . import conf_cacheable_with_name
+
 logger = structlog.get_logger(logger_name=__name__)
 _self_path = _path.dirname(_path.abspath(__file__))
 _cmd_prefix = ['/bin/bash', _path.join(_self_path, 'vcs.sh')]
 
 PROT_VER = 1
+
+get_cacheable_conf = conf_cacheable_with_name('vcs')
 
 def _parse_oldver(oldver):
     if oldver is None:
