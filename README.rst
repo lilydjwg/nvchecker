@@ -6,7 +6,7 @@
 .. image:: https://badge.fury.io/py/nvchecker.svg
    :alt: PyPI version
    :target: https://badge.fury.io/py/nvchecker
-
+|
 .. image:: https://repology.org/badge/vertical-allrepos/nvchecker.svg
    :alt: Packaging status
    :target: https://repology.org/metapackage/nvchecker/versions
