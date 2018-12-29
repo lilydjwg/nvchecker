@@ -1,15 +1,25 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from .simple_json import simple_json
+from . import cmd, conf_cacheable_with_name, session
 
-PYPI_URL = 'https://pypi.org/pypi/%s/json'
+get_cacheable_conf = conf_cacheable_with_name('pypi')
 
-def _version_from_json(data):
-  return data['info']['version']
+async def get_version(name, conf, **kwargs):
+  package = conf.get('pypi')
+  use_pre_release = conf.getboolean('use_pre_release', False)
 
-get_version, get_cacheable_conf = simple_json(
-  PYPI_URL,
-  'pypi',
-  _version_from_json,
-)
+  headers = {
+    'Accept': 'application/json',
+    'User-Agent': 'lilydjwg/nvchecker'
+  }
+  url = 'https://pypi.org/pypi/{}/json'.format((package))
+
+  async with session.get(url) as res:
+    data = await res.json()
+
+  if use_pre_release:
+    version = list(data['releases'].keys())[-1]
+  else:
+    version = data['info']['version']
+  return version
