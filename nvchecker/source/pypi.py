@@ -11,9 +11,9 @@ async def get_version(name, conf, **kwargs):
 
   headers = {
     'Accept': 'application/json',
-    'User-Agent': 'lilydjwg/nvchecker'
+    'User-Agent': 'lilydjwg/nvchecker',
   }
-  url = 'https://pypi.org/pypi/{}/json'.format((package))
+  url = 'https://pypi.org/pypi/{}/json'.format(package)
 
   async with session.get(url) as res:
     data = await res.json()
