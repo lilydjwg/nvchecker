@@ -8,7 +8,7 @@ async def test_pypi(get_version):
     assert await get_version("example", {"pypi": None}) == "0.1.0"
 
 async def test_pypi_release(get_version):
-    assert await get_version("example-test-package", {"pypi": None}) == "1.0.0"
+    assert await get_version("example-test-package", {"pypi": "example-test-package"}) == "1.0.0"
 
 async def test_pypi_pre_release(get_version):
-    assert await get_version("example-test-package", {"pypi": None, "use_pre_release": 1}) == "1.0.1a1"
+    assert await get_version("example-test-package", {"pypi": "example-test-package", "use_pre_release": 1}) == "1.0.1a1"
