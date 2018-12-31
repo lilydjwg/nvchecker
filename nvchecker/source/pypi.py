@@ -19,7 +19,7 @@ async def get_version(name, conf, **kwargs):
     data = await res.json()
 
   if use_pre_release:
-    version = list(data['releases'].keys())[-1]
+    version = sorted(data['releases'].keys())[-1]
   else:
     version = data['info']['version']
   return version
