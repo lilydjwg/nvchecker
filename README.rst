@@ -357,6 +357,9 @@ Check `PyPI <https://pypi.python.org/>`_ for updates.
 pypi
   The name used on PyPI, e.g. ``PySide``.
 
+use_pre_release
+  Whether to accept pre release. Default is false.
+
 Check RubyGems
 --------------
 Check `RubyGems <https://rubygems.org/>`_ for updates.
