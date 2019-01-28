@@ -4,6 +4,7 @@
 import os
 import re
 import time
+from urllib.parse import urlencode
 from functools import partial
 
 import structlog
@@ -26,6 +27,7 @@ async def get_version(name, conf, **kwargs):
 async def get_version_real(name, conf, **kwargs):
   repo = conf.get('github')
   br = conf.get('branch')
+  path = conf.get('path')
   use_latest_release = conf.getboolean('use_latest_release', False)
   use_max_tag = conf.getboolean('use_max_tag', False)
   include_tags_pattern = conf.get("include_tags_pattern", "")
@@ -37,8 +39,12 @@ async def get_version_real(name, conf, **kwargs):
     url = GITHUB_MAX_TAG % repo
   else:
     url = GITHUB_URL % repo
+    parameters = {}
     if br:
-      url += '?sha=' + br
+      parameters['sha'] = br
+    if path:
+      parameters['path'] = path
+    url += '?' + urlencode(parameters)
   headers = {
     'Accept': 'application/vnd.github.quicksilver-preview+json',
     'User-Agent': 'lilydjwg/nvchecker',
