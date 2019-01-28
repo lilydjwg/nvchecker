@@ -249,6 +249,9 @@ github
 branch
   Which branch to track? Default: ``master``.
 
+path
+  Only commits containing this file path will be returned.
+
 use_latest_release
   Set this to ``true`` to check for the latest release on GitHub. An annotated
   tag creates a "release" on GitHub. It's not the same with git tags, which
