@@ -28,6 +28,8 @@ def main():
   parser = argparse.ArgumentParser(description='New version checker for software')
   parser.add_argument('-n', '--notify', action='store_true', default=False,
                       help='show desktop notifications when a new version is available')
+  parser.add_argument('-t', '--tries', default=1, type=int, metavar='N',
+                      help='try N times when errors occur')
   core.add_common_arguments(parser)
   args = parser.parse_args()
   if core.process_common_arguments(args):
@@ -36,7 +38,7 @@ def main():
   if not args.file:
     return
 
-  s = Source(args.file)
+  s = Source(args.file, args.tries)
 
   ioloop = asyncio.get_event_loop()
   ioloop.run_until_complete(s.check())

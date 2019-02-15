@@ -104,12 +104,14 @@ def write_verfile(file, versions):
 
 class Source:
   oldver = newver = None
+  tries = 1
 
-  def __init__(self, file):
+  def __init__(self, file, tries=1):
     self.config = config = configparser.ConfigParser(
       dict_type=dict, allow_no_value=True
     )
     self.name = file.name
+    self.tries = tries
     config.read_file(file)
     if '__config__' in config:
       c = config['__config__']
@@ -141,6 +143,7 @@ class Source:
       self.oldvers = {}
     self.curvers = self.oldvers.copy()
 
+    tries = self.tries
     token_q = asyncio.Queue(maxsize=self.max_concurrent)
 
     for _ in range(self.max_concurrent):
@@ -149,10 +152,18 @@ class Source:
     async def worker(name, conf):
       await token_q.get()
       try:
-        ret = await get_version(name, conf, keyman=self.keymanager)
-        return name, ret
-      except Exception as e:
-        return name, e
+        for i in range(tries):
+          try:
+            ret = await get_version(
+              name, conf, keyman=self.keymanager)
+            return name, ret
+          except Exception as e:
+            if i + 1 < tries:
+              logger.warning('failed, retrying',
+                             name=name, exc_info=e)
+              await asyncio.sleep(i)
+            else:
+              return name, e
       finally:
         await token_q.put(True)
 
