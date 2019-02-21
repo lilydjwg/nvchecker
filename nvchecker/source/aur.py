@@ -20,7 +20,7 @@ async def get_version(name, conf, **kwargs):
     data = await res.json()
 
   if not data['results']:
-    logger.error('AUR upstream not found', name=name)
+    logger.error('AUR upstream not found', pkgname=name, aurname=aurname)
     return
 
   version = data['results'][0]['Version']
