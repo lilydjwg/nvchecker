@@ -26,7 +26,7 @@ def add_common_arguments(parser):
   parser.add_argument('--logger', default='pretty',
                       choices=['pretty', 'json', 'both'],
                       help='select which logger to use')
-  parser.add_argument('--json-log-fd',
+  parser.add_argument('--json-log-fd', metavar='FD',
                       type=lambda fd: os.fdopen(int(fd), mode='w'),
                       help='specify fd to send json logs to. stdout by default')
   parser.add_argument('-V', '--version', action='store_true',

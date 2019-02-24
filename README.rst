@@ -86,7 +86,7 @@ You normally will like to specify some "version record files"; see below.
 JSON logging
 ------------
 With ``--logger=json`` or ``--logger=both``, you can get a structured logging
-for programmatically consuming. You can use ``--json-log-fd=N`` to specify the
+for programmatically consuming. You can use ``--json-log-fd=FD`` to specify the
 file descriptor to send logs to (take care to do line buffering). The logging
 level option (``-l`` or ``--logging``) doesn't take effect with this.
 
