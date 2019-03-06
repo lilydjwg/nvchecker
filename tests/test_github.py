@@ -36,9 +36,9 @@ async def test_github_max_tag_with_include_old(get_version):
     version = await get_version("example", {
         "github": "EFForg/https-everywhere",
         "use_max_tag": 1,
-        "include_tags_pattern": r"^\d",
+        "include_tags_pattern": r"^chrome-\d",
     })
-    assert re.match(r'[\d.]+', version)
+    assert re.match(r'chrome-[\d.]+', version)
 
 async def test_github_max_tag_with_include(get_version):
     version = await get_version("example", {
