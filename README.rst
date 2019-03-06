@@ -198,7 +198,7 @@ source sections to determine whether they are supported.
 
 include_regex
   Only consider version strings that match the given regex. The whole string
-  should match the regex.
+  should match the regex. Be sure to use ``.*`` when you mean it!
 
 sort_version_key
   Sort the version string using this key function. Choose between

@@ -44,6 +44,6 @@ async def test_github_max_tag_with_include(get_version):
     version = await get_version("example", {
         "github": "EFForg/https-everywhere",
         "use_max_tag": 1,
-        "include_regex": r"^\d",
+        "include_regex": r"^\d.*",
     })
     assert re.match(r'[\d.]+', version)
