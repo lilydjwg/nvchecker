@@ -6,6 +6,8 @@ from importlib import import_module
 
 import structlog
 
+from .sortversion import sort_version_keys
+
 logger = structlog.get_logger(logger_name=__name__)
 
 handler_precedence = (
@@ -38,6 +40,26 @@ def substitute_version(version, name, conf):
   # No substitution rules found. Just return the original version string.
   return version
 
+def apply_list_options(versions, conf):
+  pattern = conf.get('include_regex')
+  if pattern:
+    pattern = re.compile(pattern)
+    versions = [x for x in versions
+                if pattern.fullmatch(x)]
+
+  ignored = set(conf.get('ignored', '').split())
+  if ignored:
+    versions = [x for x in versions if x not in ignored]
+
+  if not versions:
+    return
+
+  sort_version_key = sort_version_keys[
+    conf.get("sort_version_key", "parse_version")]
+  versions.sort(key=sort_version_key)
+
+  return versions[-1]
+
 _cache = {}
 
 async def get_version(name, conf, **kwargs):
@@ -60,6 +82,10 @@ async def get_version(name, conf, **kwargs):
     return version
 
   version = await func(name, conf, **kwargs)
+
+  if isinstance(version, list):
+    version = apply_list_options(version, conf)
+
   if version:
     version = version.replace('\n', ' ')
     try:
@@ -69,4 +95,5 @@ async def get_version(name, conf, **kwargs):
 
   if version is not None:
     _cache[cache_key] = version
+
   return version

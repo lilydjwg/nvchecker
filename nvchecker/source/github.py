@@ -10,7 +10,6 @@ from functools import partial
 import structlog
 
 from . import session, HTTPError
-from ..sortversion import sort_version_keys
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -32,7 +31,6 @@ async def get_version_real(name, conf, **kwargs):
   use_max_tag = conf.getboolean('use_max_tag', False)
   include_tags_pattern = conf.get("include_tags_pattern", "")
   ignored_tags = conf.get("ignored_tags", "").split()
-  sort_version_key = sort_version_keys[conf.get("sort_version_key", "parse_version")]
   if use_latest_release:
     url = GITHUB_LATEST_RELEASE % repo
   elif use_max_tag:
@@ -64,7 +62,6 @@ async def get_version_real(name, conf, **kwargs):
     return await max_tag(partial(
       session.get, headers=headers, **kwargs),
       url, name, ignored_tags, include_tags_pattern,
-      sort_version_key,
     )
 
   async with session.get(url, headers=headers, **kwargs) as res:
@@ -87,8 +84,7 @@ async def get_version_real(name, conf, **kwargs):
   return version
 
 async def max_tag(
-  getter, url, name,
-  ignored_tags, include_tags_pattern, sort_version_key,
+  getter, url, name, ignored_tags, include_tags_pattern,
 ):
   # paging is needed
 
@@ -104,8 +100,7 @@ async def max_tag(
       data = [x for x in data
               if re.search(include_tags_pattern, x)]
     if data:
-      data.sort(key=sort_version_key)
-      return data[-1]
+      return data
     else:
       next_page_url = get_next_page_url(links)
       if not next_page_url:

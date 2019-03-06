@@ -7,7 +7,6 @@ import urllib.parse
 import structlog
 
 from . import session, HTTPError
-from ..sortversion import sort_version_keys
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -26,7 +25,6 @@ async def get_version_real(name, conf, **kwargs):
   host = conf.get('host', "gitlab.com")
   use_max_tag = conf.getboolean('use_max_tag', False)
   ignored_tags = conf.get("ignored_tags", "").split()
-  sort_version_key = sort_version_keys[conf.get("sort_version_key", "parse_version")]
 
   if use_max_tag:
     url = GITLAB_MAX_TAG % (host, repo)
@@ -52,9 +50,7 @@ async def get_version_real(name, conf, **kwargs):
   async with session.get(url, headers=headers) as res:
     data = await res.json()
   if use_max_tag:
-    data = [tag["name"] for tag in data if tag["name"] not in ignored_tags]
-    data.sort(key=sort_version_key)
-    version = data[-1]
+    version = [tag["name"] for tag in data if tag["name"] not in ignored_tags]
   else:
     version = data[0]['created_at'].split('T', 1)[0].replace('-', '')
   return version

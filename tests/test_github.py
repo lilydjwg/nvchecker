@@ -23,16 +23,27 @@ async def test_github_max_tag(get_version):
 async def test_github_max_tag_with_ignored_tags(get_version):
     assert await get_version("example", {"github": "harry-sanabria/ReleaseTestRepo", "use_max_tag": 1, "ignored_tags": "second_release release3"}) == "first_release"
 
+async def test_github_max_tag_with_ignored(get_version):
+    assert await get_version("example", {"github": "harry-sanabria/ReleaseTestRepo", "use_max_tag": 1, "ignored": "second_release release3"}) == "first_release"
+
 async def test_github_with_path(get_version):
     assert await get_version("example", {"github": "petronny/ReleaseTestRepo", "path": "test_directory"}) == "20140122.012101"
 
 async def test_github_with_path_and_branch(get_version):
     assert await get_version("example", {"github": "petronny/ReleaseTestRepo", "branch": "test", "path": "test_directory/test_directory"}) == "20190128.113201"
 
-async def test_github_max_tag_with_include(get_version):
+async def test_github_max_tag_with_include_old(get_version):
     version = await get_version("example", {
         "github": "EFForg/https-everywhere",
         "use_max_tag": 1,
         "include_tags_pattern": r"^\d",
+    })
+    assert re.match(r'[\d.]+', version)
+
+async def test_github_max_tag_with_include(get_version):
+    version = await get_version("example", {
+        "github": "EFForg/https-everywhere",
+        "use_max_tag": 1,
+        "include_regex": r"^\d",
     })
     assert re.match(r'[\d.]+', version)

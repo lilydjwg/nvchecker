@@ -197,16 +197,18 @@ The following options apply to sources that return a list. See individual
 source sections to determine whether they are supported.
 
 include_regex
-  Only consider version strings that match the given regex.
+  Only consider version strings that match the given regex. The whole string
+  should match the regex.
 
 sort_version_key
-  Sort the version string using this key function. Choose between ``parse_version`` and 
-  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
-  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
+  Sort the version string using this key function. Choose between
+  ``parse_version`` and ``vercmp``. Default value is ``parse_version``.
+  ``parse_version`` use ``pkg_resources.parse_version``. ``vercmp`` use
+  ``pyalpm.vercmp``.
 
 ignored
-  Version strings that are explicitly ignored, separated by whitespace. This can
-  be useful to avoid some known mis-named versions, so newer ones won't be
+  Version strings that are explicitly ignored, separated by whitespace. This
+  can be useful to avoid some known mis-named versions, so newer ones won't be
   "overridden" by the old broken ones.
 
 Search in a Webpage
