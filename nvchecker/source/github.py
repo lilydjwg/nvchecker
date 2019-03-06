@@ -62,6 +62,7 @@ async def get_version_real(name, conf, **kwargs):
     return await max_tag(partial(
       session.get, headers=headers, **kwargs),
       url, name, ignored_tags, include_tags_pattern,
+      max_page = conf.get("max_page", 3),
     )
 
   async with session.get(url, headers=headers, **kwargs) as res:
@@ -84,11 +85,12 @@ async def get_version_real(name, conf, **kwargs):
   return version
 
 async def max_tag(
-  getter, url, name, ignored_tags, include_tags_pattern,
+  getter, url, name, ignored_tags, include_tags_pattern, max_page,
 ):
   # paging is needed
+  tags = []
 
-  while True:
+  for _ in range(max_page):
     async with getter(url) as res:
       logger.debug('X-RateLimit-Remaining',
                     n=res.headers.get('X-RateLimit-Remaining'))
@@ -100,7 +102,7 @@ async def max_tag(
       data = [x for x in data
               if re.search(include_tags_pattern, x)]
     if data:
-      return data
+      tags += data
     else:
       next_page_url = get_next_page_url(links)
       if not next_page_url:
@@ -111,7 +113,7 @@ async def max_tag(
   logger.error('No tag found in upstream repository.',
                 name=name,
                 include_tags_pattern=include_tags_pattern)
-  return
+  return tags
 
 def get_next_page_url(links):
   links = links.split(', ')

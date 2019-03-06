@@ -286,9 +286,14 @@ use_latest_release
   includes both annotated tags and lightweight ones.
 
 use_max_tag
-  Set this to ``true`` to check for the max tag on GitHub. Unlike ``use_latest_release``,
-  this option includes both annotated tags and lightweight ones, and return the biggest one
-  sorted by ``pkg_resources.parse_version``.
+  Set this to ``true`` to check for the max tag on GitHub. Unlike
+  ``use_latest_release``, this option includes both annotated tags and
+  lightweight ones, and return the largest one sorted by the
+  ``sort_version_key`` option.
+
+max_page
+  How many pages do we search for the max tag? Default is 3. This works when
+  ``use_max_tag`` is set.
 
 proxy
   The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
@@ -300,7 +305,7 @@ An environment variable ``NVCHECKER_GITHUB_TOKEN`` or a key named ``github``
 can be set to a GitHub OAuth token in order to request more frequently than
 anonymously.
 
-This source supports `list options`_ when ``use_latest_release`` or ``use_max_tag`` is set.
+This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check BitBucket
 ---------------
