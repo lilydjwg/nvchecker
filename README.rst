@@ -170,7 +170,7 @@ keyfile
 
 Global Options
 --------------
-The following options apply to all checkers.
+The following options apply to all check sources.
 
 prefix
   Strip the prefix string if the version string starts with it. Otherwise the
