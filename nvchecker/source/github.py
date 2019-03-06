@@ -62,7 +62,7 @@ async def get_version_real(name, conf, **kwargs):
     return await max_tag(partial(
       session.get, headers=headers, **kwargs),
       url, name, ignored_tags, include_tags_pattern,
-      max_page = conf.get("max_page", 3),
+      max_page = conf.get("max_page", 1),
     )
 
   async with session.get(url, headers=headers, **kwargs) as res:

@@ -292,7 +292,7 @@ use_max_tag
   ``sort_version_key`` option.
 
 max_page
-  How many pages do we search for the max tag? Default is 3. This works when
+  How many pages do we search for the max tag? Default is 1. This works when
   ``use_max_tag`` is set.
 
 proxy
