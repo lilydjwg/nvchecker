@@ -190,6 +190,25 @@ and then do something special, just use ``from_pattern```/``to_pattern``. For
 example, the transformation of ``v1_1_0`` => ``1.1.0`` can be achieved with
 ``from_pattern = v(\d+)_(\d+)_(\d+)`` and ``to_pattern = \1.\2.\3``.
 
+List Options
+------------
+
+The following options apply to sources that return a list. See individual
+source sections to determine whether they are supported.
+
+include_regex
+  Only consider version strings that match the given regex.
+
+sort_version_key
+  Sort the version string using this key function. Choose between ``parse_version`` and 
+  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
+  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
+
+ignored
+  Version strings that are explicitly ignored, separated by whitespace. This can
+  be useful to avoid some known mis-named versions, so newer ones won't be
+  "overridden" by the old broken ones.
+
 Search in a Webpage
 -------------------
 Search through a specific webpage for the version string. This type of version finding has these fields:
@@ -217,6 +236,8 @@ sort_version_key
   Sort the version string using this key function. Choose between ``parse_version`` and 
   ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
   ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
+
+This source supports `list options`_.
 
 Find with a Command
 -------------------
@@ -261,27 +282,17 @@ use_max_tag
   this option includes both annotated tags and lightweight ones, and return the biggest one
   sorted by ``pkg_resources.parse_version``.
 
-include_tags_pattern
-  Only include tags matching this pattern. This option must be used together
-  with ``use_max_tag``.
-
-ignored_tags
-  Ignore certain tags while computing the max tag. Tags are separate by
-  whitespaces. This option must be used together with ``use_max_tag``. This can
-  be useful to avoid some known badly versioned tags, so the newer tags won't
-  be "overridden" by the old broken ones.
-
-sort_version_key
-  Sort the version string using this key function. Choose between ``parse_version`` and 
-  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
-  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
-
 proxy
   The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
+
+include_tags_pattern, ignored_tags, sort_version_key
+  Deprecated. Use `list options`_ instead.
 
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` or a key named ``github``
 can be set to a GitHub OAuth token in order to request more frequently than
 anonymously.
+
+This source supports `list options`_ when ``use_latest_release`` or ``use_max_tag`` is set.
 
 Check BitBucket
 ---------------
@@ -298,16 +309,10 @@ use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
   sorted by ``pkg_resources.parse_version``.
 
-ignored_tags
-  Ignore certain tags while computing the max tag. Tags are separate by
-  whitespaces. This option must be used together with ``use_max_tag``. This can
-  be useful to avoid some known badly versioned tags, so the newer tags won't
-  be "overridden" by the old broken ones.
+ignored_tags, sort_version_key
+  Deprecated. Use `list options`_ instead.
 
-sort_version_key
-  Sort the version string using this key function. Choose between ``parse_version`` and 
-  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
-  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
+This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check GitLab
 -------------
@@ -323,26 +328,16 @@ use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
   sorted by ``pkg_resources.parse_version``.
 
-ignored_tags
-  Ignore certain tags while computing the max tag. Tags are separate by
-  whitespaces. This option must be used together with ``use_max_tag``. This can
-  be useful to avoid some known badly versioned tags, so the newer tags won't
-  be "overridden" by the old broken ones.
-
-sort_version_key
-  Sort the version string using this key function. Choose between ``parse_version`` and 
-  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
-  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
-
 host
   Hostname for self-hosted GitLab instance.
 
 token
   GitLab authorization token used to call the API.
   
-Authenticated only.
+ignored_tags, sort_version_key
+  Deprecated. Use `list options`_ instead.
 
-To set a authorization token, you can set:
+To set an authorization token, you can set:
 
 - a key named ``gitlab_{host}`` in the keyfile (where ``host`` is formed the
   same as the environment variable, but all lowercased).
@@ -351,6 +346,8 @@ To set a authorization token, you can set:
   with dots (``.``) and slashes (``/``) replaced by underscores (``_``), e.g.
   ``NVCHECKER_GITLAB_TOKEN_GITLAB_COM``.
 - the token option
+
+This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check PyPI
 ----------
@@ -496,3 +493,4 @@ Bugs
 * Finish writing results even on Ctrl-C or other interruption.
 
 .. _Pacman: https://wiki.archlinux.org/index.php/Pacman
+.. _list options: #list-options
