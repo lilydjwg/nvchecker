@@ -22,7 +22,7 @@ async def test_gitlab_max_tag_with_ignored_tags(get_version):
 async def test_gitlab_max_tag_with_include(get_version):
     assert await get_version("example", {
         "gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1,
-        "include": r'v1\.0.*',
+        "include_regex": r'v1\.0.*',
     }) == "v1.0.0"
 
 async def test_gitlab_max_tag_with_ignored(get_version):
