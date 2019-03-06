@@ -200,6 +200,12 @@ include_regex
   Only consider version strings that match the given regex. The whole string
   should match the regex. Be sure to use ``.*`` when you mean it!
 
+exclude_regex
+  Don't consider version strings that match the given regex. The whole string
+  should match the regex. Be sure to use ``.*`` when you mean it! This option
+  has higher precedence that ``include_regex``; that is, if matched by this
+  one, it's excluded even it's also matched by ``include_regex``.
+
 sort_version_key
   Sort the version string using this key function. Choose between
   ``parse_version`` and ``vercmp``. Default value is ``parse_version``.

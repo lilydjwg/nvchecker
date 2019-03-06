@@ -47,6 +47,12 @@ def apply_list_options(versions, conf):
     versions = [x for x in versions
                 if pattern.fullmatch(x)]
 
+  pattern = conf.get('exclude_regex')
+  if pattern:
+    pattern = re.compile(pattern)
+    versions = [x for x in versions
+                if not pattern.fullmatch(x)]
+
   ignored = set(conf.get('ignored', '').split())
   if ignored:
     versions = [x for x in versions if x not in ignored]
