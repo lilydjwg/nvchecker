@@ -45,7 +45,7 @@ async def get_version(name, conf, **kwargs):
       continue
     for archive in pkg.findall('./archives/archive'):
       host_os = archive.find('./host-os')
-      if host_os and host_os.text != 'linux':
+      if host_os is not None and host_os.text != 'linux':
         continue
       archive_url = archive.find('./complete/url').text
       # revision
