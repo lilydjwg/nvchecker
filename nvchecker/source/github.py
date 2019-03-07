@@ -110,9 +110,10 @@ async def max_tag(
       else:
         url = next_page_url
 
-  logger.error('No tag found in upstream repository.',
-                name=name,
-                include_tags_pattern=include_tags_pattern)
+  if not tags:
+    logger.error('No tag found in upstream repository.',
+                  name=name,
+                  include_tags_pattern=include_tags_pattern)
   return tags
 
 def get_next_page_url(links):
