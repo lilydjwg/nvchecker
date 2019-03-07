@@ -19,7 +19,7 @@ async def test_regex(get_version):
         "regex": 'for (\w+) examples',
     }) == "illustrative"
 
-async def test_missing_ok(get_version, raise_on_logger_msg):
+async def test_missing_ok(get_version):
     assert await get_version("example", {
         "url": "http://example.net/",
         "regex": "foobar",

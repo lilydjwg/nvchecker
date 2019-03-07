@@ -59,7 +59,7 @@ def event_loop(request):
   loop = asyncio.get_event_loop()
   yield loop
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session", autouse=True)
 def raise_on_logger_msg():
   def proc(logger, method_name, event_dict):
     if method_name in ('warn', 'error'):
