@@ -63,6 +63,8 @@ def event_loop(request):
 def raise_on_logger_msg():
   def proc(logger, method_name, event_dict):
     if method_name in ('warn', 'error'):
+      if 'exc_info' in event_dict:
+        raise event_dict['exc_info']
       raise RuntimeError(event_dict['event'])
     return event_dict['event']
 
