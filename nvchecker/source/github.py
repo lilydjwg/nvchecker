@@ -15,7 +15,8 @@ logger = structlog.get_logger(logger_name=__name__)
 
 GITHUB_URL = 'https://api.github.com/repos/%s/commits'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
-GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
+# https://developer.github.com/v3/git/refs/#get-all-references
+GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/git/refs/tags'
 
 async def get_version(name, conf, **kwargs):
   try:
@@ -95,9 +96,16 @@ async def max_tag(
       logger.debug('X-RateLimit-Remaining',
                     n=res.headers.get('X-RateLimit-Remaining'))
       links = res.headers.get('Link')
-      data = await res.json()
+      j = await res.json()
 
-    data = [tag["name"] for tag in data if tag["name"] not in ignored_tags]
+    data = []
+
+    for ref in j:
+      tag = ref['ref'].split('/', 2)[-1]
+      if tag in ignored_tags:
+        continue
+      data.append(tag)
+
     if include_tags_pattern:
       data = [x for x in data
               if re.search(include_tags_pattern, x)]
@@ -117,6 +125,9 @@ async def max_tag(
   return tags
 
 def get_next_page_url(links):
+  if not links:
+    return
+
   links = links.split(', ')
   next_link = [x for x in links if x.endswith('rel="next"')]
   if not next_link:
