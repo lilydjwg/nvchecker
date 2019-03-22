@@ -103,12 +103,12 @@ async def max_tag(
               if re.search(include_tags_pattern, x)]
     if data:
       tags += data
+
+    next_page_url = get_next_page_url(links)
+    if not next_page_url:
+      break
     else:
-      next_page_url = get_next_page_url(links)
-      if not next_page_url:
-        break
-      else:
-        url = next_page_url
+      url = next_page_url
 
   if not tags:
     logger.error('No tag found in upstream repository.',
