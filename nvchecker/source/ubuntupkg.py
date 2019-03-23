@@ -3,7 +3,7 @@
 
 import structlog
 
-from . import session, conf_cacheable_with_name
+from . import session, conf_cacheable_with_name, strip_number
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -12,7 +12,7 @@ URL = 'https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedS
 get_cacheable_conf = conf_cacheable_with_name('ubuntupkg')
 
 async def get_version(name, conf, **kwargs):
-  pkg = conf.get('ubuntupkg') or name
+  pkg = conf.get('ubuntupkg') or strip_number(name)
   strip_release = conf.getboolean('strip-release', False)
   suite = conf.get('suite')
   url = URL % pkg

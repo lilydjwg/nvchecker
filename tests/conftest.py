@@ -40,7 +40,9 @@ async def run_source():
 
 @pytest.fixture(scope="module")
 async def get_version():
-  async def __call__(name, config):
+  async def __call__(name, config, clear_cache=False):
+    if clear_cache:
+      _cache.clear()
 
     if isinstance(config, dict):
       _config = configparser.ConfigParser(dict_type=dict, allow_no_value=True)

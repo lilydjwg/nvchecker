@@ -12,3 +12,6 @@ async def test_pacman(get_version):
 
 async def test_pacman_strip_release(get_version):
     assert await get_version("ipw2100-fw", {"pacman": None, "strip-release": 1}) == "1.3"
+
+async def test_pacman_numbered(get_version):
+    assert await get_version("ipw2100-fw:1", {"pacman": None}, clear_cache=True) == "1.3-9"

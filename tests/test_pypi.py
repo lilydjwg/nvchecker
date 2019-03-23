@@ -12,3 +12,6 @@ async def test_pypi_release(get_version):
 
 async def test_pypi_pre_release(get_version):
     assert await get_version("example-test-package", {"pypi": "example-test-package", "use_pre_release": 1}) == "1.0.1a1"
+
+async def test_pypi_numbered(get_version):
+    assert await get_version("example:1", {"pypi": None}, clear_cache=True) == "0.1.0"

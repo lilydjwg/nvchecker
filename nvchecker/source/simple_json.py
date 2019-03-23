@@ -1,12 +1,12 @@
 # MIT licensed
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from . import session, conf_cacheable_with_name
+from . import session, conf_cacheable_with_name, strip_number
 
 def simple_json(urlpat, confkey, version_from_json):
 
   async def get_version(name, conf, **kwargs):
-    repo = conf.get(confkey) or name
+    repo = conf.get(confkey) or strip_number(name)
     url = urlpat % repo
     kwargs = {}
     if conf.get('proxy'):
