@@ -297,6 +297,9 @@ max_page
   How many pages do we search for the max tag? Default is 1. This works when
   ``use_max_tag`` is set.
 
+  However, with current API in use, GitHub seems to always return all data in
+  one page, making this option obsolete.
+
 proxy
   The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
