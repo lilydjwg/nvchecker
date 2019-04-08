@@ -343,7 +343,7 @@ branch
   Which branch to track? Default: ``master``.
 
 use_max_tag
-  Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
+  Set this to ``true`` to check for the max tag on GitLab. Will return the biggest one
   sorted by ``pkg_resources.parse_version``.
 
 host

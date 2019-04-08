@@ -28,7 +28,6 @@ setup(
   tests_require = [
     'pytest',
     'pytest-asyncio',
-    'pytest-xdist',
     'flaky',
   ],
   entry_points = {
