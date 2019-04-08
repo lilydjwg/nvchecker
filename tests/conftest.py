@@ -65,7 +65,8 @@ def raise_on_logger_msg():
     if method_name in ('warning', 'error'):
       if 'exc_info' in event_dict:
         raise event_dict['exc_info']
-      raise RuntimeError(event_dict['event'])
+      if not event_dict['event'].startswith('rate limited'):
+        raise RuntimeError(event_dict['event'])
     return event_dict['event']
 
   structlog.configure([proc])
