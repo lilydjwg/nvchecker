@@ -162,7 +162,7 @@ newver
   Specify a version record file to store the new version info.
 
 proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
+  The HTTP proxy to use. The format is ``proto://host:port``, e.g. ``http://localhost:8087``.
 
 max_concurrent
   Max number of concurrent jobs. Default: 20.

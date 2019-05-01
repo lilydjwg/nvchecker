@@ -15,7 +15,7 @@ try:
 except ImportError:
   pycurl = None
 
-__all__ = ['session', 'HTTPError']
+__all__ = ['session', 'HTTPError', 'NetworkErrors']
 
 client = AsyncHTTPClient()
 HTTP2_AVAILABLE = None if pycurl else False
@@ -73,3 +73,5 @@ async def read(self):
 HTTPResponse.json = json_response
 HTTPResponse.read = read
 session = Session()
+
+NetworkErrors = ()

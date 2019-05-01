@@ -38,6 +38,7 @@ def process_common_arguments(args):
   '''return True if should stop'''
   processors = [
     slogconf.exc_info,
+    slogconf.filter_exc,
   ]
   logger_factory = None
 

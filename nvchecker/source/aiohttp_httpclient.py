@@ -6,7 +6,7 @@ import asyncio
 import aiohttp
 connector = aiohttp.TCPConnector(limit=20)
 
-__all__ = ['session', 'HTTPError']
+__all__ = ['session', 'HTTPError', 'NetworkErrors']
 
 class HTTPError(Exception):
     def __init__(self, code, message, response):
@@ -25,9 +25,17 @@ class BetterClientSession(aiohttp.ClientSession):
             raise HTTPError(res.status, res.reason, res)
         return res
 
-session = BetterClientSession(connector=connector)
+session = BetterClientSession(
+    connector = connector,
+    timeout = aiohttp.ClientTimeout(total=20),
+)
 
 @atexit.register
 def cleanup():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(session.close())
+
+NetworkErrors = (
+    asyncio.TimeoutError,
+    aiohttp.ClientConnectorError,
+)

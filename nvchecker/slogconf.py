@@ -6,8 +6,11 @@ import logging
 import os
 import io
 import traceback
+import sys
 
 import structlog
+
+from .source import HTTPError, NetworkErrors
 
 def _console_msg(event):
   evt = event['event']
@@ -36,6 +39,24 @@ def exc_info(logger, level, event):
     event['exc_info'] = True
   return event
 
+def filter_exc(logger, level, event):
+  exc_info = event.get('exc_info')
+  if not exc_info:
+    return event
+
+  if exc_info is True:
+    exc = sys.exc_info()[1]
+  else:
+    exc = exc_info
+
+  if isinstance(exc, HTTPError):
+    if exc.code == 599: # tornado timeout
+      del event['exc_info']
+  elif isinstance(exc, NetworkErrors):
+    del event['exc_info']
+  event['error'] = exc
+  return event
+
 def stdlib_renderer(logger, level, event):
   # return event unchanged for further processing
   std_event = _console_msg(event.copy())
@@ -45,6 +66,8 @@ def stdlib_renderer(logger, level, event):
     logger = logging.getLogger()
   msg = std_event.pop('msg', std_event.pop('event'))
   exc_info = std_event.pop('exc_info', None)
+  if 'error' in std_event:
+    std_event['error'] = repr(std_event['error'])
   getattr(logger, level)(
     msg, exc_info = exc_info, extra=std_event,
   )
