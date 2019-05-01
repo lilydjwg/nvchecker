@@ -65,7 +65,7 @@ def raise_on_logger_msg():
     if method_name in ('warning', 'error'):
       if 'exc_info' in event_dict:
         raise event_dict['exc_info']
-      if not event_dict['event'].startswith('rate limited'):
+      if not event_dict['event'].startswith(('rate limited', 'no-result')):
         raise RuntimeError(event_dict['event'])
     return event_dict['event']
 
