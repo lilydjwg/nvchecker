@@ -36,7 +36,7 @@ async def get_version(name, conf, **kwargs):
 async def _get_tags(url, *, max_page):
   ret = []
 
-  while True:
+  for _ in range(max_page):
     async with session.get(url) as res:
       data = await res.json()
     ret.extend(x['name'] for x in data['values'])
