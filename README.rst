@@ -330,6 +330,10 @@ use_max_tag
 ignored_tags, sort_version_key
   Deprecated. Use `list options`_ instead.
 
+max_page
+  How many pages do we search for the max tag? Default is 3. This works when
+  ``use_max_tag`` is set.
+
 This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check GitLab
