@@ -18,9 +18,9 @@ env:
     - secure: "ZmD5E59cLbGylhId+uYsuaM7HCcuP7E3DVZUHtSKQ7ZtiDIPG2EFCl+WlcPBS2JhdyEJ1v7PbxSCq6/jkSK2EGVcWaHMDIyZRu8TFY+l8mqghHi18l0jeegE7FSqkW2JMWmB3y6jsv7EV6YffrSuvHiNgHyZhhIRkbV/B4N9KvJwNYoyVxGYGoJRe5yuvE+2Xkwc9y0ddxh/p+nILU+Vt0i3Z+yVfg4jul7zN1KhK8I8ax4wpAq+0V1PpWbF6/4UK5Xc/1UMEyWE0f8aEzn4kdC6UetOKacWycq7ag3W1vWKVYJvXyRKjGWmef+Al7z8KbwBkU6KR0Hb2OZWKF3SsCvv8bQEjbqcIeGKQT9J2LTgqTxgFtCMmKWXM3BxLASac/WEdQyyZmQq3XHI/OyJ/1hsSLCgvpexIueITo68LkOigrRRiobSER6KK1CaA1AQFWnPnEwrC3QCtzYUIHPT70nTy1Dx0PiOeQrG/stUoPQ9V0FCBf2tKYg2tUDlJbk7avt8rsmLht1uGx8I75qgg3Di/03N19wEBf6V50H9T23wYXRJ/q2mqPiBCBWIlHwE8NbLZgRfBvCFyUBRvggNAyvZaEOmWRl3U9JEipcqrAQtddzDP1dUbr6SYJChR6yfMkWXXsUvy3FxrOOILeaBT2j0goSaye8aLncUqArgWSw="
   matrix:
     - DEPS=aiohttp
-    - DEPS=tornado pycurl
+    - DEPS="tornado pycurl"
     - DEPS=tornado
-    - DEPS="tornado<5" pycurl
+    - DEPS="tornado<5 pycurl"
     - DEPS="tornado<5"
 matrix:
   fast_finish: true
