@@ -4,6 +4,8 @@
 import atexit
 import asyncio
 import aiohttp
+from .httpclient import DEFAULT_USER_AGENT
+
 connector = aiohttp.TCPConnector(limit=20)
 
 __all__ = ['session', 'HTTPError', 'NetworkErrors']
@@ -18,6 +20,8 @@ class BetterClientSession(aiohttp.ClientSession):
     async def _request(self, *args, **kwargs):
         if hasattr(self, "nv_config") and self.nv_config.get("proxy"):
             kwargs.setdefault("proxy", self.nv_config.get("proxy"))
+
+        kwargs.setdefault("headers", {}).setdefault('User-Agent', DEFAULT_USER_AGENT)
 
         res = await super(BetterClientSession, self)._request(
             *args, **kwargs)
