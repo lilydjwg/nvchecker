@@ -28,6 +28,7 @@ setup(
   tests_require = [
     'pytest',
     'pytest-asyncio',
+    'pytest-httpbin',
     'flaky',
   ],
   entry_points = {
