@@ -15,6 +15,8 @@ try:
 except ImportError:
   pycurl = None
 
+from .httpclient import DEFAULT_USER_AGENT
+
 __all__ = ['session', 'HTTPError', 'NetworkErrors']
 
 client = AsyncHTTPClient()
@@ -51,6 +53,7 @@ class Session:
       q = urlencode(params)
       url += '?' + q
 
+    kwargs.setdefault("headers", {}).setdefault('User-Agent', DEFAULT_USER_AGENT)
     r = HTTPRequest(url, **kwargs)
     return ResponseManager(r)
 

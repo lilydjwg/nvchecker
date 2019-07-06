@@ -46,7 +46,6 @@ async def get_version_real(name, conf, **kwargs):
     url += '?' + urlencode(parameters)
   headers = {
     'Accept': 'application/vnd.github.quicksilver-preview+json',
-    'User-Agent': 'lilydjwg/nvchecker',
   }
   if 'NVCHECKER_GITHUB_TOKEN' in os.environ:
     headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
