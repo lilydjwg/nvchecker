@@ -4,9 +4,13 @@
 import pytest
 pytestmark = pytest.mark.asyncio
 
-@pytest.mark.skipif(True,
-                    reason='httpbin is overloaded?')
-async def test_regex_httpbin(get_version):
+async def test_regex_httpbin_default_user_agent(get_version):
+    assert await get_version("example", {
+        "url": "https://httpbin.org/get",
+        "regex": r'"User-Agent": "([^"]+)"',
+    }) == "lilydjwg/nvchecker"
+
+async def test_regex_httpbin_user_agent(get_version):
     assert await get_version("example", {
         "url": "https://httpbin.org/get",
         "regex": r'"User-Agent": "(\w+)"',
