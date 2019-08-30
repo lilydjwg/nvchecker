@@ -29,6 +29,7 @@ Contents
 
   * `Configuration Section <#configuration-section>`_
   * `Global Optons <#global-options>`_
+  * `List Optons <#list-options>`_
   * `Search in a Webpage <#search-in-a-webpage>`_
   * `Find with a Command <#find-with-a-command>`_
   * `Check AUR <#check-aur>`_
