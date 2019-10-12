@@ -28,7 +28,7 @@ async def get_version(name, conf, **kwargs):
   if use_max_tag:
     data = [tag for tag in data if tag not in ignored_tags]
     data.sort(key=sort_version_key)
-    version = data[-1]
+    version = data
   else:
     version = data['values'][0]['date'].split('T', 1)[0].replace('-', '')
   return version
