@@ -28,11 +28,6 @@ matrix:
     # doesn't work well, see https://travis-ci.org/lilydjwg/nvchecker/jobs/376326582
     - python: pypy3.6-7.1.1
       env: DEPS=aiohttp
-    # segfault, see https://github.com/aio-libs/yarl/issues/317
+    # it works now, but may be broken in the future again
     - python: nightly
       env: DEPS=aiohttp
-
-addons:
-  apt:
-    packages:
-    - libgnutls-dev
