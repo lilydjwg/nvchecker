@@ -35,4 +35,5 @@ matrix:
 addons:
   apt:
     packages:
+    # This is needed for pycurl
     - libgnutls28-dev
