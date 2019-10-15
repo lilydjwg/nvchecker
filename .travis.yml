@@ -1,5 +1,5 @@
 sudo: false
-dist: bionic
+dist: xenial
 language: python
 cache: pip
 python:
@@ -36,4 +36,4 @@ addons:
   apt:
     packages:
     # This is needed for pycurl
-    - libgnutls28-dev
+    - libgnutls-dev
