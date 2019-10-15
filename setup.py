@@ -32,7 +32,7 @@ setup(
   ],
   entry_points = {
     'console_scripts': [
-      'nvchecker = nvchecker.main:main',
+      'nvchecker = nvchecker.__main__:main',
       'nvtake = nvchecker.tools:take',
       'nvcmp = nvchecker.tools:cmp',
     ],
