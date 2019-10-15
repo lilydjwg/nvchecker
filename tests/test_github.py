@@ -5,6 +5,7 @@ import os
 import re
 import pytest
 pytestmark = [pytest.mark.asyncio,
+              pytest.mark.needs_net,
               pytest.mark.skipif("NVCHECKER_GITHUB_TOKEN" not in os.environ,
                                  reason="requires NVCHECKER_GITHUB_TOKEN, or it fails too much")]
 

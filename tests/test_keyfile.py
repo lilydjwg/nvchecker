@@ -8,7 +8,7 @@ import contextlib
 from nvchecker.source import HTTPError
 
 import pytest
-pytestmark = [pytest.mark.asyncio]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 @contextlib.contextmanager
 def unset_github_token_env():

@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import pytest
-pytestmark = pytest.mark.asyncio
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_bitbucket(get_version):
     assert await get_version("example", {"bitbucket": "prawee/git-tag"}) == "20150303"

@@ -5,6 +5,7 @@ import os
 import pytest
 import contextlib
 pytestmark = [pytest.mark.asyncio,
+              pytest.mark.needs_net,
               pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
                                  reason="rate-limited per IP")]
 

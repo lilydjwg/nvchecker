@@ -4,6 +4,7 @@
 import os
 import pytest
 pytestmark = [pytest.mark.asyncio,
+              pytest.mark.needs_net,
               pytest.mark.skipif("NVCHECKER_GITLAB_TOKEN_GITLAB_COM" not in os.environ,
                                  reason="requires NVCHECKER_GITLAB_TOKEN_GITLAB_COM")]
 

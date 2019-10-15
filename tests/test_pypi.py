@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import pytest
-pytestmark = pytest.mark.asyncio
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_pypi(get_version):
     assert await get_version("example", {"pypi": None}) == "0.1.0"

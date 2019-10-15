@@ -2,7 +2,7 @@
 # Copyright (c) 2017 Yen Chi Hsuan <yan12125 at gmail dot com>
 
 import pytest
-pytestmark = pytest.mark.asyncio
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_android_addon(get_version):
     assert await get_version("android-google-play-apk-expansion", {"android_sdk": "extras;google;market_apk_expansion", "repo": "addon"}) == "1.r03"

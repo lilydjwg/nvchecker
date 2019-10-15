@@ -70,3 +70,9 @@ def raise_on_logger_msg():
     return event_dict['event']
 
   structlog.configure([proc])
+
+def pytest_configure(config):
+  # register an additional marker
+  config.addinivalue_line(
+    'markers', 'needs_net: mark test to require Internet access',
+  )
