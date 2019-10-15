@@ -31,3 +31,8 @@ matrix:
     # it works now, but may be broken in the future again
     - python: nightly
       env: DEPS=aiohttp
+
+addons:
+  apt:
+    packages:
+    - libgnutls28-dev
