@@ -12,3 +12,19 @@ async def test_archpkg(get_version):
 @flaky
 async def test_archpkg_strip_release(get_version):
     assert await get_version("ipw2100-fw", {"archpkg": None, "strip-release": 1}) == "1.3"
+
+@flaky
+async def test_archpkg_provided(get_version):
+    assert await get_version("jsoncpp", {
+        "archpkg": None,
+        "provided": "libjsoncpp.so",
+    }) == "21-64"
+
+@flaky
+async def test_archpkg_provided_strip(get_version):
+    assert await get_version("jsoncpp", {
+        "archpkg": None,
+        "provided": "libjsoncpp.so",
+        "strip-release": True,
+    }) == "21"
+

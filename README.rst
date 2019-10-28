@@ -438,7 +438,10 @@ archpkg
   Name of the Arch Linux package.
 
 strip-release
-  Strip the release part.
+  Strip the release part, only return part before ``-``.
+
+provided
+  Instead of the package version, return the version this package provides. Its value is what the package provides, and ``strip-release`` takes effect too. This is best used with libraries.
 
 Check Debian Linux official packages
 ------------------------------------
