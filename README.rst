@@ -46,6 +46,7 @@ Contents
   * `Check Arch Linux official packages <#check-arch-linux-official-packages>`_
   * `Check Debian Linux official packages <#check-debian-linux-official-packages>`_
   * `Check Ubuntu Linux official packages <#check-ubuntu-linux-official-packages>`_
+  * `Check Repology (repology.org) <#check-repology>`_
   * `Check Anitya (release-monitoring.org) <#check-anitya>`_
   * `Check Android SDK <#check-android-sdk>`_
   * `Manually updating <#manually-updating>`_
@@ -468,6 +469,16 @@ suite
 
 strip-release
   Strip the release part.
+
+Check Repology
+--------------
+This enables you to track updates from `Repology <https://repology.org/>`_ (repology.org).
+
+repology
+  Name of the ``project`` to check.
+
+repo
+  Check the version in this repo. This field is required.
 
 Check Anitya
 ------------
