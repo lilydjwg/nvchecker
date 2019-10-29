@@ -6,6 +6,7 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
+  - "3.8"
   - "nightly"
   - "pypy3.6-7.1.1"
 install: pip install -U $DEPS pytest pytest-asyncio pytest-httpbin flaky structlog
