@@ -44,7 +44,7 @@ async def get_version(name, conf, **kwargs):
     stderr=asyncio.subprocess.PIPE,
   )
 
-  output, error = await p.communicate()
+  output, error = await asyncio.wait_for(p.communicate(), 20)
   output = output.strip().decode('latin1')
   error = error.strip().decode('latin1')
 
