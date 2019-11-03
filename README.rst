@@ -273,7 +273,9 @@ use_last_modified
 
 Check GitHub
 ------------
-Check `GitHub <https://github.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+Check `GitHub <https://github.com/>`_ for updates. The version returned is in
+date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``
+or ``use_max_tag`` is used. See below.
 
 github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
@@ -287,13 +289,14 @@ path
 use_latest_release
   Set this to ``true`` to check for the latest release on GitHub. An annotated
   tag creates a "release" on GitHub. It's not the same with git tags, which
-  includes both annotated tags and lightweight ones.
+  includes both annotated tags and lightweight ones. Will return the release name
+  instead of date.
 
 use_max_tag
   Set this to ``true`` to check for the max tag on GitHub. Unlike
   ``use_latest_release``, this option includes both annotated tags and
   lightweight ones, and return the largest one sorted by the
-  ``sort_version_key`` option.
+  ``sort_version_key`` option. Will return the tag name instead of date.
 
 max_page
   How many pages do we search for the max tag? Default is 1. This works when
@@ -317,7 +320,7 @@ This source supports `list options`_ when ``use_max_tag`` is set.
 Check BitBucket
 ---------------
 Check `BitBucket <https://bitbucket.org/>`_ for updates. The version returned
-is in date format ``%Y%m%d``, e.g. ``20130701``.
+is in date format ``%Y%m%d``, e.g. ``20130701``, unless ``use_max_tag`` is used. See below.
 
 bitbucket
   The bitbucket repository, with author, e.g. ``lilydjwg/dotvim``.
@@ -327,7 +330,7 @@ branch
 
 use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
-  sorted by ``pkg_resources.parse_version``.
+  sorted by ``pkg_resources.parse_version``. Will return the tag name instead of date.
 
 ignored_tags, sort_version_key
   Deprecated. Use `list options`_ instead.
@@ -340,7 +343,8 @@ This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check GitLab
 -------------
-Check `GitLab <https://gitlab.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``.
+Check `GitLab <https://gitlab.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``,
+unless ``use_max_tag`` is used. See below.
 
 gitlab
   The gitlab repository, with author, e.g. ``Deepin/deepin-music``.
@@ -350,7 +354,7 @@ branch
 
 use_max_tag
   Set this to ``true`` to check for the max tag on GitLab. Will return the biggest one
-  sorted by ``pkg_resources.parse_version``.
+  sorted by ``pkg_resources.parse_version``. Will return the tag name instead of date.
 
 host
   Hostname for self-hosted GitLab instance.
