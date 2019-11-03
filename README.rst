@@ -273,8 +273,9 @@ use_last_modified
 
 Check GitHub
 ------------
-Check `GitHub <https://github.com/>`_ for updates. The version returned is in date format ``%Y%m%d``,e.g. ``20130701``,
-unless ``use_latest_release`` or ``use_max_tag`` is used. See below.
+Check `GitHub <https://github.com/>`_ for updates. The version returned is in
+date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``
+or ``use_max_tag`` is used. See below.
 
 github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
