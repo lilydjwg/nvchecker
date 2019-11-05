@@ -3,7 +3,7 @@
 
 from flaky import flaky
 import pytest
-pytestmark = pytest.mark.asyncio
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 @flaky
 async def test_ubuntupkg(get_version):
