@@ -7,7 +7,7 @@ pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 @flaky
 async def test_archpkg(get_version):
-    assert await get_version("ipw2100-fw", {"archpkg": None}) == "1.3-9"
+    assert await get_version("ipw2100-fw", {"archpkg": None}) == "1.3-10"
 
 @flaky
 async def test_archpkg_strip_release(get_version):
