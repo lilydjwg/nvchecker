@@ -3,11 +3,11 @@
 
 from . import cmd, conf_cacheable_with_name
 
-get_cacheable_conf = conf_cacheable_with_name('debianpkg')
+get_cacheable_conf = conf_cacheable_with_name('pacman')
 
 async def get_version(name, conf, **kwargs):
   referree = conf.get('pacman') or name
-  c = "LANG=C pacman -Si %s | grep -F Version | awk '{print $3}'" % referree
+  c = "LANG=C pacman -Si %s | grep -F Version | awk '{print $3}' | head -n 1" % referree
   conf['cmd'] = c
   strip_release = conf.getboolean('strip-release', False)
 
