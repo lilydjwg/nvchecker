@@ -15,10 +15,10 @@ async def test_gitlab(get_version):
     assert ver.isdigit()
 
 async def test_gitlab_max_tag(get_version):
-    assert await get_version("example", {"gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1}) == "v1.1.0"
+    assert await get_version("example", {"gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1}) == "v1.1.1"
 
 async def test_gitlab_max_tag_with_ignored_tags(get_version):
-    assert await get_version("example", {"gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1, "ignored_tags": "v1.1.0"}) == "v1.0.0"
+    assert await get_version("example", {"gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1, "ignored_tags": "v1.1.0 v1.1.1"}) == "v1.0.0"
 
 async def test_gitlab_max_tag_with_include(get_version):
     assert await get_version("example", {
@@ -29,6 +29,6 @@ async def test_gitlab_max_tag_with_include(get_version):
 async def test_gitlab_max_tag_with_ignored(get_version):
     assert await get_version("example", {
         "gitlab": "gitlab-org/gitlab-test", "use_max_tag": 1,
-        "ignored": "v1.1.0",
+        "ignored": "v1.1.0 v1.1.1",
     }) == "v1.0.0"
 
