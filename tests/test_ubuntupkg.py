@@ -7,11 +7,11 @@ pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 @flaky
 async def test_ubuntupkg(get_version):
-    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None}) == "0.1.6-1"
+    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None}) == "0.1.7-1"
 
 @flaky
 async def test_ubuntupkg_strip_release(get_version):
-    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None, "strip-release": 1}) == "0.1.6"
+    assert await get_version("sigrok-firmware-fx2lafw", {"ubuntupkg": None, "strip-release": 1}) == "0.1.7"
 
 @flaky
 async def test_ubuntupkg_suite(get_version):
