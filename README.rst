@@ -287,10 +287,15 @@ path
   Only commits containing this file path will be returned.
 
 use_latest_release
-  Set this to ``true`` to check for the latest release on GitHub. An annotated
-  tag creates a "release" on GitHub. It's not the same with git tags, which
-  includes both annotated tags and lightweight ones. Will return the release name
-  instead of date.
+  Set this to ``true`` to check for the latest release on GitHub.
+  
+  GitHub releases are not the same with git tags. You'll see big version names 
+  and descriptions in the release page for such releases, e.g.
+  `zfsonlinux/zfs's <https://github.com/zfsonlinux/zfs/releases>`_, and those
+  small ones like `nvchecker's <https://github.com/lilydjwg/nvchecker/releases>`_
+  are only git tags that should use ``use_max_tag`` below.
+  
+  Will return the release name instead of date.
 
 use_max_tag
   Set this to ``true`` to check for the max tag on GitHub. Unlike
