@@ -17,4 +17,13 @@ async def test_android_package(get_version):
         "source": "android_sdk",
         "android_sdk": "cmake;",
         "repo": "package",
+    }) == "3.6.4111459"
+
+
+async def test_android_package_channel(get_version):
+    assert await get_version("android-sdk-cmake", {
+        "source": "android_sdk",
+        "android_sdk": "cmake;",
+        "repo": "package",
+        "channel": "beta,dev,canary",
     }) == "3.18.1"
