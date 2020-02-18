@@ -21,8 +21,6 @@ env:
     - DEPS=aiohttp
     - DEPS="tornado pycurl"
     - DEPS=tornado
-    - DEPS="tornado<5 pycurl"
-    - DEPS="tornado<5"
 matrix:
   fast_finish: true
   allow_failures:

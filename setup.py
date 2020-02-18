@@ -21,7 +21,7 @@ setup(
   zip_safe = False,
 
   packages = find_packages(exclude=["tests"]),
-  install_requires = ['setuptools', 'structlog', 'tornado', 'pycurl'],
+  install_requires = ['setuptools', 'structlog', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
   },
@@ -53,6 +53,7 @@ setup(
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Topic :: Internet",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development",
