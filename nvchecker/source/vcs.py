@@ -54,10 +54,7 @@ async def get_version(name, conf, **kwargs):
     return
   else:
     if use_max_tag:
-      data = [tag for tag in output.split("\n") if tag not in ignored_tags]
-      data.sort(key=parse_version)
-      version = data[-1]
-      return version
+      return [tag for tag in output.split("\n") if tag not in ignored_tags]
     else:
       oldvers = _parse_oldver(oldver)
       if output == oldvers[2]:

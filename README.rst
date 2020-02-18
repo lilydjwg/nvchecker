@@ -530,6 +530,8 @@ ignored_tags
   be useful to avoid some known badly versioned tags, so the newer tags won't
   be "overridden" by the old broken ones.
 
+This source supports `list options`_ when ``use_max_tag`` is set.
+
 Other
 -----
 More to come. Send me a patch or pull request if you can't wait and have written one yourself :-)
