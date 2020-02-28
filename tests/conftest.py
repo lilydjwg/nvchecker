@@ -43,7 +43,10 @@ async def get_version():
   async def __call__(name, config):
 
     if isinstance(config, dict):
-      _config = configparser.ConfigParser(dict_type=dict, allow_no_value=True)
+      _config = configparser.ConfigParser(
+        dict_type=dict, allow_no_value=True,
+        interpolation=None,
+      )
       _config.read_dict({name: config})
       config = _config[name]
 
