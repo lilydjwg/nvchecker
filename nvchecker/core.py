@@ -109,7 +109,7 @@ class Source:
 
   def __init__(self, file, tries=1):
     self.config = config = configparser.ConfigParser(
-      dict_type=dict, allow_no_value=True
+      dict_type=dict, allow_no_value=True, interpolation=None,
     )
     self.name = file.name
     self.tries = tries
