@@ -25,7 +25,7 @@ async def get_version(name, conf, **kwargs):
 
   if version_string:
     version.append(version_string)
-  if build_number:
+  if build_number and (build_number not in version):
     version.append(build_number)
 
   return '-'.join(version) if version else None
