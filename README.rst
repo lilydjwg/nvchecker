@@ -49,6 +49,7 @@ Contents
   * `Check Repology (repology.org) <#check-repology>`_
   * `Check Anitya (release-monitoring.org) <#check-anitya>`_
   * `Check Android SDK <#check-android-sdk>`_
+  * `Check Sparkle framework <#check-sparkle-framework>`_
   * `Manually updating <#manually-updating>`_
   * `Version Control System (VCS) (git, hg, svn, bzr) <#version-control-system-vcs-git-hg-svn-bzr>`_
   * `Other <#other>`_
@@ -505,6 +506,13 @@ android_sdk
 
 repo
   Should be one of ``addon`` or ``package``. Packages in ``addon2-1.xml`` use ``addon`` and packages in ``repository2-1.xml`` use ``package``.
+
+Check Sparkle framework
+-----------------------
+This enables you to track updates of macOS applications which using `Sparkle framework <https://sparkle-project.org/>`_.
+
+sparkle
+  The url of the sparkle appcast.
 
 Manually updating
 -----------------
