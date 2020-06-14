@@ -34,6 +34,12 @@ def try_use_http2(curl):
     curl.setopt(pycurl.HTTP_VERSION, 4)
 
 class Session:
+  def post(self, url, **kwargs):
+    j = kwargs.pop('json', None)
+    if j:
+      kwargs['body'] = json.dumps(j)
+    return self.get(url, method='POST', **kwargs)
+
   def get(self, url, **kwargs):
     kwargs['prepare_curl_callback'] = try_use_http2
 

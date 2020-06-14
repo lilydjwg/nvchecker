@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2018 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import os
 import re
@@ -48,3 +48,7 @@ async def test_github_max_tag_with_include(get_version):
         "include_regex": r"chrome-\d.*",
     })
     assert re.match(r'chrome-[\d.]+', version)
+
+async def test_github_latest_tag(get_version):
+    assert await get_version("example", {"github": "harry-sanabria/ReleaseTestRepo", "use_latest_tag": 1}) == "release3"
+

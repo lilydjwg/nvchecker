@@ -17,6 +17,7 @@ GITHUB_URL = 'https://api.github.com/repos/%s/commits'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
 # https://developer.github.com/v3/git/refs/#get-all-references
 GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/git/refs/tags'
+GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
 
 async def get_version(name, conf, **kwargs):
   try:
@@ -24,7 +25,68 @@ async def get_version(name, conf, **kwargs):
   except HTTPError as e:
     check_ratelimit(e, name)
 
+QUERY_LATEST_TAG = '''
+{{
+  repository(name: "{name}", owner: "{owner}") {{
+    refs(refPrefix: "refs/tags/", first: 1,
+         query: "{query}",
+         orderBy: {{field: TAG_COMMIT_DATE, direction: DESC}}) {{
+      edges {{
+        node {{
+          name
+        }}
+      }}
+    }}
+  }}
+}}
+'''
+
+async def get_latest_tag(name, conf, token):
+  repo = conf.get('github')
+  query = conf.get('query', '')
+  owner, reponame = repo.split('/')
+  headers = {
+    'Authorization': 'bearer %s' % token,
+    'Content-Type': 'application/json',
+  }
+  q = QUERY_LATEST_TAG.format(
+    owner = owner,
+    name = reponame,
+    query = query,
+  )
+  async with session.post(
+    GITHUB_GRAPHQL_URL,
+    headers = headers,
+    json = {'query': q},
+  ) as res:
+    j = await res.json()
+
+  refs = j['data']['repository']['refs']['edges']
+  if not refs:
+    logger.error('no tag found', name=name)
+    return
+
+  return refs[0]['node']['name']
+
+def get_token(kwargs):
+  token = os.environ.get('NVCHECKER_GITHUB_TOKEN')
+  if token:
+    return token
+
+  token = kwargs['keyman'].get_key('github')
+  return token
+
 async def get_version_real(name, conf, **kwargs):
+  token = get_token(kwargs)
+
+  use_latest_tag = conf.getboolean('use_latest_tag', False)
+  if use_latest_tag:
+    if not token:
+      logger.error('token not given but it is required',
+                   name = name)
+      return
+    return await get_latest_tag(name, conf, token)
+
   repo = conf.get('github')
   br = conf.get('branch')
   path = conf.get('path')
@@ -47,12 +109,8 @@ async def get_version_real(name, conf, **kwargs):
   headers = {
     'Accept': 'application/vnd.github.quicksilver-preview+json',
   }
-  if 'NVCHECKER_GITHUB_TOKEN' in os.environ:
-    headers['Authorization'] = 'token %s' % os.environ['NVCHECKER_GITHUB_TOKEN']
-  else:
-    key = kwargs['keyman'].get_key('github')
-    if key:
-      headers['Authorization'] = 'token %s' % key
+  if token:
+    headers['Authorization'] = 'token %s' % token
 
   kwargs = {}
   if conf.get('proxy'):

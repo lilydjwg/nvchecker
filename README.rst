@@ -298,6 +298,15 @@ use_latest_release
   
   Will return the release name instead of date.
 
+use_latest_tag
+  Set this to ``true`` to check for the latest tag on GitHub.
+
+  This requires a token because it's using the v4 GraphQL API.
+
+query
+  When ``use_latest_tag`` is ``true``, this sets a query for the tag. The exact
+  matching method is not documented by GitHub.
+  
 use_max_tag
   Set this to ``true`` to check for the max tag on GitHub. Unlike
   ``use_latest_release``, this option includes both annotated tags and
