@@ -1,13 +1,11 @@
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import json
 from urllib.parse import urlencode
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
 from tornado.httpclient import HTTPError
-from tornado.platform.asyncio import AsyncIOMainLoop, to_asyncio_future
-AsyncIOMainLoop().install()
 
 try:
   import pycurl
@@ -68,7 +66,7 @@ class ResponseManager:
     self.req = req
 
   async def __aenter__(self):
-    return await to_asyncio_future(client.fetch(self.req))
+    return await client.fetch(self.req)
 
   async def __aexit__(self, exc_type, exc, tb):
     pass
