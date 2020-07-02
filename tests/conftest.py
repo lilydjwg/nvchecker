@@ -54,10 +54,11 @@ async def get_version():
 
   return __call__
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def event_loop(request):
   """Override pytest-asyncio's event_loop fixture,
      Don't create an instance of the default event loop for each test case.
+     We need the same ioloop across tests for the aiohttp support.
   """
   loop = asyncio.get_event_loop()
   yield loop
