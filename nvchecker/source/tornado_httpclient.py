@@ -17,7 +17,6 @@ from .httpclient import DEFAULT_USER_AGENT
 
 __all__ = ['session', 'HTTPError', 'NetworkErrors']
 
-client = AsyncHTTPClient()
 HTTP2_AVAILABLE = None if pycurl else False
 
 def try_use_http2(curl):
@@ -66,7 +65,7 @@ class ResponseManager:
     self.req = req
 
   async def __aenter__(self):
-    return await client.fetch(self.req)
+    return await AsyncHTTPClient().fetch(self.req)
 
   async def __aexit__(self, exc_type, exc, tb):
     pass

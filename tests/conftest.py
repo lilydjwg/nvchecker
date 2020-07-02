@@ -54,12 +54,10 @@ async def get_version():
 
   return __call__
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def event_loop(request):
   """Override pytest-asyncio's event_loop fixture,
      Don't create an instance of the default event loop for each test case.
-
-     The scope is session because the Tornado AsyncHTTPClient singleton remains.
   """
   loop = asyncio.get_event_loop()
   yield loop
