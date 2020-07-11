@@ -50,7 +50,7 @@ class Session:
     else:
       # tornado does not support env variables
       # https://github.com/tornadoweb/tornado/issues/754
-      proxy = get_environment_http_proxy()
+      proxy = get_environment_http_proxy(url)
 
     if hasattr(self, 'nv_config') and not use_proxy(url, self.nv_config):
       proxy = None

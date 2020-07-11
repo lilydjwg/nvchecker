@@ -17,7 +17,7 @@ def use_proxy(url, nv_config):
   """
   no_proxies =  nv_config.get('no_proxy')
   if no_proxies is None:
-    no_proxies = get_environment_no_proxy()
+    no_proxies = os.environ.get('no_proxy')
   if no_proxies is None:
     return True
   no_proxies = no_proxies.split(',')
@@ -27,14 +27,9 @@ def use_proxy(url, nv_config):
       return False
   return True
 
-def get_environment_http_proxy():
-  http_proxy = os.environ.get('HTTP_PROXY')
-  if http_proxy is None:
-    http_proxy = os.environ.get('http_proxy')
-  return http_proxy
-
-def get_environment_no_proxy():
-  no_proxy = os.environ.get('NO_PROXY')
-  if no_proxy is None:
-    no_proxy = os.environ.get('no_proxy')
-  return no_proxy
+def get_environment_http_proxy(url):
+  parsed_url = urlparse(url)
+  if parsed_url.scheme == 'http':
+    return os.environ.get('http_proxy')
+  elif parsed_url.scheme == 'https':
+    return os.environ.get('https_proxy')

@@ -23,7 +23,7 @@ class BetterClientSession(aiohttp.ClientSession):
         else:
             # aio does not support no_proxy
             # https://github.com/aio-libs/aiohttp/issues/4431
-            proxy = get_environment_http_proxy()
+            proxy = get_environment_http_proxy(url)
         if proxy and hasattr(self, 'nv_config') and use_proxy(args[1], self.nv_config):
             kwargs.setdefault("proxy", proxy)
 
