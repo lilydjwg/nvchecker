@@ -3,6 +3,8 @@
 
 import json
 from urllib.parse import urlencode
+from .httpclient import use_proxy, get_environment_http_proxy
+
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
 from tornado.httpclient import HTTPError
@@ -45,6 +47,14 @@ class Session:
       del kwargs['proxy']
     elif hasattr(self, 'nv_config') and self.nv_config.get('proxy'):
       proxy = self.nv_config.get('proxy')
+    else:
+      # tornado does not support env variables
+      # https://github.com/tornadoweb/tornado/issues/754
+      proxy = get_environment_http_proxy()
+
+    if hasattr(self, 'nv_config') and not use_proxy(url, self.nv_config):
+      proxy = None
+
     if proxy:
       host, port = proxy.rsplit(':', 1)
       kwargs['proxy_host'] = host

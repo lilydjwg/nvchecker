@@ -4,7 +4,7 @@
 import atexit
 import asyncio
 import aiohttp
-from .httpclient import DEFAULT_USER_AGENT
+from .httpclient import DEFAULT_USER_AGENT, use_proxy, get_environment_http_proxy
 
 connector = aiohttp.TCPConnector(limit=20)
 
@@ -19,7 +19,13 @@ class HTTPError(Exception):
 class BetterClientSession(aiohttp.ClientSession):
     async def _request(self, *args, **kwargs):
         if hasattr(self, "nv_config") and self.nv_config.get("proxy"):
-            kwargs.setdefault("proxy", self.nv_config.get("proxy"))
+            proxy = self.nv_config.get("proxy")
+        else:
+            # aio does not support no_proxy
+            # https://github.com/aio-libs/aiohttp/issues/4431
+            proxy = get_environment_http_proxy()
+        if proxy and hasattr(self, 'nv_config') and use_proxy(args[1], self.nv_config):
+            kwargs.setdefault("proxy", proxy)
 
         kwargs.setdefault("headers", {}).setdefault('User-Agent', DEFAULT_USER_AGENT)
 
