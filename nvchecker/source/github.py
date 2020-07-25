@@ -73,6 +73,9 @@ def get_token(kwargs):
   if token:
     return token
 
+  if 'keyman' not in kwargs:
+    return None
+
   token = kwargs['keyman'].get_key('github')
   return token
 
