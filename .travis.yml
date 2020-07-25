@@ -29,3 +29,9 @@ jobs:
       env: DEPS=aiohttp
     # it works now, but may be broken in the future again
     - python: nightly
+
+addons:
+  apt:
+    packages:
+    # This is needed for pycurl
+    - libgnutls28-dev
