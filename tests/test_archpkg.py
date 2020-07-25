@@ -18,7 +18,7 @@ async def test_archpkg_provided(get_version):
     assert await get_version("jsoncpp", {
         "archpkg": None,
         "provided": "libjsoncpp.so",
-    }) == "22-64"
+    }) == "24-64"
 
 @flaky
 async def test_archpkg_provided_strip(get_version):
@@ -26,5 +26,5 @@ async def test_archpkg_provided_strip(get_version):
         "archpkg": None,
         "provided": "libjsoncpp.so",
         "strip-release": True,
-    }) == "22"
+    }) == "24"
 
