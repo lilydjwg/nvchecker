@@ -32,6 +32,7 @@ class BetterClientSession(aiohttp.ClientSession):
 session = BetterClientSession(
     connector = connector,
     timeout = aiohttp.ClientTimeout(total=20),
+    trust_env = True,
 )
 
 @atexit.register
