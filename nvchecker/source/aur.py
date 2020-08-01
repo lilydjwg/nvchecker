@@ -8,7 +8,7 @@ from . import session, conf_cacheable_with_name
 
 logger = structlog.get_logger(logger_name=__name__)
 
-AUR_URL = 'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]='
+AUR_URL = 'https://aur.archlinux.org/rpc/'
 
 get_cacheable_conf = conf_cacheable_with_name('aur')
 
