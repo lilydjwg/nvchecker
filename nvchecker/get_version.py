@@ -15,7 +15,7 @@ handler_precedence = (
   'gems', 'pacman',
   'cmd', 'bitbucket', 'regex', 'manual', 'vcs',
   'cratesio', 'npm', 'hackage', 'cpan', 'gitlab', 'packagist',
-  'repology', 'anitya', 'android_sdk', 'sparkle',
+  'repology', 'anitya', 'android_sdk', 'sparkle', 'gitea'
 )
 
 def substitute_version(version, name, conf):
