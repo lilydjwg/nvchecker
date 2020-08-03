@@ -333,7 +333,7 @@ anonymously.
 
 This source supports `list options`_ when ``use_max_tag`` is set.
 
-Check GitLab
+Check Gitea
 -------------
 Check `Gitea <https://gitea.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``,
 unless ``use_max_tag`` is used. See below.
