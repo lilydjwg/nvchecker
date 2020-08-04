@@ -36,6 +36,7 @@ Contents
   * `Check GitHub <#check-github>`_
   * `Check BitBucket <#check-bitbucket>`_
   * `Check GitLab <#check-gitlab>`_
+  * `Check Gitea <#check-gitea>`_
   * `Check PyPI <#check-pypi>`_
   * `Check RubyGems <#check-rubygems>`_
   * `Check NPM Registry <#check-npm-registry>`_
@@ -329,6 +330,42 @@ include_tags_pattern, ignored_tags, sort_version_key
 An environment variable ``NVCHECKER_GITHUB_TOKEN`` or a key named ``github``
 can be set to a GitHub OAuth token in order to request more frequently than
 anonymously.
+
+This source supports `list options`_ when ``use_max_tag`` is set.
+
+Check Gitea
+-------------
+Check `Gitea <https://gitea.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``,
+unless ``use_max_tag`` is used. See below.
+
+gitea
+  The gitea repository, with author, e.g. ``gitea/tea``.
+
+branch
+  Which branch to track? Default: ``master``.
+
+use_max_tag
+  Set this to ``true`` to check for the max tag on Gitea. Will return the biggest one
+  sorted by ``pkg_resources.parse_version``. Will return the tag name instead of date.
+
+host
+  Hostname for self-hosted Gitea instance.
+
+token
+  Gitea authorization token used to call the API.
+  
+ignored_tags, sort_version_key
+  Deprecated. Use `list options`_ instead.
+
+To set an authorization token, you can set:
+
+- a key named ``gitea_{host}`` in the keyfile (where ``host`` is formed the
+  same as the environment variable, but all lowercased).
+- an environment variable ``NVCHECKER_GITEA_TOKEN_{host}`` must provide that
+  token. The ``host`` part is the uppercased version of the ``host`` setting,
+  with dots (``.``) and slashes (``/``) replaced by underscores (``_``), e.g.
+  ``NVCHECKER_GITEA_TOKEN_GITEA_COM``.
+- the token option
 
 This source supports `list options`_ when ``use_max_tag`` is set.
 
