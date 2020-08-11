@@ -11,7 +11,7 @@ try:
   import pycurl
   AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient", max_clients=20)
 except ImportError:
-  pycurl = None
+  pycurl = None # type: ignore
 
 from .httpclient import DEFAULT_USER_AGENT
 
@@ -76,8 +76,8 @@ async def json_response(self, **kwargs):
 async def read(self):
   return self.body
 
-HTTPResponse.json = json_response
-HTTPResponse.read = read
+HTTPResponse.json = json_response # type: ignore
+HTTPResponse.read = read # type: ignore
 session = Session()
 
 NetworkErrors = ()

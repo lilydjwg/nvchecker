@@ -1,25 +1,43 @@
 # vim: se sw=2:
 # MIT licensed
-# Copyright (c) 2013-2018 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
+
+from __future__ import annotations
 
 import os
 import sys
-import configparser
 import asyncio
+from asyncio import Queue
 import logging
+import argparse
+from typing import (
+  TextIO, Tuple, NamedTuple, Optional, List, Union,
+  cast, Dict, Awaitable, Sequence,
+)
+import types
+from pathlib import Path
+from importlib import import_module
+import re
 
 import structlog
+import toml
 
 from .lib import nicelogger
-from .get_version import get_version
-from .source import session
 from . import slogconf
-
+from .util import (
+  Entry, Entries, KeyManager, RawResult, Result, VersData,
+)
 from . import __version__
+from .sortversion import sort_version_keys
 
 logger = structlog.get_logger(logger_name=__name__)
 
-def add_common_arguments(parser):
+def get_default_config() -> str:
+  confdir = os.environ.get('XDG_CONFIG_DIR', os.path.expanduser('~/.config'))
+  file = os.path.join(confdir, 'nvchecker/nvchecker.toml')
+  return file
+
+def add_common_arguments(parser: argparse.ArgumentParser) -> None:
   parser.add_argument('-l', '--logging',
                       choices=('debug', 'info', 'warning', 'error'), default='info',
                       help='logging level (default: info)')
@@ -31,10 +49,11 @@ def add_common_arguments(parser):
                       help='specify fd to send json logs to. stdout by default')
   parser.add_argument('-V', '--version', action='store_true',
                       help='show version and exit')
-  parser.add_argument('file', metavar='FILE', nargs='?', type=open,
-                      help='software version source file')
+  parser.add_argument('-c', '--file',
+                      metavar='FILE', type=open,
+                      help='software version configuration file [default: %s]' % get_default_config)
 
-def process_common_arguments(args):
+def process_common_arguments(args: argparse.Namespace) -> bool:
   '''return True if should stop'''
   processors = [
     slogconf.exc_info,
@@ -71,8 +90,10 @@ def process_common_arguments(args):
     progname = os.path.basename(sys.argv[0])
     print('%s v%s' % (progname, __version__))
     return True
+  return False
 
-def safe_overwrite(fname, data, *, method='write', mode='w', encoding=None):
+def safe_overwrite(fname: str, data: Union[bytes, str], *,
+                   method: str = 'write', mode: str = 'w', encoding: Optional[str] = None) -> None:
   # FIXME: directory has no read perm
   # FIXME: symlinks and hard links
   tmpname = fname + '.tmp'
@@ -85,7 +106,7 @@ def safe_overwrite(fname, data, *, method='write', mode='w', encoding=None):
   # if the above write failed (because disk is full etc), the old data should be kept
   os.rename(tmpname, fname)
 
-def read_verfile(file):
+def read_verfile(file: Path) -> VersData:
   v = {}
   try:
     with open(file) as f:
@@ -96,134 +117,199 @@ def read_verfile(file):
     pass
   return v
 
-def write_verfile(file, versions):
-  # sort using only alphanums, as done by the sort command, and needed by
-  # comm command
+def write_verfile(file: Path, versions: VersData) -> None:
+  # sort using only alphanums, as done by the sort command,
+  # and needed by comm command
   data = ['%s %s\n' % item
           for item in sorted(versions.items(), key=lambda i: (''.join(filter(str.isalnum, i[0])), i[1]))]
-  safe_overwrite(file, data, method='writelines')
+  safe_overwrite(
+    str(file), ''.join(data), method='writelines')
 
-class Source:
-  oldver = newver = None
-  tries = 1
+class Options(NamedTuple):
+  ver_files: Optional[Tuple[Path, Path]]
+  max_concurrent: int
+  keymanager: KeyManager
 
-  def __init__(self, file, tries=1):
-    self.config = config = configparser.ConfigParser(
-      dict_type=dict, allow_no_value=True, interpolation=None,
+def load_file(
+  file: TextIO,
+) -> Tuple[Entries, Options]:
+  config = toml.load(file)
+  ver_files: Optional[Tuple[Path, Path]] = None
+
+  if '__config__' in config:
+    c = config.pop('__config__')
+    d = Path(file.name).parent
+
+    if 'oldver' in c and 'newver' in c:
+      oldver_s = os.path.expandvars(
+        os.path.expanduser(c.get('oldver')))
+      oldver = d / oldver_s
+      newver_s = os.path.expandvars(
+        os.path.expanduser(c.get('newver')))
+      newver = d / newver_s
+      ver_files = oldver, newver
+
+    keyfile = c.get('keyfile')
+    if keyfile:
+      keyfile_s = os.path.expandvars(
+        os.path.expanduser(c.get('keyfile')))
+      keyfile = d / keyfile_s
+
+    max_concurrent = c.getint(
+      'max_concurrent', 20)
+    keymanager = KeyManager(keyfile)
+
+  else:
+    max_concurrent = 20
+    keymanager = KeyManager(None)
+
+  return cast(Entries, config), Options(
+    ver_files, max_concurrent, keymanager)
+
+def token_queue(maxsize: int) -> Queue[bool]:
+  token_q: Queue[bool] = Queue(maxsize=maxsize)
+
+  for _ in range(maxsize):
+    token_q.put_nowait(True)
+
+  return token_q
+
+def dispatch(
+  entries: Entries,
+  token_q: Queue[bool],
+  result_q: Queue[RawResult],
+  keymanager: KeyManager,
+  tries: int,
+) -> List[asyncio.Future]:
+  mods: Dict[str, Tuple[types.ModuleType, List]] = {}
+  for name, entry in entries.items():
+    source = entry.get('source', 'none')
+    if source not in mods:
+      mod = import_module('nvchecker_source.' + source)
+      tasks: List[Tuple[str, Entry]] = []
+      mods[source] = mod, tasks
+    else:
+      tasks = mods[source][1]
+    tasks.append((name, entry))
+
+  ret = []
+  for mod, tasks in mods.values():
+    worker = mod.Worker( # type: ignore
+      token_q, result_q, tasks,
+      tries, keymanager,
     )
-    self.name = file.name
-    self.tries = tries
-    config.read_file(file)
-    if '__config__' in config:
-      c = config['__config__']
+    ret.append(worker.run())
 
-      d = os.path.dirname(file.name)
-      if 'oldver' in c and 'newver' in c:
-        self.oldver = os.path.expandvars(os.path.expanduser(
-          os.path.join(d, c.get('oldver'))))
-        self.newver = os.path.expandvars(os.path.expanduser(
-          os.path.join(d, c.get('newver'))))
+  return ret
 
-      keyfile = c.get('keyfile')
-      if keyfile:
-        keyfile = os.path.expandvars(os.path.expanduser(
-          os.path.join(d, c.get('keyfile'))))
+def substitute_version(
+  version: str, conf: Entry,
+) -> str:
+  '''
+  Substitute the version string via defined rules in the configuration file.
+  See README.rst#global-options for details.
+  '''
+  prefix = conf.get('prefix')
+  if prefix:
+    if version.startswith(prefix):
+      version = version[len(prefix):]
+    return version
 
-      self.max_concurrent = c.getint('max_concurrent', 20)
-      self.keymanager = KeyManager(keyfile)
-      session.nv_config = config["__config__"]
+  from_pattern = conf.get('from_pattern')
+  if from_pattern:
+    to_pattern = conf.get('to_pattern')
+    if not to_pattern:
+      raise ValueError("from_pattern exists but to_pattern doesn't")
 
-    else:
-      self.max_concurrent = 20
-      self.keymanager = KeyManager(None)
+    return re.sub(from_pattern, to_pattern, version)
 
-  async def check(self):
-    if self.oldver:
-      self.oldvers = read_verfile(self.oldver)
-    else:
-      self.oldvers = {}
-    self.curvers = self.oldvers.copy()
+  # No substitution rules found. Just return the original version string.
+  return version
 
-    tries = self.tries
-    token_q = asyncio.Queue(maxsize=self.max_concurrent)
+def apply_list_options(
+  versions: List[str], conf: Entry,
+) -> Optional[str]:
+  pattern = conf.get('include_regex')
+  if pattern:
+    re_pat = re.compile(pattern)
+    versions = [x for x in versions
+                if re_pat.fullmatch(x)]
 
-    for _ in range(self.max_concurrent):
-      await token_q.put(True)
+  pattern = conf.get('exclude_regex')
+  if pattern:
+    re_pat = re.compile(pattern)
+    versions = [x for x in versions
+                if not re_pat.fullmatch(x)]
 
-    async def worker(name, conf):
-      await token_q.get()
-      try:
-        for i in range(tries):
-          try:
-            ret = await get_version(
-              name, conf, keyman=self.keymanager)
-            return name, ret
-          except Exception as e:
-            if i + 1 < tries:
-              logger.warning('failed, retrying',
-                             name=name, exc_info=e)
-              await asyncio.sleep(i)
-            else:
-              return name, e
-      finally:
-        await token_q.put(True)
+  ignored = set(conf.get('ignored', '').split())
+  if ignored:
+    versions = [x for x in versions if x not in ignored]
 
-    config = self.config
-    futures = []
-    for name in config.sections():
-      if name == '__config__':
+  if not versions:
+    return None
+
+  sort_version_key = sort_version_keys[
+    conf.get("sort_version_key", "parse_version")]
+  versions.sort(key=sort_version_key)
+
+  return versions[-1]
+
+def _process_result(r: RawResult) -> Optional[Result]:
+  version = r.version
+  conf = r.conf
+  name = r.name
+
+  if isinstance(version, Exception):
+    logger.error('unexpected error happened',
+                  name=r.name, exc_info=r.version)
+    return None
+  elif isinstance(version, list):
+    version_str = apply_list_options(version, conf)
+  else:
+    version_str = version
+
+  if version_str:
+    version_str = version_str.replace('\n', ' ')
+
+    try:
+      version_str = substitute_version(version_str, conf)
+      return Result(name, version_str, conf)
+    except (ValueError, re.error):
+      logger.exception('error occurred in version substitutions', name=name)
+
+  return None
+
+def check_version_update(
+  oldvers: VersData, name: str, version: str,
+) -> Optional[str]:
+  oldver = oldvers.get(name, None)
+  if not oldver or oldver != version:
+    logger.info('updated', name=name, version=version, old_version=oldver)
+    return version
+  else:
+    logger.debug('up-to-date', name=name, version=version)
+    return None
+
+async def process_result(
+  oldvers: VersData,
+  result_q: Queue[RawResult],
+) -> VersData:
+  ret = {}
+  try:
+    while True:
+      r = await result_q.get()
+      r1 = _process_result(r)
+      if r1 is None:
         continue
+      v = check_version_update(
+        oldvers, r1.name, r1.version)
+      if v is not None:
+        ret[r1.name] = v
+  except asyncio.CancelledError:
+    return ret
 
-      conf = config[name]
-      conf['oldver'] = self.oldvers.get(name, None)
-      fu = asyncio.ensure_future(worker(name, conf))
-      futures.append(fu)
-
-    for fu in asyncio.as_completed(futures):
-      name, result = await fu
-      if isinstance(result, Exception):
-        logger.error('unexpected error happened',
-                     name=name, exc_info=result)
-        self.on_exception(name, result)
-      elif result is not None:
-        self.print_version_update(name, result)
-      else:
-        conf = config[name]
-        if not conf.getboolean('missing_ok', False):
-          logger.warning('no-result', name=name)
-        self.on_no_result(name)
-
-    if self.newver:
-      write_verfile(self.newver, self.curvers)
-
-  def print_version_update(self, name, version):
-    oldver = self.oldvers.get(name, None)
-    if not oldver or oldver != version:
-      logger.info('updated', name=name, version=version, old_version=oldver)
-      self.curvers[name] = version
-      self.on_update(name, version, oldver)
-    else:
-      logger.debug('up-to-date', name=name, version=version)
-
-  def on_update(self, name, version, oldver):
-    pass
-
-  def on_no_result(self, name):
-    pass
-
-  def on_exception(self, name, exc):
-    pass
-
-  def __repr__(self):
-    return '<Source from %r>' % self.name
-
-class KeyManager:
-  def __init__(self, file):
-    self.config = config = configparser.ConfigParser(dict_type=dict)
-    if file is not None:
-      config.read([file])
-    else:
-      config.add_section('keys')
-
-  def get_key(self, name):
-    return self.config.get('keys', name, fallback=None)
+async def run_tasks(
+  futures: Sequence[Awaitable[None]]
+) -> None:
+  for fu in asyncio.as_completed(futures):
+    await fu

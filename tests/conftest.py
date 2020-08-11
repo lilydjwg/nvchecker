@@ -1,3 +1,6 @@
+# MIT licensed
+# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
+
 import configparser
 import pytest
 import asyncio

@@ -19,10 +19,3 @@ m = __import__('%s_httpclient' % which, globals(), locals(), level=1)
 __all__ = m.__all__
 for x in __all__:
   globals()[x] = getattr(m, x)
-
-def conf_cacheable_with_name(key):
-  def get_cacheable_conf(name, conf):
-    conf = dict(conf)
-    conf[key] = conf.get(key) or name
-    return conf
-  return get_cacheable_conf

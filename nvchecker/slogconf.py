@@ -10,7 +10,7 @@ import sys
 
 import structlog
 
-from .source import HTTPError, NetworkErrors
+from .httpclient import HTTPError, NetworkErrors # type: ignore
 
 def _console_msg(event):
   evt = event['event']
