@@ -5,6 +5,8 @@ import asyncio
 
 import structlog
 
+from nvchecker.util import GetVersionError
+
 logger = structlog.get_logger(logger_name=__name__)
 
 def cacher(name, conf):
@@ -12,6 +14,7 @@ def cacher(name, conf):
 
 async def get_version(name, conf, *, keymanager=None):
   cmd = conf['cmd']
+  logger.debug('running cmd', name=name, cmd=cmd)
   p = await asyncio.create_subprocess_shell(
     cmd,
     stdout=asyncio.subprocess.PIPE,
@@ -22,12 +25,14 @@ async def get_version(name, conf, *, keymanager=None):
   output = output.strip().decode('latin1')
   error = error.strip().decode(errors='replace')
   if p.returncode != 0:
-    logger.error('command exited with error',
-                 cmd=cmd, error=error,
-                 name=name, returncode=p.returncode)
+    raise GetVersionError(
+      'command exited with error',
+      cmd=cmd, error=error,
+      name=name, returncode=p.returncode)
   elif not output:
-    logger.error('command exited without output',
-                 cmd=cmd, error=error,
-                 name=name, returncode=p.returncode)
+    raise GetVersionError(
+      'command exited without output',
+      cmd=cmd, error=error,
+      name=name, returncode=p.returncode)
   else:
     return output

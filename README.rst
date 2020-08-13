@@ -168,7 +168,7 @@ newver
 proxy
   The HTTP proxy to use. The format is ``proto://host:port``, e.g. ``http://localhost:8087``.
 
-max_concurrent
+max_concurrency
   Max number of concurrent jobs. Default: 20.
 
 keyfile

@@ -8,12 +8,14 @@ from asyncio import Queue
 import contextlib
 from typing import (
   Dict, Optional, List, AsyncGenerator, NamedTuple, Union,
-  Any, Tuple, Coroutine, Callable,
-  TYPE_CHECKING,
+  Any, Tuple, Callable, TYPE_CHECKING,
 )
 from pathlib import Path
 
 import toml
+import structlog
+
+logger = structlog.get_logger(logger_name=__name__)
 
 Entry = Dict[str, Any]
 Entries = Dict[str, Entry]
@@ -62,10 +64,12 @@ class BaseWorker:
   @contextlib.asynccontextmanager
   async def acquire_token(self) -> AsyncGenerator[None, None]:
     token = await self.token_q.get()
+    logger.debug('got token')
     try:
       yield
     finally:
       await self.token_q.put(token)
+      logger.debug('return token')
 
 if TYPE_CHECKING:
   from typing_extensions import Protocol
@@ -155,3 +159,8 @@ class FunctionWorker(BaseWorker):
       version = await fu
       self.cache[key] = version
       return version
+
+class GetVersionError(Exception):
+  def __init__(self, msg: str, **kwargs: Any) -> None:
+    self.msg = msg
+    self.kwargs = kwargs

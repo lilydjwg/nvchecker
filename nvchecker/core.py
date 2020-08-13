@@ -26,7 +26,7 @@ from .lib import nicelogger
 from . import slogconf
 from .util import (
   Entry, Entries, KeyManager, RawResult, Result, VersData,
-  FunctionWorker,
+  FunctionWorker, GetVersionError,
 )
 from . import __version__
 from .sortversion import sort_version_keys
@@ -128,7 +128,7 @@ def write_verfile(file: Path, versions: VersData) -> None:
 
 class Options(NamedTuple):
   ver_files: Optional[Tuple[Path, Path]]
-  max_concurrent: int
+  max_concurrency: int
   keymanager: KeyManager
 
 def load_file(
@@ -156,16 +156,16 @@ def load_file(
         os.path.expanduser(c.get('keyfile')))
       keyfile = d / keyfile_s
 
-    max_concurrent = c.getint(
-      'max_concurrent', 20)
+    max_concurrency = c.get(
+      'max_concurrency', 20)
     keymanager = KeyManager(keyfile)
 
   else:
-    max_concurrent = 20
+    max_concurrency = 20
     keymanager = KeyManager(None)
 
   return cast(Entries, config), Options(
-    ver_files, max_concurrent, keymanager)
+    ver_files, max_concurrency, keymanager)
 
 def token_queue(maxsize: int) -> Queue[bool]:
   token_q: Queue[bool] = Queue(maxsize=maxsize)
@@ -270,7 +270,12 @@ def _process_result(r: RawResult) -> Optional[Result]:
   conf = r.conf
   name = r.name
 
-  if isinstance(version, Exception):
+  if isinstance(version, GetVersionError):
+    kw = version.kwargs
+    kw['name'] = name
+    logger.error(version.msg, **kw)
+    return None
+  elif isinstance(version, Exception):
     logger.error('unexpected error happened',
                   name=r.name, exc_info=r.version)
     return None

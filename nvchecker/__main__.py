@@ -34,7 +34,7 @@ def main() -> None:
     file = args.file
 
   entries, options = core.load_file(file)
-  token_q = core.token_queue(options.max_concurrent)
+  token_q = core.token_queue(options.max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
   try:
     futures = core.dispatch(
