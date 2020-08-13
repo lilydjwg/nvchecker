@@ -1,23 +1,24 @@
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import structlog
 
-from . import session, conf_cacheable_with_name
+from nvchecker.httpclient import session # type: ignore
 
 logger = structlog.get_logger(logger_name=__name__)
 
 URL = 'https://www.archlinux.org/packages/search/json/'
 
-get_cacheable_conf = conf_cacheable_with_name('archpkg')
+async def request(pkg):
+  async with session.get(URL, params={"name": pkg}) as res:
+    return await res.json()
 
-async def get_version(name, conf, **kwargs):
+async def get_version(name, conf, *, cache, **kwargs):
   pkg = conf.get('archpkg') or name
-  strip_release = conf.getboolean('strip-release', False)
+  strip_release = conf.get('strip_release', False)
   provided = conf.get('provided')
 
-  async with session.get(URL, params={"name": pkg}) as res:
-    data = await res.json()
+  data = await cache.get(pkg, request)
 
   if not data['results']:
     logger.error('Arch package not found', name=name)

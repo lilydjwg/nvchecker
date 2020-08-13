@@ -8,7 +8,8 @@ from asyncio import Queue
 import contextlib
 from typing import (
   Dict, Optional, List, AsyncGenerator, NamedTuple, Union,
-  Any, Tuple, Callable, TYPE_CHECKING,
+  Any, Tuple, Callable, TypeVar, Coroutine, Generic,
+  TYPE_CHECKING,
 )
 from pathlib import Path
 
@@ -71,6 +72,38 @@ class BaseWorker:
       await self.token_q.put(token)
       logger.debug('return token')
 
+T = TypeVar('T')
+S = TypeVar('S')
+
+class AsyncCache(Generic[T, S]):
+  cache: Dict[T, Union[S, asyncio.Task]]
+  lock: asyncio.Lock
+
+  def __init__(self) -> None:
+    self.cache = {}
+    self.lock = asyncio.Lock()
+
+  async def get(
+    self,
+    key: T,
+    func: Callable[[T], Coroutine[None, None, S]],
+  ) -> S:
+    async with self.lock:
+      cached = self.cache.get(key)
+      if cached is None:
+        coro = func(key)
+        fu = asyncio.create_task(coro)
+        self.cache[key] = fu
+
+    if asyncio.isfuture(cached): # pending
+      return await cached # type: ignore
+    elif cached is not None: # cached
+      return cached # type: ignore
+    else: # not cached
+      r = await fu
+      self.cache[key] = r
+      return r
+
 if TYPE_CHECKING:
   from typing_extensions import Protocol
   class GetVersionFunc(Protocol):
@@ -78,37 +111,22 @@ if TYPE_CHECKING:
       self,
       name: str, conf: Entry,
       *,
+      cache: AsyncCache,
       keymanager: KeyManager,
     ) -> VersionResult:
       ...
 else:
   GetVersionFunc = Any
 
-Cacher = Callable[[str, Entry], str]
-
 class FunctionWorker(BaseWorker):
-  func = None
-  cacher = None
+  func: GetVersionFunc
+  cache: AsyncCache
 
-  cache: Dict[str, Union[
-    VersionResult,
-    asyncio.Task,
-  ]]
-  lock: asyncio.Lock
-
-  def set_func(
-    self,
-    func: GetVersionFunc,
-    cacher: Optional[Cacher],
-  ) -> None:
+  def initialize(self, func: GetVersionFunc) -> None:
     self.func = func
-    self.cacher = cacher
-    if cacher:
-      self.cache = {}
-      self.lock = asyncio.Lock()
+    self.cache = AsyncCache()
 
   async def run(self) -> None:
-    assert self.func is not None
     futures = [
       self.run_one(name, entry)
       for name, entry in self.tasks
@@ -123,42 +141,14 @@ class FunctionWorker(BaseWorker):
 
     try:
       async with self.acquire_token():
-        if self.cacher:
-          version = await self.run_one_may_cache(
-            name, entry)
-        else:
-          version = await self.func(
-            name, entry, keymanager = self.keymanager,
-          )
+        version = await self.func(
+          name, entry,
+          cache = self.cache,
+          keymanager = self.keymanager,
+        )
       await self.result_q.put(RawResult(name, version, entry))
     except Exception as e:
       await self.result_q.put(RawResult(name, e, entry))
-
-  async def run_one_may_cache(
-    self, name: str, entry: Entry,
-  ) -> VersionResult:
-    assert self.cacher is not None
-    assert self.func is not None
-
-    key = self.cacher(name, entry)
-
-    async with self.lock:
-      cached = self.cache.get(key)
-      if cached is None:
-        coro = self.func(
-          name, entry, keymanager = self.keymanager,
-        )
-        fu = asyncio.create_task(coro)
-        self.cache[key] = fu
-
-    if asyncio.isfuture(cached): # pending
-      return await cached # type: ignore
-    elif cached is not None: # cached
-      return cached # type: ignore
-    else: # not cached
-      version = await fu
-      self.cache[key] = version
-      return version
 
 class GetVersionError(Exception):
   def __init__(self, msg: str, **kwargs: Any) -> None:

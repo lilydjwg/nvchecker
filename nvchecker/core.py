@@ -1,4 +1,3 @@
-# vim: se sw=2:
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
@@ -206,8 +205,7 @@ def dispatch(
     )
     if worker_cls is FunctionWorker:
       func = mod.get_version # type: ignore
-      cacher = getattr(mod, 'cacher', None)
-      worker.set_func(func, cacher)
+      worker.initialize(func)
 
     ret.append(worker.run())
 
