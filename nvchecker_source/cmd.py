@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import asyncio
 
@@ -7,7 +7,10 @@ import structlog
 
 logger = structlog.get_logger(logger_name=__name__)
 
-async def get_version(name, conf, **kwargs):
+def cacher(name, conf):
+  return conf['cmd']
+
+async def get_version(name, conf, *, keymanager=None):
   cmd = conf['cmd']
   p = await asyncio.create_subprocess_shell(
     cmd,

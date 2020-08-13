@@ -3,11 +3,13 @@
 
 from __future__ import annotations
 
+import asyncio
 from asyncio import Queue
 import contextlib
 from typing import (
   Dict, Optional, List, AsyncGenerator, NamedTuple, Union,
-  Any, Tuple,
+  Any, Tuple, Coroutine, Callable,
+  TYPE_CHECKING,
 )
 from pathlib import Path
 
@@ -16,6 +18,7 @@ import toml
 Entry = Dict[str, Any]
 Entries = Dict[str, Entry]
 VersData = Dict[str, str]
+VersionResult = Union[None, str, List[str], Exception]
 
 class KeyManager:
   def __init__(
@@ -30,6 +33,16 @@ class KeyManager:
 
   def get_key(self, name: str) -> Optional[str]:
     return self.keys.get(name)
+
+class RawResult(NamedTuple):
+  name: str
+  version: VersionResult
+  conf: Entry
+
+class Result(NamedTuple):
+  name: str
+  version: str
+  conf: Entry
 
 class BaseWorker:
   def __init__(
@@ -54,19 +67,91 @@ class BaseWorker:
     finally:
       await self.token_q.put(token)
 
-class RawResult(NamedTuple):
-  name: str
-  version: Union[Exception, List[str], str]
-  conf: Entry
+if TYPE_CHECKING:
+  from typing_extensions import Protocol
+  class GetVersionFunc(Protocol):
+    async def __call__(
+      self,
+      name: str, conf: Entry,
+      *,
+      keymanager: KeyManager,
+    ) -> VersionResult:
+      ...
+else:
+  GetVersionFunc = Any
 
-class Result(NamedTuple):
-  name: str
-  version: str
-  conf: Entry
+Cacher = Callable[[str, Entry], str]
 
-def conf_cacheable_with_name(key):
-  def get_cacheable_conf(name, conf):
-    conf = dict(conf)
-    conf[key] = conf.get(key) or name
-    return conf
-  return get_cacheable_conf
+class FunctionWorker(BaseWorker):
+  func = None
+  cacher = None
+
+  cache: Dict[str, Union[
+    VersionResult,
+    asyncio.Task,
+  ]]
+  lock: asyncio.Lock
+
+  def set_func(
+    self,
+    func: GetVersionFunc,
+    cacher: Optional[Cacher],
+  ) -> None:
+    self.func = func
+    self.cacher = cacher
+    if cacher:
+      self.cache = {}
+      self.lock = asyncio.Lock()
+
+  async def run(self) -> None:
+    assert self.func is not None
+    futures = [
+      self.run_one(name, entry)
+      for name, entry in self.tasks
+    ]
+    for fu in asyncio.as_completed(futures):
+      await fu
+
+  async def run_one(
+    self, name: str, entry: Entry,
+  ) -> None:
+    assert self.func is not None
+
+    try:
+      async with self.acquire_token():
+        if self.cacher:
+          version = await self.run_one_may_cache(
+            name, entry)
+        else:
+          version = await self.func(
+            name, entry, keymanager = self.keymanager,
+          )
+      await self.result_q.put(RawResult(name, version, entry))
+    except Exception as e:
+      await self.result_q.put(RawResult(name, e, entry))
+
+  async def run_one_may_cache(
+    self, name: str, entry: Entry,
+  ) -> VersionResult:
+    assert self.cacher is not None
+    assert self.func is not None
+
+    key = self.cacher(name, entry)
+
+    async with self.lock:
+      cached = self.cache.get(key)
+      if cached is None:
+        coro = self.func(
+          name, entry, keymanager = self.keymanager,
+        )
+        fu = asyncio.create_task(coro)
+        self.cache[key] = fu
+
+    if asyncio.isfuture(cached): # pending
+      return await cached # type: ignore
+    elif cached is not None: # cached
+      return cached # type: ignore
+    else: # not cached
+      version = await fu
+      self.cache[key] = version
+      return version

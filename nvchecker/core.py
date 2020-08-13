@@ -26,6 +26,7 @@ from .lib import nicelogger
 from . import slogconf
 from .util import (
   Entry, Entries, KeyManager, RawResult, Result, VersData,
+  FunctionWorker,
 )
 from . import __version__
 from .sortversion import sort_version_keys
@@ -194,10 +195,20 @@ def dispatch(
 
   ret = []
   for mod, tasks in mods.values():
-    worker = mod.Worker( # type: ignore
+    if hasattr(mod, 'Worker'):
+      worker_cls = mod.Worker # type: ignore
+    else:
+      worker_cls = FunctionWorker
+
+    worker = worker_cls(
       token_q, result_q, tasks,
       tries, keymanager,
     )
+    if worker_cls is FunctionWorker:
+      func = mod.get_version # type: ignore
+      cacher = getattr(mod, 'cacher', None)
+      worker.set_func(func, cacher)
+
     ret.append(worker.run())
 
   return ret

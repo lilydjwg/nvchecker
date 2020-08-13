@@ -1,21 +1,4 @@
-source file
-| parse
-entries: name, conf, global options
-| dedupe
-entries: names, conf, global options
-| dispatch
-one future per module
-| run; token queue; result queue
-result task, runner task
-| receive
-(names, result)
-| transform back
-(name, result)
-| runner task done
-| write record file
-file
-
 TODO:
-* dedupe & cache
+* pass `tries` to `httpclient`
 * update tests
 * update README

@@ -4,28 +4,25 @@
 import structlog
 from datetime import datetime
 import asyncio
-from typing import Iterable, Dict, List, Tuple, Any
+from typing import Iterable, Dict, List, Tuple, Any, Optional
 
-from nvchecker.util import (
-  Entry, BaseWorker, RawResult,
-  conf_cacheable_with_name,
-)
+from nvchecker.util import Entry, BaseWorker, RawResult
 from nvchecker.httpclient import session # type: ignore
-
-get_cacheable_conf = conf_cacheable_with_name('aur')
 
 logger = structlog.get_logger(logger_name=__name__)
 
 AUR_URL = 'https://aur.archlinux.org/rpc/'
 
 class AurResults:
+  cache: Dict[str, Optional[Dict[str, Any]]]
+
   def __init__(self) -> None:
     self.cache = {}
 
   async def get_multiple(
     self,
     aurnames: Iterable[str],
-  ) -> Dict[str, Dict[str, Any]]:
+  ) -> Dict[str, Optional[Dict[str, Any]]]:
     params = [('v', '5'), ('type', 'info')]
     params.extend(('arg[]', name) for name in aurnames
                   if name not in self.cache)
