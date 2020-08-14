@@ -1,14 +1,13 @@
 # MIT licensed
-# Copyright (c) 2013-2019 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from . import session
-from ..sortversion import sort_version_keys
+from nvchecker.sortversion import sort_version_keys
 
 # doc: https://confluence.atlassian.com/display/BITBUCKET/commits+or+commit+Resource
 BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
 BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/2.0/repositories/%s/refs/tags'
 
-async def get_version(name, conf, **kwargs):
+async def get_version(name, conf, *, cache, **kwargs):
   repo = conf.get('bitbucket')
   br = conf.get('branch', '')
   use_max_tag = conf.getboolean('use_max_tag', False)
@@ -18,12 +17,11 @@ async def get_version(name, conf, **kwargs):
   if use_max_tag:
     url = BITBUCKET_MAX_TAG % repo
     max_page = conf.getint('max_page', 3)
-    data = await _get_tags(url, max_page=max_page)
+    data = await _get_tags(url, max_page=max_page, cache=cache)
 
   else:
     url = BITBUCKET_URL % (repo, br)
-    async with session.get(url) as res:
-      data = await res.json()
+    data = await cache.get_json(url)
 
   if use_max_tag:
     data = [tag for tag in data if tag not in ignored_tags]
@@ -33,12 +31,11 @@ async def get_version(name, conf, **kwargs):
     version = data['values'][0]['date'].split('T', 1)[0].replace('-', '')
   return version
 
-async def _get_tags(url, *, max_page):
+async def _get_tags(url, *, max_page, cache):
   ret = []
 
   for _ in range(max_page):
-    async with session.get(url) as res:
-      data = await res.json()
+    data = await cache.get_json(url)
     ret.extend(x['name'] for x in data['values'])
     if 'next' in data:
       url = data['next']

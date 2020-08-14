@@ -1,14 +1,16 @@
 # MIT licensed
+# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 # Copyright (c) 2020 Sunlei <guizaicn@gmail.com>
 
 from xml.etree import ElementTree
 
-from . import session
+from nvchecker.httpclient import session
 
-
-async def get_version(name, conf, **kwargs):
+async def get_version(name, conf, *, cache, **kwargs):
   sparkle = conf['sparkle']
+  return await cache.get(sparkle, get_version_impl)
 
+async def get_version_impl(sparkle):
   async with session.get(sparkle) as res:
     resp = await res.read()
 

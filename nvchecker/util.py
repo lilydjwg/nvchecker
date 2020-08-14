@@ -16,6 +16,8 @@ from pathlib import Path
 import toml
 import structlog
 
+from .httpclient import session
+
 logger = structlog.get_logger(logger_name=__name__)
 
 Entry = Dict[str, Any]
@@ -82,6 +84,15 @@ class AsyncCache(Generic[T, S]):
   def __init__(self) -> None:
     self.cache = {}
     self.lock = asyncio.Lock()
+
+  async def _get_json(self, key: Tuple[str, str]) -> Any:
+    url = key[1]
+    async with session.get(url) as res:
+      return await res.json(content_type=None)
+
+  async def get_json(self, url: str) -> Any:
+    return await self.get(
+      ('_jsonurl', url), self._get_json)
 
   async def get(
     self,

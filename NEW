@@ -1,4 +1,6 @@
 TODO:
-* pass `tries` to `httpclient`
+* use contextvars for `tries` and `proxy` (passing to `httpclient`)
 * update tests
 * update README
+* create source plugin documentation
+  * move things to a seperate `api.py`

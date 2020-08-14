@@ -1,27 +1,20 @@
 # MIT licensed
+# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
-import structlog
-
-from . import session, conf_cacheable_with_name
-
-logger = structlog.get_logger(logger_name=__name__)
+from nvchecker.util import GetVersionError
 
 URL = 'https://sources.debian.org/api/src/%(pkgname)s/?suite=%(suite)s'
 
-get_cacheable_conf = conf_cacheable_with_name('debianpkg')
-
-async def get_version(name, conf, **kwargs):
+async def get_version(name, conf, *, cache, **kwargs):
   pkg = conf.get('debianpkg') or name
-  strip_release = conf.getboolean('strip-release', False)
+  strip_release = conf.get('strip_release', False)
   suite = conf.get('suite') or "sid"
   url = URL % {"pkgname": pkg, "suite": suite}
-  async with session.get(url) as res:
-    data = await res.json()
+  data = await cache.get_json(url)
 
   if not data.get('versions'):
-    logger.error('Debian package not found', name=name)
-    return
+    raise GetVersionError('Debian package not found')
 
   r = data['versions'][0]
   if strip_release:
