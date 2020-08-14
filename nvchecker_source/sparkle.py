@@ -4,7 +4,7 @@
 
 from xml.etree import ElementTree
 
-from nvchecker.httpclient import session
+from nvchecker.api import session
 
 async def get_version(name, conf, *, cache, **kwargs):
   sparkle = conf['sparkle']

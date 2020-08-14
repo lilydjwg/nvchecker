@@ -4,12 +4,7 @@
 import re
 import sre_constants
 
-import structlog
-
-from nvchecker.httpclient import session
-from nvchecker.util import GetVersionError
-
-logger = structlog.get_logger(logger_name=__name__)
+from nvchecker.api import session, GetVersionError
 
 async def get_version(name, conf, *, cache, **kwargs):
   key = sorted(conf.items())

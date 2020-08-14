@@ -6,7 +6,7 @@ import os
 import re
 from xml.etree import ElementTree
 
-from nvchecker.httpclient import session
+from nvchecker.api import session
 
 _ANDROID_REPO_MANIFESTS = {
   'addon': 'https://dl.google.com/android/repository/addon2-1.xml',

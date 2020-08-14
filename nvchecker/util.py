@@ -16,7 +16,7 @@ from pathlib import Path
 import toml
 import structlog
 
-from .httpclient import session
+from .httpclient import session # type: ignore
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -92,7 +92,7 @@ class AsyncCache(Generic[T, S]):
 
   async def get_json(self, url: str) -> Any:
     return await self.get(
-      ('_jsonurl', url), self._get_json)
+      ('_jsonurl', url), self._get_json) # type: ignore
 
   async def get(
     self,

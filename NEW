@@ -3,4 +3,3 @@ TODO:
 * update tests
 * update README
 * create source plugin documentation
-  * move things to a seperate `api.py`

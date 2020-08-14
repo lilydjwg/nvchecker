@@ -5,7 +5,7 @@ import asyncio
 
 import structlog
 
-from nvchecker.util import GetVersionError
+from nvchecker.api import GetVersionError
 
 logger = structlog.get_logger(logger_name=__name__)
 

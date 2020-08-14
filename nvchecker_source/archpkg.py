@@ -1,11 +1,7 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import structlog
-
-from nvchecker.httpclient import session # type: ignore
-
-logger = structlog.get_logger(logger_name=__name__)
+from nvchecker.api import session, GetVersionError
 
 URL = 'https://www.archlinux.org/packages/search/json/'
 
@@ -21,8 +17,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   data = await cache.get(pkg, request)
 
   if not data['results']:
-    logger.error('Arch package not found', name=name)
-    return
+    raise GetVersionError('Arch package not found')
 
   r = [r for r in data['results'] if r['repo'] != 'testing'][0]
 

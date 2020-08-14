@@ -1,15 +1,14 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import structlog
 from datetime import datetime
 import asyncio
 from typing import Iterable, Dict, List, Tuple, Any, Optional
 
-from nvchecker.util import Entry, BaseWorker, RawResult
-from nvchecker.httpclient import session # type: ignore
-
-logger = structlog.get_logger(logger_name=__name__)
+from nvchecker.api import (
+  session, GetVersionError, VersionResult,
+  Entry, BaseWorker, RawResult,
+)
 
 AUR_URL = 'https://aur.archlinux.org/rpc/'
 
@@ -77,21 +76,21 @@ class Worker(BaseWorker):
 async def _run_batch_impl(
   batch: List[Tuple[str, Entry]],
   aur_results: AurResults,
-) -> Dict[str, str]:
+) -> Dict[str, VersionResult]:
   aurnames = {conf.get('aur', name) for name, conf in batch}
   results = await aur_results.get_multiple(aurnames)
 
-  ret = {}
+  ret: Dict[str, VersionResult] = {}
 
   for name, conf in batch:
     aurname = conf.get('aur', name)
     use_last_modified = conf.get('use_last_modified', False)
-    strip_release = conf.get('strip-release', False)
+    strip_release = conf.get('strip_release', False)
 
     result = results.get(aurname)
 
     if result is None:
-      logger.error('AUR upstream not found', name=name)
+      ret[name] = GetVersionError('AUR upstream not found')
       continue
 
     version = result['Version']

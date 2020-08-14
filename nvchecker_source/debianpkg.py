@@ -2,7 +2,7 @@
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
-from nvchecker.util import GetVersionError
+from nvchecker.api import GetVersionError
 
 URL = 'https://sources.debian.org/api/src/%(pkgname)s/?suite=%(suite)s'
 

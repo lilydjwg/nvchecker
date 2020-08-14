@@ -4,11 +4,8 @@
 import asyncio
 import os.path as _path
 
-import structlog
+from nvchecker.api import GetVersionError
 
-from nvchecker.util import GetVersionError
-
-logger = structlog.get_logger(logger_name=__name__)
 _self_path = _path.dirname(_path.abspath(__file__))
 _cmd_prefix = ['/bin/bash', _path.join(_self_path, 'vcs.sh')]
 

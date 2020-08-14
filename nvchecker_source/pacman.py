@@ -1,7 +1,7 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from . import cmd
+from nvchecker_source import cmd # type: ignore
 
 async def get_version(name, conf, **kwargs):
   referree = conf.get('pacman') or name

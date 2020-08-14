@@ -2,7 +2,7 @@
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
-from nvchecker.util import GetVersionError
+from nvchecker.api import GetVersionError
 
 URL = 'https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=%s&exact_match=true'
 

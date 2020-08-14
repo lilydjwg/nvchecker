@@ -1,7 +1,7 @@
 # MIT licensed
 # Copyright (c) 2019 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from nvchecker.util import GetVersionError
+from nvchecker.api import GetVersionError
 
 API_URL = 'https://repology.org/api/v1/project/{}'
 
