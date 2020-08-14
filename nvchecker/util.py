@@ -8,7 +8,7 @@ from asyncio import Queue
 import contextlib
 from typing import (
   Dict, Optional, List, AsyncGenerator, NamedTuple, Union,
-  Any, Tuple, Callable, TypeVar, Coroutine, Generic,
+  Any, Tuple, Callable, Coroutine, Hashable,
   TYPE_CHECKING,
 )
 from pathlib import Path
@@ -74,11 +74,9 @@ class BaseWorker:
       await self.token_q.put(token)
       logger.debug('return token')
 
-T = TypeVar('T')
-S = TypeVar('S')
 
-class AsyncCache(Generic[T, S]):
-  cache: Dict[T, Union[S, asyncio.Task]]
+class AsyncCache:
+  cache: Dict[Hashable, Any]
   lock: asyncio.Lock
 
   def __init__(self) -> None:
@@ -96,9 +94,9 @@ class AsyncCache(Generic[T, S]):
 
   async def get(
     self,
-    key: T,
-    func: Callable[[T], Coroutine[None, None, S]],
-  ) -> S:
+    key: Hashable,
+    func: Callable[[Hashable], Coroutine[Any, Any, Any]],
+  ) -> Any:
     async with self.lock:
       cached = self.cache.get(key)
       if cached is None:
@@ -109,7 +107,7 @@ class AsyncCache(Generic[T, S]):
     if asyncio.isfuture(cached): # pending
       return await cached # type: ignore
     elif cached is not None: # cached
-      return cached # type: ignore
+      return cached
     else: # not cached
       r = await fu
       self.cache[key] = r
