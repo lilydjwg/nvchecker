@@ -1,11 +1,11 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import json
+import json as _json
 from urllib.parse import urlencode
+from typing import Optional, Dict, Any
 
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
-from tornado.httpclient import HTTPError
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
 try:
   import pycurl
@@ -13,9 +13,9 @@ try:
 except ImportError:
   pycurl = None # type: ignore
 
-from .httpclient import DEFAULT_USER_AGENT
+from .base import BaseSession, TemporaryError, Response
 
-__all__ = ['session', 'HTTPError', 'NetworkErrors']
+__all__ = ['session']
 
 HTTP2_AVAILABLE = None if pycurl else False
 
@@ -30,54 +30,43 @@ def try_use_http2(curl):
   elif HTTP2_AVAILABLE:
     curl.setopt(pycurl.HTTP_VERSION, 4)
 
-class Session:
-  def post(self, url, **kwargs):
-    j = kwargs.pop('json', None)
-    if j:
-      kwargs['body'] = json.dumps(j)
-    return self.get(url, method='POST', **kwargs)
+class TornadoSession(BaseSession):
+  async def request_impl(
+    self, url: str, *,
+    method: str,
+    proxy: Optional[str] = None,
+    headers: Dict[str, str] = {},
+    params = (),
+    json = None,
+  ) -> Response:
+    kwargs: Dict[str, Any] = {
+      'method': method,
+      'headers': headers,
+    }
 
-  def get(self, url, **kwargs):
+    if json:
+      kwargs['body'] = _json.dumps(json)
     kwargs['prepare_curl_callback'] = try_use_http2
 
-    proxy = kwargs.get('proxy')
-    if proxy:
-      del kwargs['proxy']
-    elif hasattr(self, 'nv_config') and self.nv_config.get('proxy'):
-      proxy = self.nv_config.get('proxy')
     if proxy:
       host, port = proxy.rsplit(':', 1)
       kwargs['proxy_host'] = host
       kwargs['proxy_port'] = int(port)
 
-    params = kwargs.get('params')
     if params:
-      del kwargs['params']
       q = urlencode(params)
       url += '?' + q
 
-    kwargs.setdefault("headers", {}).setdefault('User-Agent', DEFAULT_USER_AGENT)
     r = HTTPRequest(url, **kwargs)
-    return ResponseManager(r)
+    res = await AsyncHTTPClient().fetch(
+      r, raise_error=False)
+    if res.code >= 500:
+      raise TemporaryError(
+        res.code, res.reason, res
+      )
+    else:
+      res.rethrow()
 
-class ResponseManager:
-  def __init__(self, req):
-    self.req = req
+    return Response(res.body)
 
-  async def __aenter__(self):
-    return await AsyncHTTPClient().fetch(self.req)
-
-  async def __aexit__(self, exc_type, exc, tb):
-    pass
-
-async def json_response(self, **kwargs):
-  return json.loads(self.body.decode('utf-8'))
-
-async def read(self):
-  return self.body
-
-HTTPResponse.json = json_response # type: ignore
-HTTPResponse.read = read # type: ignore
-session = Session()
-
-NetworkErrors = ()
+session = TornadoSession()

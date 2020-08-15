@@ -10,7 +10,7 @@ import sys
 
 import structlog
 
-from .httpclient import HTTPError, NetworkErrors # type: ignore
+from .httpclient.base import TemporaryError
 
 def _console_msg(event):
   evt = event['event']
@@ -49,11 +49,9 @@ def filter_exc(logger, level, event):
   else:
     exc = exc_info
 
-  if isinstance(exc, HTTPError):
-    if exc.code == 599: # tornado timeout
+  if isinstance(exc, TemporaryError):
+    if exc.code == 599: # network issues
       del event['exc_info']
-  elif isinstance(exc, NetworkErrors):
-    del event['exc_info']
   event['error'] = exc
   return event
 

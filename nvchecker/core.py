@@ -17,6 +17,7 @@ import types
 from pathlib import Path
 from importlib import import_module
 import re
+import contextvars
 
 import structlog
 import toml
@@ -29,6 +30,7 @@ from .util import (
 )
 from . import __version__
 from .sortversion import sort_version_keys
+from .ctxvars import tries as ctx_tries
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -182,6 +184,9 @@ def dispatch(
   tries: int,
 ) -> List[asyncio.Future]:
   mods: Dict[str, Tuple[types.ModuleType, List]] = {}
+  ctx_tries.set(tries)
+  root_ctx = contextvars.copy_context()
+
   for name, entry in entries.items():
     source = entry.get('source', 'none')
     if source not in mods:
@@ -199,15 +204,16 @@ def dispatch(
     else:
       worker_cls = FunctionWorker
 
-    worker = worker_cls(
-      token_q, result_q, tasks,
-      tries, keymanager,
+    ctx = root_ctx.copy()
+    worker = ctx.run(
+      worker_cls,
+      token_q, result_q, tasks, keymanager,
     )
     if worker_cls is FunctionWorker:
       func = mod.get_version # type: ignore
-      worker.initialize(func)
+      ctx.run(worker.initialize, func)
 
-    ret.append(worker.run())
+    ret.append(ctx.run(worker.run))
 
   return ret
 

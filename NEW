@@ -1,5 +1,5 @@
 TODO:
-* use contextvars for `tries` and `proxy` (passing to `httpclient`)
 * update tests
 * update README
+* set keyfile via command line?
 * create source plugin documentation

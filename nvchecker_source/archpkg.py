@@ -6,8 +6,8 @@ from nvchecker.api import session, GetVersionError
 URL = 'https://www.archlinux.org/packages/search/json/'
 
 async def request(pkg):
-  async with session.get(URL, params={"name": pkg}) as res:
-    return await res.json()
+  res = await session.get(URL, params={"name": pkg})
+  return res.json()
 
 async def get_version(name, conf, *, cache, **kwargs):
   pkg = conf.get('archpkg') or name

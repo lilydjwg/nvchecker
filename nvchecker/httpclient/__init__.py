@@ -11,9 +11,13 @@ except ImportError:
     which = 'aiohttp'
     # connection reuse
   except ImportError:
-    import tornado
-    which = 'tornado'
-    # fallback
+    try:
+      import httpx
+      which = 'httpx'
+    except ImportError:
+      import tornado
+      which = 'tornado'
+      # fallback
 
 m = __import__('%s_httpclient' % which, globals(), locals(), level=1)
 __all__ = m.__all__

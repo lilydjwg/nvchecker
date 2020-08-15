@@ -7,3 +7,4 @@ from .util import (
   Entry, BaseWorker, RawResult, VersionResult,
 )
 from .sortversion import sort_version_keys
+from .ctxvars import tries, proxy

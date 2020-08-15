@@ -25,8 +25,8 @@ class AurResults:
     params = [('v', '5'), ('type', 'info')]
     params.extend(('arg[]', name) for name in aurnames
                   if name not in self.cache)
-    async with session.get(AUR_URL, params=params) as res:
-      data = await res.json()
+    res = await session.get(AUR_URL, params=params)
+    data = res.json()
     new_results = {r['Name']: r for r in data['results']}
 
     cache = self.cache

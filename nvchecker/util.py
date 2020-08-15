@@ -12,11 +12,15 @@ from typing import (
   TYPE_CHECKING,
 )
 from pathlib import Path
+import contextvars
 
 import toml
 import structlog
 
 from .httpclient import session # type: ignore
+from .ctxvars import tries as ctx_tries
+from .ctxvars import proxy as ctx_proxy
+from .ctxvars import user_agent as ctx_ua
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -55,12 +59,10 @@ class BaseWorker:
     token_q: Queue[bool],
     result_q: Queue[RawResult],
     tasks: List[Tuple[str, Entry]],
-    tries: int,
     keymanager: KeyManager,
   ) -> None:
     self.token_q = token_q
     self.result_q = result_q
-    self.tries = tries
     self.keymanager = keymanager
     self.tasks = tasks
 
@@ -85,8 +87,8 @@ class AsyncCache:
 
   async def _get_json(self, key: Tuple[str, str]) -> Any:
     url = key[1]
-    async with session.get(url) as res:
-      return await res.json(content_type=None)
+    res = await session.get(url)
+    return res.json()
 
   async def get_json(self, url: str) -> Any:
     return await self.get(
@@ -136,17 +138,29 @@ class FunctionWorker(BaseWorker):
     self.cache = AsyncCache()
 
   async def run(self) -> None:
-    futures = [
-      self.run_one(name, entry)
-      for name, entry in self.tasks
-    ]
-    for fu in asyncio.as_completed(futures):
-      await fu
+    futures = []
+    for name, entry in self.tasks:
+      ctx = contextvars.copy_context()
+      fu = ctx.run(self.run_one, name, entry)
+      futures.append(fu)
+
+    for fu2 in asyncio.as_completed(futures):
+      await fu2
 
   async def run_one(
     self, name: str, entry: Entry,
   ) -> None:
     assert self.func is not None
+
+    tries = entry.get('tries', None)
+    if tries is not None:
+      ctx_tries.set(tries)
+    proxy = entry.get('proxy', None)
+    if tries is not None:
+      ctx_proxy.set(proxy)
+    ua = entry.get('user_agent', None)
+    if ua is not None:
+      ctx_ua.set(ua)
 
     try:
       async with self.acquire_token():
