@@ -40,6 +40,12 @@ class KeyManager:
       keys = {}
     self.keys = keys
 
+  @classmethod
+  def from_str(cls, toml_str: str) -> KeyManager:
+    self = cls(None)
+    self.keys = toml.loads(toml_str)['keys']
+    return self
+
   def get_key(self, name: str) -> Optional[str]:
     return self.keys.get(name)
 

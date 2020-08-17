@@ -12,5 +12,5 @@ class Worker(BaseWorker):
     exc = GetVersionError('no source specified')
     async with self.acquire_token():
       for name, conf in self.tasks:
-        self.result_q.put(
+        await self.result_q.put(
           RawResult(name, exc, conf))

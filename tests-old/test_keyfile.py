@@ -21,15 +21,15 @@ def unset_github_token_env():
     if token:
       os.environ['NVCHECKER_GITHUB_TOKEN'] = token
 
-async def test_keyfile_missing(run_source):
+async def test_keyfile_missing(run_str):
   test_conf = '''\
 [example]
 github = harry-sanabria/ReleaseTestRepo
 '''
 
-  assert await run_source(test_conf) in ['20140122.012101', None]
+  assert await run_str(test_conf) in ['20140122.012101', None]
 
-async def test_keyfile_invalid(run_source):
+async def test_keyfile_invalid(run_str):
   with tempfile.NamedTemporaryFile(mode='w') as f, \
     unset_github_token_env():
     f.write('''\
@@ -46,7 +46,7 @@ keyfile = {name}
 '''.format(name=f.name)
 
     try:
-      version = await run_source(test_conf, clear_cache=True)
+      version = await run_str(test_conf, clear_cache=True)
       assert version is None # out of allowance
       return
     except HTTPError as e:
@@ -57,7 +57,7 @@ keyfile = {name}
 
 @pytest.mark.skipif('NVCHECKER_GITHUB_TOKEN' not in os.environ,
                     reason='no key given')
-async def test_keyfile_valid(run_source):
+async def test_keyfile_valid(run_str):
   with tempfile.NamedTemporaryFile(mode='w') as f, \
     unset_github_token_env() as token:
     f.write('''\
@@ -74,4 +74,4 @@ github = harry-sanabria/ReleaseTestRepo
 keyfile = {name}
       '''.format(name=f.name)
 
-    assert await run_source(test_conf) == '20140122.012101'
+    assert await run_str(test_conf) == '20140122.012101'

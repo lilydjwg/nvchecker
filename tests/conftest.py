@@ -1,59 +1,63 @@
 # MIT licensed
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import configparser
-import pytest
 import asyncio
-import io
 import structlog
+from typing import Optional
 
-from nvchecker.get_version import get_version as _get_version
-from nvchecker.get_version import _cache
-from nvchecker.core import Source
+import toml
+import pytest
 
-class TestSource(Source):
-  def __init__(self, future, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    self._future = future
+from nvchecker import core
+from nvchecker import __main__ as main
+from nvchecker.util import Entries, VersData, RawResult
 
-  def on_update(self, name, version, oldver):
-    self._future.set_result(version)
+async def run(
+  entries: Entries, max_concurrency: int = 20,
+  keys_toml: Optional[str] = None,
+) -> VersData:
+  token_q = core.token_queue(max_concurrency)
+  result_q: asyncio.Queue[RawResult] = asyncio.Queue()
+  if keys_toml:
+    keymanager = core.KeyManager.from_str(keys_toml)
+  else:
+    keymanager = core.KeyManager(None)
 
-  def on_no_result(self, name):
-    self._future.set_result(None)
+  futures = core.dispatch(
+    entries, token_q, result_q,
+    keymanager, 1,
+  )
 
-  def on_exception(self, name, exc):
-    self._future.set_exception(exc)
+  oldvers: VersData = {}
+  result_coro = core.process_result(oldvers, result_q)
+  runner_coro = core.run_tasks(futures)
 
-@pytest.fixture(scope="module")
-async def run_source():
-  async def __call__(conf, *, clear_cache=False):
-    if clear_cache:
-      _cache.clear()
-
-    future = asyncio.Future()
-    file = io.StringIO(conf)
-    file.name = '<StringIO>'
-
-    s = TestSource(future, file)
-    await s.check()
-    return await future
-
-  return __call__
+  return await main.run(result_coro, runner_coro)
 
 @pytest.fixture(scope="module")
 async def get_version():
   async def __call__(name, config):
+    entries = {name: config}
+    newvers = await run(entries)
+    return newvers[name]
 
-    if isinstance(config, dict):
-      _config = configparser.ConfigParser(
-        dict_type=dict, allow_no_value=True,
-        interpolation=None,
-      )
-      _config.read_dict({name: config})
-      config = _config[name]
+  return __call__
 
-    return await _get_version(name, config)
+@pytest.fixture(scope="module")
+async def run_str():
+  async def __call__(str):
+    entries = toml.loads(str)
+    newvers = await run(entries)
+    return newvers.popitem()[1]
+
+  return __call__
+
+@pytest.fixture(scope="module")
+async def run_str_multi():
+  async def __call__(str):
+    entries = toml.loads(str)
+    newvers = await run(entries)
+    return newvers
 
   return __call__
 
