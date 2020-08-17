@@ -7,7 +7,7 @@ import sre_constants
 from nvchecker.api import session, GetVersionError
 
 async def get_version(name, conf, *, cache, **kwargs):
-  key = sorted(conf.items())
+  key = tuple(sorted(conf.items()))
   return await cache.get(key, get_version_impl)
 
 async def get_version_impl(info):
@@ -20,19 +20,12 @@ async def get_version_impl(info):
 
   encoding = conf.get('encoding', 'latin1')
 
-  kwargs = {}
-  headers = {}
-  if conf.get('proxy'):
-    kwargs["proxy"] = conf.get("proxy")
-  if conf.get('user_agent'):
-    headers['User-Agent'] = conf['user_agent']
-
-  async with session.get(conf['url'], headers=headers, **kwargs) as res:
-    body = (await res.read()).decode(encoding)
-    try:
-      version = regex.findall(body)
-    except ValueError:
-      version = None
-      if not conf.get('missing_ok', False):
-        raise GetVersionError('version string not found.')
-    return version
+  res = await session.get(conf['url'])
+  body = res.body.decode(encoding)
+  try:
+    version = regex.findall(body)
+  except ValueError:
+    version = None
+    if not conf.get('missing_ok', False):
+      raise GetVersionError('version string not found.')
+  return version

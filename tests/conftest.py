@@ -39,7 +39,7 @@ async def get_version():
   async def __call__(name, config):
     entries = {name: config}
     newvers = await run(entries)
-    return newvers[name]
+    return newvers.get(name)
 
   return __call__
 

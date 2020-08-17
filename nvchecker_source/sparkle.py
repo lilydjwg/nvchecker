@@ -11,10 +11,8 @@ async def get_version(name, conf, *, cache, **kwargs):
   return await cache.get(sparkle, get_version_impl)
 
 async def get_version_impl(sparkle):
-  async with session.get(sparkle) as res:
-    resp = await res.read()
-
-  root = ElementTree.fromstring(resp)
+  res = await session.get(sparkle)
+  root = ElementTree.fromstring(res.body)
   item = root.find('./channel/item[1]/enclosure')
 
   version_string = item.get('{http://www.andymatuschak.org/xml-namespaces/sparkle}shortVersionString')

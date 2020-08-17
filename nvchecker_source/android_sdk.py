@@ -16,8 +16,8 @@ _ANDROID_REPO_MANIFESTS = {
 async def _get_repo_manifest(repo):
   repo_xml_url = _ANDROID_REPO_MANIFESTS[repo]
 
-  async with session.get(repo_xml_url) as res:
-    data = (await res.read()).decode('utf-8')
+  res = await session.get(repo_xml_url)
+  data = res.body.decode('utf-8')
 
   repo_manifest = ElementTree.fromstring(data)
   return repo_manifest

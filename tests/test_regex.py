@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2019 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import base64
 
@@ -14,6 +14,7 @@ def base64_encode(s):
 
 async def test_regex_httpbin_default_user_agent(get_version, httpbin):
     ua = await get_version("example", {
+        "source": "regex",
         "url": httpbin.url + "/get",
         "regex": r'"User-Agent":\s*"([^"]+)"',
     })
@@ -21,6 +22,7 @@ async def test_regex_httpbin_default_user_agent(get_version, httpbin):
 
 async def test_regex_httpbin_user_agent(get_version, httpbin):
     assert await get_version("example", {
+        "source": "regex",
         "url": httpbin.url + "/get",
         "regex": r'"User-Agent":\s*"(\w+)"',
         "user_agent": "Meow",
@@ -28,12 +30,14 @@ async def test_regex_httpbin_user_agent(get_version, httpbin):
 
 async def test_regex(get_version, httpbin):
     assert await get_version("example", {
+        "source": "regex",
         "url": httpbin.url + "/base64/" + base64_encode("version 1.12 released"),
         "regex": r'version ([0-9.]+)',
     }) == "1.12"
 
 async def test_missing_ok(get_version, httpbin):
     assert await get_version("example", {
+        "source": "regex",
         "url": httpbin.url + "/base64/" + base64_encode("something not there"),
         "regex": "foobar",
         "missing_ok": True,
