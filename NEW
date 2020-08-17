@@ -3,4 +3,3 @@ TODO:
 * update README
 * create source plugin documentation
 * a script to convert old ini into new toml files
-* use github actions to run mypy
