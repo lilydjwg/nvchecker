@@ -10,13 +10,13 @@ BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/2.0/repositories/%s/refs/tags'
 async def get_version(name, conf, *, cache, **kwargs):
   repo = conf.get('bitbucket')
   br = conf.get('branch', '')
-  use_max_tag = conf.getboolean('use_max_tag', False)
+  use_max_tag = conf.get('use_max_tag', False)
   ignored_tags = conf.get("ignored_tags", "").split()
   sort_version_key = sort_version_keys[conf.get("sort_version_key", "parse_version")]
 
   if use_max_tag:
     url = BITBUCKET_MAX_TAG % repo
-    max_page = conf.getint('max_page', 3)
+    max_page = conf.get('max_page', 3)
     data = await _get_tags(url, max_page=max_page, cache=cache)
 
   else:

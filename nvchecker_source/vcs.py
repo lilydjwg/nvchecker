@@ -26,7 +26,7 @@ def _parse_oldver(oldver):
 
 async def get_version(name, conf, *, cache, **kwargs):
   vcs = conf['vcs'] or ''
-  use_max_tag = conf.getboolean('use_max_tag', False)
+  use_max_tag = conf.get('use_max_tag', False)
   ignored_tags = conf.get("ignored_tags", "").split()
   oldver = conf.get('oldver')
   cmd = _cmd_prefix + [name, vcs]
