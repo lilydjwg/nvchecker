@@ -133,10 +133,12 @@ class Options(NamedTuple):
   keymanager: KeyManager
 
 def load_file(
-  file: TextIO,
+  file: TextIO, *,
+  use_keymanager: bool,
 ) -> Tuple[Entries, Options]:
   config = toml.load(file)
   ver_files: Optional[Tuple[Path, Path]] = None
+  keymanager = KeyManager(None)
 
   if '__config__' in config:
     c = config.pop('__config__')
@@ -151,19 +153,18 @@ def load_file(
       newver = d / newver_s
       ver_files = oldver, newver
 
-    keyfile = c.get('keyfile')
-    if keyfile:
-      keyfile_s = os.path.expandvars(
-        os.path.expanduser(c.get('keyfile')))
-      keyfile = d / keyfile_s
+    if use_keymanager:
+      keyfile = c.get('keyfile')
+      if keyfile:
+        keyfile_s = os.path.expandvars(
+          os.path.expanduser(c.get('keyfile')))
+        keyfile = d / keyfile_s
+      keymanager = KeyManager(keyfile)
 
     max_concurrency = c.get(
       'max_concurrency', 20)
-    keymanager = KeyManager(keyfile)
-
   else:
     max_concurrency = 20
-    keymanager = KeyManager(None)
 
   return cast(Entries, config), Options(
     ver_files, max_concurrency, keymanager)

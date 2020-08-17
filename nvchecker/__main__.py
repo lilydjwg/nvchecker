@@ -12,12 +12,15 @@ from typing import Coroutine
 import structlog
 
 from . import core
-from .util import VersData, RawResult
+from .util import VersData, RawResult, KeyManager
 
 logger = structlog.get_logger(logger_name=__name__)
 
 def main() -> None:
   parser = argparse.ArgumentParser(description='New version checker for software')
+  parser.add_argument('-k', '--keyfile',
+                      metavar='FILE', type=str,
+                      help='use specified keyfile')
   parser.add_argument('-t', '--tries', default=1, type=int, metavar='N',
                       help='try N times when errors occur')
   core.add_common_arguments(parser)
@@ -33,13 +36,20 @@ def main() -> None:
   else:
     file = args.file
 
-  entries, options = core.load_file(file)
+  entries, options = core.load_file(
+    file, use_keymanager=bool(args.keyfile))
+
+  if args.keyfile:
+    keymanager = KeyManager(args.keyfile)
+  else:
+    keymanager = options.keymanager
+
   token_q = core.token_queue(options.max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
   try:
     futures = core.dispatch(
       entries, token_q, result_q,
-      options.keymanager, args.tries,
+      keymanager, args.tries,
     )
   except ModuleNotFoundError as e:
     sys.exit(f'Error: {e}')
