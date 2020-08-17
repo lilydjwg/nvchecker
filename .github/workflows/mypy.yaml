@@ -1,0 +1,15 @@
+name: run mypy
+on: [push, pull_request]
+jobs:
+  build:
+    name: run mypy
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Install deps
+      run: pacman -Syu --noconfirm python-tornado python-pytest python-pytest-asyncio python-pytest-httpbin python-flaky python-structlog python-toml python-aiohttp python-httpx mypy
+    - name: Run mypy
+      run: mypy nvchecker nvchecker_source tests
