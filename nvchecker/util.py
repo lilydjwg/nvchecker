@@ -162,7 +162,7 @@ class FunctionWorker(BaseWorker):
     if tries is not None:
       ctx_tries.set(tries)
     proxy = entry.get('proxy', None)
-    if tries is not None:
+    if proxy is not None:
       ctx_proxy.set(proxy)
     ua = entry.get('user_agent', None)
     if ua is not None:
