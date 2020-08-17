@@ -3,13 +3,11 @@ on: [push, pull_request]
 jobs:
   build:
     name: run mypy
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
     - name: Install deps
-      run: pacman -Syu --noconfirm python-tornado python-pytest python-pytest-asyncio python-pytest-httpbin python-flaky python-structlog python-toml python-aiohttp python-httpx mypy
+      run: pip3 install -U tornado pytest pytest-asyncio pytest-httpbin flaky structlog toml aiohttp httpx mypy
     - name: Run mypy
-      run: mypy nvchecker nvchecker_source tests
+      run: PATH=$HOME/.local/bin:$PATH mypy nvchecker nvchecker_source tests
