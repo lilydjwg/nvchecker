@@ -17,10 +17,10 @@ async def test_bitbucket_max_tag(get_version):
         "use_max_tag": True,
     }) == "1.7.0"
 
-async def test_bitbucket_max_tag_with_ignored_tags(get_version):
+async def test_bitbucket_max_tag_with_ignored(get_version):
     assert await get_version("example", {
         "source": "bitbucket",
         "bitbucket": "prawee/git-tag",
         "use_max_tag": True,
-        "ignored_tags": "1.6.0 1.7.0",
+        "ignored": "1.6.0 1.7.0",
     }) == "v1.5"

@@ -19,7 +19,7 @@ async def test_gitea_max_tag(get_version):
         "use_max_tag": True,
     }) == "v0.4.0"
 
-async def test_gitea_max_tag_with_ignored_tags(get_version):
+async def test_gitea_max_tag_with_ignored(get_version):
     assert await get_version("example", {
         "source": "gitea",
         "gitea": "gitea/tea",

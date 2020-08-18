@@ -33,10 +33,10 @@ async def test_git_max_tag(get_version):
 
 @pytest.mark.skipif(shutil.which("git") is None,
                     reason="requires git command")
-async def test_git_max_tag_with_ignored_tags(get_version):
+async def test_git_max_tag_with_ignored(get_version):
     assert await get_version("example", {
         "source": "vcs",
         "vcs": "git+https://github.com/harry-sanabria/ReleaseTestRepo.git",
         "use_max_tag": 1,
-        "ignored_tags": "second_release release3",
+        "ignored": "second_release release3",
     }) == "first_release"

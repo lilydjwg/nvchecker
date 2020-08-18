@@ -27,7 +27,6 @@ def _parse_oldver(oldver):
 async def get_version(name, conf, *, cache, **kwargs):
   vcs = conf['vcs'] or ''
   use_max_tag = conf.get('use_max_tag', False)
-  ignored_tags = conf.get("ignored_tags", "").split()
   oldver = conf.get('oldver')
   cmd = _cmd_prefix + [name, vcs]
   if use_max_tag:
@@ -36,7 +35,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   output = await cache.get(tuple(cmd), run_cmd)
 
   if use_max_tag:
-    return [tag for tag in output.split("\n") if tag not in ignored_tags]
+    return [tag for tag in output.split("\n")]
   else:
     oldvers = _parse_oldver(oldver)
     if output == oldvers[2]:
