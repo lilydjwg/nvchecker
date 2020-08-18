@@ -13,5 +13,5 @@ async def get_version(name, conf, *, cache, **kwargs):
     if version != "dev-master"
   }
 
-  if len(data):
-    return max(data, key=lambda version: versions[version]["time"])
+  if len(versions):
+    return max(versions, key=lambda version: versions[version]["time"])
