@@ -91,14 +91,20 @@ class AsyncCache:
     self.cache = {}
     self.lock = asyncio.Lock()
 
-  async def _get_json(self, key: Tuple[str, str]) -> Any:
-    url = key[1]
-    res = await session.get(url)
+  async def _get_json(
+    self, key: Tuple[str, str, Tuple[Tuple[str, str], ...]],
+  ) -> Any:
+    _, url, headers = key
+    res = await session.get(url, headers=dict(headers))
     return res.json()
 
-  async def get_json(self, url: str) -> Any:
+  async def get_json(
+    self, url: str, *,
+    headers: Dict[str, str] = {},
+  ) -> Any:
+    key = '_jsonurl', url, tuple(sorted(headers.items()))
     return await self.get(
-      ('_jsonurl', url), self._get_json) # type: ignore
+      key , self._get_json) # type: ignore
 
   async def get(
     self,

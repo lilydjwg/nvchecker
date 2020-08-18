@@ -5,6 +5,7 @@ from .httpclient import session # type: ignore
 from .core import GetVersionError
 from .util import (
   Entry, BaseWorker, RawResult, VersionResult,
+  AsyncCache, KeyManager,
 )
 from .sortversion import sort_version_keys
 from .ctxvars import tries, proxy
