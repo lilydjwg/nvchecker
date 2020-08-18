@@ -23,3 +23,5 @@ m = __import__('%s_httpclient' % which, globals(), locals(), level=1)
 __all__ = m.__all__
 for x in __all__:
   globals()[x] = getattr(m, x)
+
+from .base import TemporaryError
