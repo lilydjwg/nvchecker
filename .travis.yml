@@ -6,7 +6,6 @@ python:
   - "3.7"
   - "3.8"
   - "nightly"
-  - "pypy3.6-7.3.1"
 before_install: openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml
 install: pip install -U $DEPS pytest pytest-asyncio pytest-httpbin flaky structlog toml
 script: pytest
@@ -21,9 +20,6 @@ env:
 jobs:
   fast_finish: true
   allow_failures:
-    # doesn't work well, see https://travis-ci.org/lilydjwg/nvchecker/jobs/376326582
-    - python: pypy3.6-7.3.1
-      env: DEPS=aiohttp
     # it works now, but may be broken in the future again
     - python: nightly
 
