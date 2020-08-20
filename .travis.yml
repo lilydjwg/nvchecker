@@ -17,7 +17,7 @@ env:
     - DEPS=aiohttp
     - DEPS="tornado pycurl"
     - DEPS=tornado
-    - DEPS="httpx>=0.14.0"
+    - DEPS="httpx[http2]>=0.14.0"
 jobs:
   fast_finish: true
   allow_failures:
