@@ -240,17 +240,6 @@ regex
 
   When multiple version strings are found, the maximum of those is chosen.
 
-proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
-
-user_agent
-  The ``User-Agent`` header value to use. Use something more like a tool (e.g. ``curl/7.40.0``) in Europe or the real web page won't get through because cookie policies (SourceForge has this issue).
-
-sort_version_key
-  Sort the version string using this key function. Choose between ``parse_version`` and 
-  ``vercmp``. Default value is ``parse_version``. ``parse_version`` use 
-  ``pkg_resources.parse_version``. ``vercmp`` use ``pyalpm.vercmp``.
-
 This source supports `list options`_.
 
 Find with a Command
@@ -314,15 +303,8 @@ use_max_tag
   lightweight ones, and return the largest one sorted by the
   ``sort_version_key`` option. Will return the tag name instead of date.
 
-proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
-
-include_tags_pattern, ignored_tags, sort_version_key
-  Deprecated. Use `list options`_ instead.
-
-An environment variable ``NVCHECKER_GITHUB_TOKEN`` or a key named ``github``
-can be set to a GitHub OAuth token in order to request more frequently than
-anonymously.
+A key named ``github`` can be set to a GitHub OAuth token in order to request
+more frequently than anonymously.
 
 This source supports `list options`_ when ``use_max_tag`` is set.
 
@@ -347,9 +329,6 @@ host
 token
   Gitea authorization token used to call the API.
   
-ignored_tags, sort_version_key
-  Deprecated. Use `list options`_ instead.
-
 To set an authorization token, you can set:
 
 - a key named ``gitea_{host}`` in the keyfile (where ``host`` is formed the
@@ -376,9 +355,6 @@ branch
 use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
   sorted by ``pkg_resources.parse_version``. Will return the tag name instead of date.
-
-ignored_tags, sort_version_key
-  Deprecated. Use `list options`_ instead.
 
 max_page
   How many pages do we search for the max tag? Default is 3. This works when
@@ -407,9 +383,6 @@ host
 token
   GitLab authorization token used to call the API.
   
-ignored_tags, sort_version_key
-  Deprecated. Use `list options`_ instead.
-
 To set an authorization token, you can set:
 
 - a key named ``gitlab_{host}`` in the keyfile (where ``host`` is formed the
@@ -459,9 +432,6 @@ Check `MetaCPAN <https://metacpan.org/>`_ for updates.
 
 cpan
   The name used on CPAN, e.g. ``YAML``.
-
-proxy
-  The HTTP proxy to use. The format is ``host:port``, e.g. ``localhost:8087``.
 
 Check Packagist
 ---------------
@@ -570,12 +540,6 @@ vcs
 use_max_tag
   Set this to ``true`` to check for the max tag. Currently only supported for ``git``.
   This option returns the biggest tag sorted by ``pkg_resources.parse_version``.
-
-ignored_tags
-  Ignore certain tags while computing the max tag. Tags are separate by
-  whitespaces. This option must be used together with ``use_max_tag``. This can
-  be useful to avoid some known badly versioned tags, so the newer tags won't
-  be "overridden" by the old broken ones.
 
 This source supports `list options`_ when ``use_max_tag`` is set.
 
