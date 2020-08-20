@@ -5,12 +5,14 @@ import atexit
 import asyncio
 from typing import Optional, Dict
 
+import structlog
 import aiohttp
 
 from .base import BaseSession, TemporaryError, Response
 
 __all__ = ['session']
 
+logger = structlog.get_logger(logger_name=__name__)
 connector = aiohttp.TCPConnector(limit=20)
 
 class AiohttpSession(BaseSession):
@@ -31,12 +33,14 @@ class AiohttpSession(BaseSession):
   ) -> Response:
     kwargs = {
       'headers': headers,
+      'params': params,
     }
 
     if proxy is not None:
       kwargs['proxy'] = proxy
 
     try:
+      logger.debug('send request', method=method, url=url, kwargs=kwargs)
       res = await self.session.request(
         method, url, **kwargs)
     except (
@@ -55,6 +59,6 @@ class AiohttpSession(BaseSession):
 @atexit.register
 def cleanup():
   loop = asyncio.get_event_loop()
-  loop.run_until_complete(session.close())
+  loop.run_until_complete(session.session.close())
 
 session = AiohttpSession()
