@@ -13,13 +13,15 @@ from nvchecker import core
 from nvchecker import __main__ as main
 from nvchecker.util import Entries, VersData, RawResult
 
+use_keyfile = False
+
 async def run(
   entries: Entries, max_concurrency: int = 20,
 ) -> VersData:
   token_q = core.token_queue(max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
   keyfile = os.environ.get('KEYFILE')
-  if keyfile:
+  if use_keyfile and keyfile:
     filepath = Path(keyfile)
     keymanager = core.KeyManager(filepath)
   else:
@@ -89,3 +91,14 @@ def pytest_configure(config):
   config.addinivalue_line(
     'markers', 'needs_net: mark test to require Internet access',
   )
+
+@pytest.fixture
+def keyfile():
+  global use_keyfile
+  if 'KEYFILE' not in os.environ:
+    pytest.skip('KEYFILE not set')
+    return
+
+  use_keyfile = True
+  yield
+  use_keyfile = False

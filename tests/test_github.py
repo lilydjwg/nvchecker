@@ -1,15 +1,13 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import os
 import re
 
 import pytest
 
 pytestmark = [pytest.mark.asyncio,
               pytest.mark.needs_net,
-              pytest.mark.skipif("KEYFILE" not in os.environ,
-                                 reason="requires KEYFILE, or it fails too much")]
+              pytest.mark.usefixtures('keyfile')]
 
 async def test_github(get_version):
     assert await get_version("example", {
