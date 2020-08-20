@@ -8,10 +8,9 @@ BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
 BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/2.0/repositories/%s/refs/tags'
 
 async def get_version(name, conf, *, cache, **kwargs):
-  repo = conf.get('bitbucket')
+  repo = conf['bitbucket']
   br = conf.get('branch', '')
   use_max_tag = conf.get('use_max_tag', False)
-  sort_version_key = sort_version_keys[conf.get("sort_version_key", "parse_version")]
 
   if use_max_tag:
     url = BITBUCKET_MAX_TAG % repo
@@ -23,7 +22,6 @@ async def get_version(name, conf, *, cache, **kwargs):
     data = await cache.get_json(url)
 
   if use_max_tag:
-    data.sort(key=sort_version_key)
     version = data
   else:
     version = data['values'][0]['date'].split('T', 1)[0].replace('-', '')
