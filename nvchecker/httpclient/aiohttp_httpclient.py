@@ -30,7 +30,6 @@ class AiohttpSession(BaseSession):
     json = None,
   ) -> Response:
     kwargs = {
-      'method': method,
       'headers': headers,
     }
 
@@ -39,7 +38,7 @@ class AiohttpSession(BaseSession):
 
     try:
       res = await self.session.request(
-        url, **kwargs)
+        method, url, **kwargs)
     except (
       asyncio.TimeoutError, aiohttp.ClientConnectorError,
     ) as e:
