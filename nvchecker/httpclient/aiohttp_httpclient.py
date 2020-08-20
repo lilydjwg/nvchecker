@@ -49,7 +49,7 @@ class AiohttpSession(BaseSession):
     else:
       res.raise_for_status()
 
-    body = await res.content
+    body = await res.content.read()
     return Response(body)
 
 @atexit.register
