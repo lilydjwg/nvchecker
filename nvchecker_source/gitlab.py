@@ -24,6 +24,7 @@ async def get_version(name, conf, **kwargs):
 async def get_version_real(
   name: str, conf: Entry, *,
   cache: AsyncCache, keymanager: KeyManager,
+  **kwargs,
 ) -> VersionResult:
   repo = urllib.parse.quote_plus(conf['gitlab'])
   br = conf.get('branch', 'master')
@@ -39,7 +40,7 @@ async def get_version_real(
   token = conf.get('token')
   # Load token from keyman
   if token is None:
-    key_name = 'gitlab_' + host.lower().replace('.', '_').replace("/", "_")
+    key_name = 'gitlab_' + host.lower()
     token = keymanager.get_key(key_name)
 
   # Set private token if token exists.

@@ -8,3 +8,4 @@ __pycache__/
 *.pyo
 .travis.pub
 .pytest_cache/
+keyfile.toml

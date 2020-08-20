@@ -3,7 +3,8 @@
 
 import asyncio
 import structlog
-from typing import Optional
+import os
+from pathlib import Path
 
 import toml
 import pytest
@@ -14,12 +15,13 @@ from nvchecker.util import Entries, VersData, RawResult
 
 async def run(
   entries: Entries, max_concurrency: int = 20,
-  keys_toml: Optional[str] = None,
 ) -> VersData:
   token_q = core.token_queue(max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
-  if keys_toml:
-    keymanager = core.KeyManager.from_str(keys_toml)
+  keyfile = os.environ.get('KEYFILE')
+  if keyfile:
+    filepath = Path(keyfile)
+    keymanager = core.KeyManager(filepath)
   else:
     keymanager = core.KeyManager(None)
 
