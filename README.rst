@@ -22,7 +22,7 @@ Contents
 * `Install and Run <#install-and-run>`_
 
   * `JSON logging <#json-logging>`_
-  * `Upgrade from 1.x version <#upgrade-from-1-x-version>`_
+  * `Upgrade from 1.x version <#upgrade-from-1x-version>`_
 
 * `Version Record Files <#version-record-files>`_
 
@@ -30,7 +30,7 @@ Contents
 
 * `Configuration Files <#configuration-files>`_
 
-  * `Configuration Section <#configuration-section>`_
+  * `Configuration Table <#configuration-table>`_
   * `Global Optons <#global-options>`_
   * `List Optons <#list-options>`_
   * `Search in a Webpage <#search-in-a-webpage>`_
@@ -125,7 +125,7 @@ There are several backward-incompatible changes from the previous 1.x version.
 1. The command syntax changes a bit. You need to use a ``-c`` switch to specify your software version configuration file.
 2. The configuration file format has been changed from ini to `toml`_. You can use the ``scripts/ini2toml`` script in this repo to convert your old configuration files. However, comments and formatting will be lost.
 3. Several options have been renamed. ``max_concurrent`` to ``max_concurrency``, and all option names have their ``-`` be replaced with ``_``.
-4. All software configuration sections need a ``source`` option to specify which source is to be used rather than being figured out from option names in use. This enables additional source plugins to be discovered.
+4. All software configuration tables need a ``source`` option to specify which source is to be used rather than being figured out from option names in use. This enables additional source plugins to be discovered.
 
 Version Record Files
 ====================
@@ -165,9 +165,9 @@ The software version source files are in `toml`_ format. The *key name* is the n
 
 See ``sample_source.toml`` for an example.
 
-Configuration Section
----------------------
-A special section named ``__config__`` is special, it provides some configuration options.
+Configuration Table
+-------------------
+A special table named ``__config__`` provides some configuration options.
 
 Relative path are relative to the source files, and ``~`` and environmental variables are expanded.
 
@@ -187,7 +187,7 @@ max_concurrency
 
 keyfile
   Specify an ini config file containing key (token) information. This file
-  should contain a ``keys`` section, mapping key names to key values. See
+  should contain a ``keys`` table, mapping key names to key values. See
   specific source for the key name(s) to use.
 
 Global Options
@@ -231,8 +231,9 @@ example, the transformation of ``v1_1_0`` => ``1.1.0`` can be achieved with
 List Options
 ------------
 
-The following options apply to sources that return a list. See individual
-source sections to determine whether they are supported.
+The following options apply to sources that return a list. See
+individual source tables to determine whether they are
+supported.
 
 include_regex
   Only consider version strings that match the given regex. The whole string
@@ -288,7 +289,7 @@ Per-item proxy setting doesn't work for this because several items will be
 batched into one request.
 
 aur
-  The package name in AUR. If empty, use the name of software (the *section name*).
+  The package name in AUR. If empty, use the name of software (the *table name*).
 
 strip_release
   Strip the release part.
