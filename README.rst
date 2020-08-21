@@ -59,12 +59,13 @@ Contents
 
 Dependency
 ==========
-- Python 3.5+
-- Python library: structlog
+- Python 3.7+
+- Python library: structlog, toml
 - One of these Python library combinations (ordered by preference):
 
   * tornado + pycurl
   * aiohttp
+  * httpx with http2 support
   * tornado
 
 - All commands used in your version source files
@@ -83,9 +84,9 @@ To see available options::
 
   nvchecker --help
 
-Run with one or more software version source files::
+Run with one or more software version files::
 
-  nvchecker source_file
+  nvchecker -c config_file
 
 You normally will like to specify some "version record files"; see below.
 
@@ -256,7 +257,7 @@ Check `Arch User Repository <https://aur.archlinux.org/>`_ for updates.
 aur
   The package name in AUR. If empty, use the name of software (the *section name*).
 
-strip-release
+strip_release
   Strip the release part.
 
 use_last_modified
@@ -447,7 +448,7 @@ This is used when you run ``nvchecker`` on an Arch Linux system and the program 
 pacman
   The package name to reference to.
 
-strip-release
+strip_release
   Strip the release part.
 
 Check Arch Linux official packages
@@ -457,7 +458,7 @@ This enables you to track the update of `Arch Linux official packages <https://w
 archpkg
   Name of the Arch Linux package.
 
-strip-release
+strip_release
   Strip the release part, only return part before ``-``.
 
 provided
@@ -473,7 +474,7 @@ debianpkg
 suite
   Name of the Debian release (jessie, wheezy, etc, defaults to sid)
 
-strip-release
+strip_release
   Strip the release part.
 
 Check Ubuntu Linux official packages
@@ -486,7 +487,7 @@ ubuntupkg
 suite
   Name of the Ubuntu release (xenial, zesty, etc, defaults to None, which means no limit on suite)
 
-strip-release
+strip_release
   Strip the release part.
 
 Check Repology

@@ -8,6 +8,7 @@ import sys
 import argparse
 import asyncio
 from typing import Coroutine
+from pathlib import Path
 
 import structlog
 
@@ -22,7 +23,7 @@ def main() -> None:
                       metavar='FILE', type=str,
                       help='use specified keyfile')
   parser.add_argument('-t', '--tries', default=1, type=int, metavar='N',
-                      help='try N times when errors occur')
+                      help='try N times when network errors occur')
   core.add_common_arguments(parser)
   args = parser.parse_args()
   if core.process_common_arguments(args):
@@ -40,7 +41,7 @@ def main() -> None:
     file, use_keymanager=bool(args.keyfile))
 
   if args.keyfile:
-    keymanager = KeyManager(args.keyfile)
+    keymanager = KeyManager(Path(args.keyfile))
   else:
     keymanager = options.keymanager
 

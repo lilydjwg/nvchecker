@@ -1,0 +1,85 @@
+#!/usr/bin/python3
+# MIT licensed
+# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
+
+import argparse
+
+import configparser
+import toml
+
+_handler_precedence = (
+  'github', 'aur', 'pypi', 'archpkg', 'debianpkg', 'ubuntupkg',
+  'gems', 'pacman',
+  'cmd', 'bitbucket', 'regex', 'manual', 'vcs',
+  'cratesio', 'npm', 'hackage', 'cpan', 'gitlab', 'packagist',
+  'repology', 'anitya', 'android_sdk', 'sparkle', 'gitea'
+)
+
+BOOL_KEYS = [
+  'strip_release', 'use_last_modified',
+  'use_latest_release', 'use_latest_tag',
+  'use_max_tag', 'use_pre_release',
+]
+
+INT_KEYS = [
+  'max_page',
+]
+
+def main():
+  parser = argparse.ArgumentParser(description='convert 1.x ini file to 2.x toml file')
+  parser.add_argument('ini', type=argparse.FileType(),
+                      help='the old ini file')
+  parser.add_argument('toml', type=argparse.FileType(mode='w'),
+                      help='the new ini file')
+  args = parser.parse_args()
+
+  old = configparser.ConfigParser(
+    dict_type=dict, allow_no_value=True, interpolation=None,
+  )
+  old.read_file(args.ini)
+
+  if '__config__' in old:
+    c = old['__config__']
+    newconf = dict(c)
+    x = newconf.pop('max_concurrent', None)
+    if x is not None:
+      newconf['max_concurrency'] = x
+    confs = {'__config__': newconf}
+  else:
+    confs = {}
+
+  for section in old.sections():
+    if section == '__config__':
+      continue
+
+    conf = old[section]
+    newconf = {}
+
+    for key in _handler_precedence:
+      if key not in conf:
+        continue
+      newconf['source'] = key
+      if conf.get(key):
+        newconf[key] = conf.get(key)
+      break
+
+    dconf = dict(conf)
+
+    for k, v in dconf.items():
+      if '-' in k:
+        k = k.replace('-', '_')
+
+      if k in BOOL_KEYS:
+        newconf[k] = conf.getboolean(k)
+      elif k in INT_KEYS:
+        newconf[k] = conf.getint(k)
+      elif v != '':
+        newconf[k] = v
+
+    confs[section] = newconf
+
+  toml.dump(confs, args.toml)
+  args.toml.flush()
+
+if __name__ == '__main__':
+  main()

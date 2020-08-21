@@ -53,7 +53,7 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
                       help='show version and exit')
   parser.add_argument('-c', '--file',
                       metavar='FILE', type=open,
-                      help='software version configuration file [default: %s]' % get_default_config)
+                      help='software version configuration file [default: %s]' % get_default_config())
 
 def process_common_arguments(args: argparse.Namespace) -> bool:
   '''return True if should stop'''

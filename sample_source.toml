@@ -1,0 +1,41 @@
+[__config__]
+oldver = "old_ver.txt"
+newver = "new_ver.txt"
+
+[vim]
+source = "regex"
+regex = "7\\.3\\.\\d+"
+url = "http://ftp.vim.org/pub/vim/patches/7.3/"
+
+[google-chrome]
+source = "cmd"
+cmd = '''wget -qO- http://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | zgrep -A1 "google-chrome-stable" | awk -F\" '/version/ {print $4"-"$6}' '''
+
+[fbcat]
+source = "aur"
+
+[winterpy]
+source = "github"
+github = "lilydjwg/winterpy"
+
+[nvchecker]
+source = "github"
+github = "lilydjwg/nvchecker"
+
+[ssed]
+source = "regex"
+regex = "The current version is ([\\d.]+)\\."
+url = "http://sed.sourceforge.net/grabbag/ssed/"
+proxy = "http://localhost:8087"
+
+[PySide]
+source = "pypi"
+pypi = "PySide"
+
+[test]
+source = "manual"
+manual = "0.1"
+
+["Sparkle Test App"]
+source = "sparkle"
+sparkle = "https://sparkle-project.org/files/sparkletestcast.xml"

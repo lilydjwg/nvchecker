@@ -25,7 +25,7 @@ def _parse_oldver(oldver):
   return PROT_VER, count, ver
 
 async def get_version(name, conf, *, cache, **kwargs):
-  vcs = conf['vcs'] or ''
+  vcs = conf.get('vcs', '')
   use_max_tag = conf.get('use_max_tag', False)
   oldver = conf.get('oldver')
   cmd = _cmd_prefix + [name, vcs]
