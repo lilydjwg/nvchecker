@@ -14,6 +14,7 @@ import structlog
 
 from . import core
 from .util import VersData, RawResult, KeyManager
+from .ctxvars import proxy as ctx_proxy
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -44,6 +45,9 @@ def main() -> None:
     keymanager = KeyManager(Path(args.keyfile))
   else:
     keymanager = options.keymanager
+
+  if options.proxy is not None:
+    ctx_proxy.set(options.proxy)
 
   token_q = core.token_queue(options.max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()

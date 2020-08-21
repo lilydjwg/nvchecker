@@ -36,7 +36,7 @@ class BaseSession:
     for i in range(1, t+1):
       try:
         return await self.request_impl(
-          proxy = p,
+          proxy = p or None,
           *args, **kwargs,
         )
       except TemporaryError as e:

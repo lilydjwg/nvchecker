@@ -130,6 +130,7 @@ def write_verfile(file: Path, versions: VersData) -> None:
 class Options(NamedTuple):
   ver_files: Optional[Tuple[Path, Path]]
   max_concurrency: int
+  proxy: Optional[str]
   keymanager: KeyManager
 
 def load_file(
@@ -161,13 +162,14 @@ def load_file(
         keyfile = d / keyfile_s
       keymanager = KeyManager(keyfile)
 
-    max_concurrency = c.get(
-      'max_concurrency', 20)
+    max_concurrency = c.get('max_concurrency', 20)
+    proxy = c.get('proxy')
   else:
     max_concurrency = 20
+    proxy = None
 
   return cast(Entries, config), Options(
-    ver_files, max_concurrency, keymanager)
+    ver_files, max_concurrency, proxy, keymanager)
 
 def token_queue(maxsize: int) -> Queue[bool]:
   token_q: Queue[bool] = Queue(maxsize=maxsize)
