@@ -310,14 +310,12 @@ def _process_result(r: RawResult) -> Optional[Result]:
 
 def check_version_update(
   oldvers: VersData, name: str, version: str,
-) -> Optional[str]:
+) -> None:
   oldver = oldvers.get(name, None)
   if not oldver or oldver != version:
     logger.info('updated', name=name, version=version, old_version=oldver)
-    return version
   else:
     logger.debug('up-to-date', name=name, version=version)
-    return None
 
 async def process_result(
   oldvers: VersData,
@@ -330,10 +328,8 @@ async def process_result(
       r1 = _process_result(r)
       if r1 is None:
         continue
-      v = check_version_update(
-        oldvers, r1.name, r1.version)
-      if v is not None:
-        ret[r1.name] = v
+      check_version_update(oldvers, r1.name, r1.version)
+      ret[r1.name] = r1.version
   except asyncio.CancelledError:
     return ret
 
