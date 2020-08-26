@@ -71,7 +71,7 @@ Dependency
   * httpx with http2 support
   * tornado
 
-- All commands used in your version source files
+- All commands used in your software version configuration files
 
 Install and Run
 ===============
