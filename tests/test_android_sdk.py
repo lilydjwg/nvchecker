@@ -17,4 +17,4 @@ async def test_android_package(get_version):
         "source": "android_sdk",
         "android_sdk": "cmake;",
         "repo": "package",
-    }) == "3.6.4111459"
+    }) == "3.18.1"
