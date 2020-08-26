@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 import nvchecker
 
 # The complex upload command:
@@ -20,7 +20,7 @@ setup(
   platforms = 'any',
   zip_safe = False,
 
-  packages = ['nvchecker', 'nvchecker_source'],
+  packages = find_namespace_packages(exclude=['tests', 'build*']),
   install_requires = ['setuptools', 'toml', 'structlog', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
@@ -38,6 +38,7 @@ setup(
       'nvcmp = nvchecker.tools:cmp',
     ],
   },
+  scripts=['scripts/nvchecker-ini2toml'],
   package_data = {'nvchecker_source': ['vcs.sh']},
 
   classifiers = [
