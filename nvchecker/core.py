@@ -10,7 +10,7 @@ from asyncio import Queue
 import logging
 import argparse
 from typing import (
-  TextIO, Tuple, NamedTuple, Optional, List, Union,
+  Tuple, NamedTuple, Optional, List, Union,
   cast, Dict, Awaitable, Sequence,
 )
 import types
@@ -18,6 +18,7 @@ from pathlib import Path
 from importlib import import_module
 import re
 import contextvars
+import json
 
 import structlog
 import toml
@@ -51,9 +52,11 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
                       help='specify fd to send json logs to. stdout by default')
   parser.add_argument('-V', '--version', action='store_true',
                       help='show version and exit')
+  default_config = get_default_config()
   parser.add_argument('-c', '--file',
-                      metavar='FILE', type=open,
-                      help='software version configuration file [default: %s]' % get_default_config())
+                      metavar='FILE', type=str,
+                      default=default_config,
+                      help='software version configuration file [default: %s]' % default_config)
 
 def process_common_arguments(args: argparse.Namespace) -> bool:
   '''return True if should stop'''
@@ -109,23 +112,26 @@ def safe_overwrite(fname: str, data: Union[bytes, str], *,
   os.rename(tmpname, fname)
 
 def read_verfile(file: Path) -> VersData:
-  v = {}
   try:
     with open(file) as f:
-      for l in f:
-        name, ver = l.rstrip().split(None, 1)
-        v[name] = ver
+      data = f.read()
   except FileNotFoundError:
-    pass
+    return {}
+
+  try:
+    v = json.loads(data)
+  except json.decoder.JSONDecodeError:
+    # old format
+    v = {}
+    for l in data.splitlines():
+      name, ver = l.rstrip().split(None, 1)
+      v[name] = ver
+
   return v
 
 def write_verfile(file: Path, versions: VersData) -> None:
-  # sort using only alphanums, as done by the sort command,
-  # and needed by comm command
-  data = ['%s %s\n' % item
-          for item in sorted(versions.items(), key=lambda i: (''.join(filter(str.isalnum, i[0])), i[1]))]
-  safe_overwrite(
-    str(file), ''.join(data), method='writelines')
+  data = json.dumps(versions, ensure_ascii=False) + '\n'
+  safe_overwrite(str(file), data)
 
 class Options(NamedTuple):
   ver_files: Optional[Tuple[Path, Path]]
@@ -134,7 +140,7 @@ class Options(NamedTuple):
   keymanager: KeyManager
 
 def load_file(
-  file: TextIO, *,
+  file: str, *,
   use_keymanager: bool,
 ) -> Tuple[Entries, Options]:
   config = toml.load(file)
@@ -143,7 +149,7 @@ def load_file(
 
   if '__config__' in config:
     c = config.pop('__config__')
-    d = Path(file.name).parent
+    d = Path(file).parent
 
     if 'oldver' in c and 'newver' in c:
       oldver_s = os.path.expandvars(

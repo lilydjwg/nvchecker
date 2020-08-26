@@ -1,6 +1,6 @@
 [__config__]
-oldver = "old_ver.txt"
-newver = "new_ver.txt"
+oldver = "old_ver.json"
+newver = "new_ver.json"
 
 [vim]
 source = "regex"

@@ -1,9 +1,8 @@
 # vim: se sw=2:
 # MIT licensed
-# Copyright (c) 2013-2017 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import sys
-import os
 import argparse
 import structlog
 
@@ -11,7 +10,7 @@ from . import core
 
 logger = structlog.get_logger(logger_name=__name__)
 
-def take():
+def take() -> None:
   parser = argparse.ArgumentParser(description='update version records of nvchecker')
   core.add_common_arguments(parser)
   parser.add_argument('--all', action='store_true',
@@ -24,15 +23,19 @@ def take():
   if core.process_common_arguments(args):
     return
 
-  s = core.Source(args.file)
-  if not s.oldver or not s.newver:
+  opt = core.load_file(args.file, use_keymanager=False)[1]
+  if opt.ver_files is None:
     logger.critical(
-      "doesn't have both 'oldver' and 'newver' set.", source=s,
+      "doesn't have 'oldver' and 'newver' set.",
+      source=args.file,
     )
     sys.exit(2)
+  else:
+    oldverf = opt.ver_files[0]
+    newverf = opt.ver_files[1]
 
-  oldvers = core.read_verfile(s.oldver)
-  newvers = core.read_verfile(s.newver)
+  oldvers = core.read_verfile(oldverf)
+  newvers = core.read_verfile(newverf)
 
   if args.all:
     oldvers.update(newvers)
@@ -51,21 +54,33 @@ def take():
         sys.exit(2)
 
   try:
-      os.rename(s.oldver, s.oldver + '~')
+    oldverf.rename(
+      oldverf.with_name(oldverf.name + '~'),
+    )
   except FileNotFoundError:
-      pass
-  core.write_verfile(s.oldver, oldvers)
+    pass
+  core.write_verfile(oldverf, oldvers)
 
-def cmp():
+def cmp() -> None:
   parser = argparse.ArgumentParser(description='compare version records of nvchecker')
   core.add_common_arguments(parser)
   args = parser.parse_args()
   if core.process_common_arguments(args):
     return
 
-  s = core.Source(args.file)
-  oldvers = core.read_verfile(s.oldver) if s.oldver else {}
-  newvers = core.read_verfile(s.newver)
+  opt = core.load_file(args.file, use_keymanager=False)[1]
+  if opt.ver_files is None:
+    logger.critical(
+      "doesn't have 'oldver' and 'newver' set.",
+      source=args.file,
+    )
+    sys.exit(2)
+  else:
+    oldverf = opt.ver_files[0]
+    newverf = opt.ver_files[1]
+
+  oldvers = core.read_verfile(oldverf)
+  newvers = core.read_verfile(newverf)
   for name, newver in sorted(newvers.items()):
     oldver = oldvers.get(name, None)
     if oldver != newver:

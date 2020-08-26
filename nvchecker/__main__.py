@@ -30,16 +30,11 @@ def main() -> None:
   if core.process_common_arguments(args):
     return
 
-  if not args.file:
-    try:
-      file = open(core.get_default_config())
-    except FileNotFoundError:
-      sys.exit('version configuration file not given and default does not exist')
-  else:
-    file = args.file
-
-  entries, options = core.load_file(
-    file, use_keymanager=bool(args.keyfile))
+  try:
+    entries, options = core.load_file(
+      args.file, use_keymanager=bool(args.keyfile))
+  except FileNotFoundError:
+    sys.exit('version configuration file not given and default does not exist')
 
   if args.keyfile:
     keymanager = KeyManager(Path(args.keyfile))
