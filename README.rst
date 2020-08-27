@@ -1,6 +1,8 @@
 **nvchecker** (short for *new version checker*) is for checking if a new version of some software has been released.
 
-.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg?branch=master
+This is version 1.x branch, which will only receive minimal maintainance. You are advised to upgrade to version 2.x as soon as it's released.
+
+.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg?branch=v1.x
    :alt: Build Status
    :target: https://travis-ci.org/lilydjwg/nvchecker
 .. image:: https://badge.fury.io/py/nvchecker.svg
