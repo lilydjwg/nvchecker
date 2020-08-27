@@ -4,9 +4,9 @@ This is the version 2.0 branch that is in beta. Things may still change without 
 
 For the old version 1.x, please switch to the ``v1.x`` branch.
 
-.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg
+.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg?branch=master
    :alt: Build Status
-   :target: https://travis-ci.org/lilydjwg/nvchecker?branch=master
+   :target: https://travis-ci.org/lilydjwg/nvchecker
 .. image:: https://badge.fury.io/py/nvchecker.svg
    :alt: PyPI version
    :target: https://badge.fury.io/py/nvchecker
