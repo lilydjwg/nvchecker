@@ -1,10 +1,12 @@
 **nvchecker** (short for *new version checker*) is for checking if a new version of some software has been released.
 
-This is the 2.0 version branch that is still in development. Things may change without backward-compatibility.
+This is the version 2.0 branch that is in beta. Things may still change without backward-compatibility.
+
+For the old version 1.x, please switch to the ``v1.x`` branch.
 
 .. image:: https://travis-ci.org/lilydjwg/nvchecker.svg
    :alt: Build Status
-   :target: https://travis-ci.org/lilydjwg/nvchecker?branch=nvchecker2
+   :target: https://travis-ci.org/lilydjwg/nvchecker?branch=master
 .. image:: https://badge.fury.io/py/nvchecker.svg
    :alt: PyPI version
    :target: https://badge.fury.io/py/nvchecker
