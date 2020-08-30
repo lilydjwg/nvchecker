@@ -57,7 +57,6 @@ Contents
   * `Check Android SDK <#check-android-sdk>`_
   * `Check Sparkle framework <#check-sparkle-framework>`_
   * `Manually updating <#manually-updating>`_
-  * `Version Control System (VCS) (git, hg, svn, bzr) <#version-control-system-vcs-git-hg-svn-bzr>`_
   * `Extending <#extending>`_
 
 * `Bugs <#bugs>`_
@@ -130,6 +129,7 @@ There are several backward-incompatible changes from the previous 1.x version.
 4. Several options have been renamed. ``max_concurrent`` to ``max_concurrency``, and all option names have their ``-`` be replaced with ``_``.
 5. All software configuration tables need a ``source`` option to specify which source is to be used rather than being figured out from option names in use. This enables additional source plugins to be discovered.
 6. The version record files have been changed to use JSON format (the old format will be converted on writing).
+7. The ``vcs`` source is removed. (It's available inside `lilac <https://github.com/archlinuxcn/lilac>`_ at the moment.)
 
 Version Record Files
 ====================
@@ -250,6 +250,10 @@ ignored
 
 Search in a Webpage
 -------------------
+::
+
+  source = "regex"
+
 Search through a specific webpage for the version string. This type of version finding has these fields:
 
 url
@@ -269,6 +273,10 @@ This source supports `list options`_.
 
 Find with a Command
 -------------------
+::
+
+  source = "cmd"
+
 Use a shell command line to get the version. The output is striped first, so trailing newlines do not bother.
 
 cmd
@@ -276,6 +284,10 @@ cmd
 
 Check AUR
 ---------
+::
+
+  source = "aur"
+
 Check `Arch User Repository <https://aur.archlinux.org/>`_ for updates.
 Per-item proxy setting doesn't work for this because several items will be
 batched into one request.
@@ -291,6 +303,10 @@ use_last_modified
 
 Check GitHub
 ------------
+::
+
+  source = "github"
+
 Check `GitHub <https://github.com/>`_ for updates. The version returned is in
 date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``
 or ``use_max_tag`` is used. See below.
@@ -345,6 +361,10 @@ This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check Gitea
 -------------
+::
+
+  source = "gitea"
+
 Check `Gitea <https://gitea.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``,
 unless ``use_max_tag`` is used. See below.
 
@@ -373,6 +393,10 @@ This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check BitBucket
 ---------------
+::
+
+  source = "bitbucket"
+
 Check `BitBucket <https://bitbucket.org/>`_ for updates. The version returned
 is in date format ``%Y%m%d``, e.g. ``20130701``, unless ``use_max_tag`` is used. See below.
 
@@ -394,6 +418,10 @@ This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check GitLab
 -------------
+::
+
+  source = "gitlab"
+
 Check `GitLab <https://gitlab.com/>`_ for updates. The version returned is in date format ``%Y%m%d``, e.g. ``20130701``,
 unless ``use_max_tag`` is used. See below.
 
@@ -422,6 +450,10 @@ This source supports `list options`_ when ``use_max_tag`` is set.
 
 Check PyPI
 ----------
+::
+
+  source = "pypi"
+
 Check `PyPI <https://pypi.python.org/>`_ for updates.
 
 pypi
@@ -432,6 +464,10 @@ use_pre_release
 
 Check RubyGems
 --------------
+::
+
+  source = "gems"
+
 Check `RubyGems <https://rubygems.org/>`_ for updates.
 
 gems
@@ -439,6 +475,10 @@ gems
 
 Check NPM Registry
 ------------------
+::
+
+  source = "npm"
+
 Check `NPM Registry <https://registry.npmjs.org/>`_ for updates.
 
 npm
@@ -446,6 +486,10 @@ npm
 
 Check Hackage
 -------------
+::
+
+  source = "hackage"
+
 Check `Hackage <https://hackage.haskell.org/>`_ for updates.
 
 hackage
@@ -453,6 +497,10 @@ hackage
 
 Check CPAN
 --------------
+::
+
+  source = "cpan"
+
 Check `MetaCPAN <https://metacpan.org/>`_ for updates.
 
 cpan
@@ -460,6 +508,10 @@ cpan
 
 Check Packagist
 ---------------
+::
+
+  source = "packagist"
+
 Check `Packagist <https://packagist.org/>`_ for updates.
 
 packagist
@@ -467,6 +519,10 @@ packagist
 
 Check Local Pacman Database
 ---------------------------
+::
+
+  source = "pacman"
+
 This is used when you run ``nvchecker`` on an Arch Linux system and the program always keeps up with a package in your configured repositories for `Pacman`_.
 
 pacman
@@ -477,6 +533,10 @@ strip_release
 
 Check Arch Linux official packages
 ----------------------------------
+::
+
+  source = "archpkg"
+
 This enables you to track the update of `Arch Linux official packages <https://www.archlinux.org/packages/>`_, without needing of pacman and an updated local Pacman databases.
 
 archpkg
@@ -490,6 +550,10 @@ provided
 
 Check Debian Linux official packages
 ------------------------------------
+::
+
+  source = "debianpkg"
+
 This enables you to track the update of `Debian Linux official packages <https://packages.debian.org>`_, without needing of apt and an updated local APT database.
 
 debianpkg
@@ -503,6 +567,10 @@ strip_release
 
 Check Ubuntu Linux official packages
 ------------------------------------
+::
+
+  source = "ubuntupkg"
+
 This enables you to track the update of `Ubuntu Linux official packages <https://packages.ubuntu.com/>`_, without needing of apt and an updated local APT database.
 
 ubuntupkg
@@ -516,6 +584,10 @@ strip_release
 
 Check Repology
 --------------
+::
+
+  source = "repology"
+
 This enables you to track updates from `Repology <https://repology.org/>`_ (repology.org).
 
 repology
@@ -526,6 +598,10 @@ repo
 
 Check Anitya
 ------------
+::
+
+  source = "anitya"
+
 This enables you to track updates from `Anitya <https://release-monitoring.org/>`_ (release-monitoring.org).
 
 anitya
@@ -533,6 +609,10 @@ anitya
 
 Check Android SDK
 -----------------
+::
+
+  source = "android_sdk"
+
 This enables you to track updates of Android SDK packages listed in ``sdkmanager --list``.
 
 android_sdk
@@ -543,6 +623,10 @@ repo
 
 Check Sparkle framework
 -----------------------
+::
+
+  source = "sparkle"
+
 This enables you to track updates of macOS applications which using `Sparkle framework <https://sparkle-project.org/>`_.
 
 sparkle
@@ -550,23 +634,14 @@ sparkle
 
 Manually updating
 -----------------
+::
+
+  source = "manual"
+
 This enables you to manually specify the version (maybe because you want to approve each release before it gets to the script).
 
 manual
   The version string.
-
-Version Control System (VCS) (git, hg, svn, bzr)
-------------------------------------------------
-Check a VCS repo for new commits. The version returned is currently not related to the version of the software and will increase whenever the referred VCS branch changes. This is mainly for Arch Linux.
-
-vcs
-  The url of the remote VCS repo, using the same syntax with a VCS url in PKGBUILD (`Pacman`_'s build script). The first VCS url found in the source array of the PKGBUILD will be used if this is left blank. (Note: for a blank ``vcs`` setting to work correctly, the PKGBUILD has to be in a directory with the name of the software under the path where nvchecker is run. Also, all the commands, if any, needed when sourcing the PKGBUILD need to be installed).
-
-use_max_tag
-  Set this to ``true`` to check for the max tag. Currently only supported for ``git``.
-  This option returns the biggest tag sorted by ``pkg_resources.parse_version``.
-
-This source supports `list options`_ when ``use_max_tag`` is set.
 
 Extending
 ---------

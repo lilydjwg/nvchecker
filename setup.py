@@ -18,7 +18,7 @@ setup(
   long_description = open('README.rst', encoding='utf-8').read(),
   long_description_content_type = 'text/x-rst',
   platforms = 'any',
-  zip_safe = False,
+  zip_safe = True,
 
   packages = find_namespace_packages(exclude=['tests', 'build*']),
   install_requires = ['setuptools', 'toml', 'structlog', 'tornado>=6', 'pycurl'],
