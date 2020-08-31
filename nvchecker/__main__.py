@@ -22,7 +22,7 @@ def main() -> None:
   parser = argparse.ArgumentParser(description='New version checker for software')
   parser.add_argument('-k', '--keyfile',
                       metavar='FILE', type=str,
-                      help='use specified keyfile')
+                      help='use specified keyfile (override the one in configuration file)')
   parser.add_argument('-t', '--tries', default=1, type=int, metavar='N',
                       help='try N times when network errors occur')
   core.add_common_arguments(parser)
@@ -32,7 +32,7 @@ def main() -> None:
 
   try:
     entries, options = core.load_file(
-      args.file, use_keymanager=bool(args.keyfile))
+      args.file, use_keymanager=not bool(args.keyfile))
   except FileNotFoundError:
     sys.exit('version configuration file not given and default does not exist')
 
