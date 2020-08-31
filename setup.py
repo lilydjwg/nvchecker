@@ -21,7 +21,7 @@ setup(
   zip_safe = True,
 
   packages = find_namespace_packages(exclude=['tests', 'build*']),
-  install_requires = ['setuptools', 'toml', 'structlog', 'tornado>=6', 'pycurl'],
+  install_requires = ['setuptools', 'toml', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
   },
@@ -39,7 +39,6 @@ setup(
     ],
   },
   scripts=['scripts/nvchecker-ini2toml'],
-  package_data = {'nvchecker_source': ['vcs.sh']},
 
   classifiers = [
     "Development Status :: 5 - Production/Stable",

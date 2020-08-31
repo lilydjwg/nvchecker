@@ -22,6 +22,7 @@ import json
 
 import structlog
 import toml
+import appdirs
 
 from .lib import nicelogger
 from . import slogconf
@@ -36,8 +37,8 @@ from .ctxvars import tries as ctx_tries
 logger = structlog.get_logger(logger_name=__name__)
 
 def get_default_config() -> str:
-  confdir = os.environ.get('XDG_CONFIG_DIR', os.path.expanduser('~/.config'))
-  file = os.path.join(confdir, 'nvchecker/nvchecker.toml')
+  confdir = appdirs.user_config_dir(appname='nvchecker')
+  file = os.path.join(confdir, 'nvchecker.toml')
   return file
 
 def add_common_arguments(parser: argparse.ArgumentParser) -> None:

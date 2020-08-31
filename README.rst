@@ -64,7 +64,7 @@ Contents
 Dependency
 ==========
 - Python 3.7+
-- Python library: structlog, toml
+- Python library: structlog, toml, appdirs
 - One of these Python library combinations (ordered by preference):
 
   * tornado + pycurl
@@ -124,7 +124,7 @@ Upgrade from 1.x version
 There are several backward-incompatible changes from the previous 1.x version.
 
 1. Version 2.x requires Python 3.7+ to run.
-2. The command syntax changes a bit. You need to use a ``-c`` switch to specify your software version configuration file.
+2. The command syntax changes a bit. You need to use a ``-c`` switch to specify your software version configuration file (or use the default).
 3. The configuration file format has been changed from ini to `toml`_. You can use the ``nvchecker-ini2toml`` script in this repo to convert your old configuration files. However, comments and formatting will be lost.
 4. Several options have been renamed. ``max_concurrent`` to ``max_concurrency``, and all option names have their ``-`` be replaced with ``_``.
 5. All software configuration tables need a ``source`` option to specify which source is to be used rather than being figured out from option names in use. This enables additional source plugins to be discovered.
