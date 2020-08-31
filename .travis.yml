@@ -7,7 +7,7 @@ python:
   - "3.8"
   - "nightly"
 before_install: openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml
-install: pip install -U $DEPS pytest pytest-asyncio pytest-httpbin flaky structlog toml
+install: pip install -U $DEPS pytest pytest-asyncio pytest-httpbin flaky structlog toml appdirs
 script: pytest
 env:
   global:
