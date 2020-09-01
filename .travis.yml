@@ -6,9 +6,9 @@ python:
   - "3.7"
   - "3.8"
   - "nightly"
-before_install: openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml
+before_install: if [[ -n $KEY ]]; then openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml; fi
 install: pip install -U $DEPS pytest pytest-asyncio pytest-httpbin flaky structlog toml appdirs
-script: pytest
+script: if [[ -n $KEY ]]; then KEYFILE=keyfile.toml pytest; else pytest; fi
 env:
   global:
     - secure: "t8ffqGkADmA8DQDnqswd/olWPM5smpibdkK67EwBy3fWwOpvWkEzmJm2ZLIF5JYRN8tG09v+54v0omHvhUrqmhTuR2wW6F9RgfeZhLfv12BW/XZCGBMW04oYPtROCWbEAFndaOBneh82suGjDtjgU+fKfUaAXLJBPFdJafLTnZaVcW/andLRpF1gEQDEfGg9Wqo7WMQjETeWQI6mXNkXmxtqKAMen7arPe18CiNMApf6ybLUnuTEyg4oi+1pgQ9sfSJqw/lYvWxIJe0ajBC+Izy9noaI+LqRITMj3zyX9c3yHMCRuJU+YUim+P58wHjpOOdhZFgIsadfkgmtLnkvXOihbGHUV6IVZ/ZroezJz8FiDg23L/z/iPKaSaKg3BvkNceS/UA8QZUCdGmM7C33iSi0JC/3jmdkip8MCCerfW5NkNT1a7V4uoEgnNPNeLYv8zYPMwVkGxwNckW2NJOhuY+R168Cfxye/Y0jydnT/jP4uZGWpVS8d0KDnl8qsX7O2ULX+E76CjCgdq7SM37tilhXbjH4bX/aaFpncOMWqw5YgpgYo9XIPZeiXIE8fjv/Eu1Ahxh7rv+bqP4SAICknRVIaLrzpVN3wYHMlDi93GoBisREe7nI78wvZxebI0NV+qvTII0Hak+hUJtDM6ujg/ZkqiEfppw9NonmHSgmQcE="
