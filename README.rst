@@ -125,11 +125,12 @@ There are several backward-incompatible changes from the previous 1.x version.
 
 1. Version 2.x requires Python 3.7+ to run.
 2. The command syntax changes a bit. You need to use a ``-c`` switch to specify your software version configuration file (or use the default).
-3. The configuration file format has been changed from ini to `toml`_. You can use the ``nvchecker-ini2toml`` script in this repo to convert your old configuration files. However, comments and formatting will be lost.
+3. The configuration file format has been changed from ini to `toml`_. You can use the ``nvchecker-ini2toml`` script to convert your old configuration files. However, comments and formatting will be lost, and some options may not be converted correctly.
 4. Several options have been renamed. ``max_concurrent`` to ``max_concurrency``, and all option names have their ``-`` be replaced with ``_``.
 5. All software configuration tables need a ``source`` option to specify which source is to be used rather than being figured out from option names in use. This enables additional source plugins to be discovered.
 6. The version record files have been changed to use JSON format (the old format will be converted on writing).
 7. The ``vcs`` source is removed. (It's available inside `lilac <https://github.com/archlinuxcn/lilac>`_ at the moment.)
+8. ``include_tags_pattern`` and ``ignored_tags`` are removed. Use `list options`_ instead.
 
 Version Record Files
 ====================
