@@ -56,6 +56,7 @@ Contents
   * `Check Anitya (release-monitoring.org) <#check-anitya>`_
   * `Check Android SDK <#check-android-sdk>`_
   * `Check Sparkle framework <#check-sparkle-framework>`_
+  * `Check Pagure <#check-pagure>`_
   * `Manually updating <#manually-updating>`_
   * `Extending <#extending>`_
 
@@ -632,6 +633,20 @@ This enables you to track updates of macOS applications which using `Sparkle fra
 
 sparkle
   The url of the sparkle appcast.
+
+Check Pagure
+------------
+::
+
+  source = "pagure"
+
+This enables you to check updates from `Pagure <https://pagure.io>`_.
+
+pagure
+  The project name, optionally with a namespace.
+
+host
+  Hostname of alternative instance like src.fedoraproject.org.
 
 Manually updating
 -----------------
