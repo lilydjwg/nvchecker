@@ -36,7 +36,6 @@ setup(
       'nvchecker = nvchecker.__main__:main',
       'nvtake = nvchecker.tools:take',
       'nvcmp = nvchecker.tools:cmp',
-      'nvcompletion = nvchecker.tools:completion',
     ],
   },
   scripts=['scripts/nvchecker-ini2toml'],

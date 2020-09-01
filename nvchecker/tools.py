@@ -64,6 +64,8 @@ def take() -> None:
 def cmp() -> None:
   parser = argparse.ArgumentParser(description='compare version records of nvchecker')
   core.add_common_arguments(parser)
+  parser.add_argument('-q', '--quiet', action='store_true',
+                      help="Quiet mode, output only the names.")
   args = parser.parse_args()
   if core.process_common_arguments(args):
     return
@@ -84,14 +86,7 @@ def cmp() -> None:
   for name, newver in sorted(newvers.items()):
     oldver = oldvers.get(name, None)
     if oldver != newver:
-      print('%s %s -> %s' % (name, oldver, newver))
-
-def completion() -> None:
-  parser = argparse.ArgumentParser(description='helper script to generate completion for nvchecker')
-  core.add_common_arguments(parser)
-  args = parser.parse_args()
-  if core.process_common_arguments(args):
-    return
-
-  entries = core.load_file(args.file, use_keymanager=False)[0]
-  print(" ".join(entries))
+      if args.quiet:
+        print(name)
+      else:
+        print('%s %s -> %s' % (name, oldver, newver))
