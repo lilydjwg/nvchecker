@@ -85,3 +85,13 @@ def cmp() -> None:
     oldver = oldvers.get(name, None)
     if oldver != newver:
       print('%s %s -> %s' % (name, oldver, newver))
+
+def completion() -> None:
+  parser = argparse.ArgumentParser(description='helper script to generate completion for nvchecker')
+  core.add_common_arguments(parser)
+  args = parser.parse_args()
+  if core.process_common_arguments(args):
+    return
+
+  entries = core.load_file(args.file, use_keymanager=False)[0]
+  print(" ".join(entries))
