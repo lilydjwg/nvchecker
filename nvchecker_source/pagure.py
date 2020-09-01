@@ -13,10 +13,7 @@ PAGURE_URL = 'https://%s/api/0/%s/git/tags'
 
 logger = structlog.get_logger(logger_name=__name__)
 
-async def get_version(name, conf, **kwargs):
-  return await get_version_real(name, conf, **kwargs)
-
-async def get_version_real(
+async def get_version(
   name: str, conf: Entry, *,
   cache: AsyncCache, keymanager: KeyManager,
   **kwargs,

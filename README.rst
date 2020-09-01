@@ -648,6 +648,8 @@ pagure
 host
   Hostname of alternative instance like src.fedoraproject.org.
 
+This source returns tags and supports `list options`_.
+
 Manually updating
 -----------------
 ::
