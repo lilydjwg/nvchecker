@@ -33,8 +33,8 @@ Contents
 * `Configuration Files <#configuration-files>`_
 
   * `Configuration Table <#configuration-table>`_
-  * `Global Optons <#global-options>`_
-  * `List Optons <#list-options>`_
+  * `Global Options <#global-options>`_
+  * `List Options <#list-options>`_
   * `Search in a Webpage <#search-in-a-webpage>`_
   * `Find with a Command <#find-with-a-command>`_
   * `Check AUR <#check-aur>`_
