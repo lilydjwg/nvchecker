@@ -1,0 +1,16 @@
+# MIT licensed
+# Copyright (c) 2020 Felix Yan <felixonmars@archlinux.org>, et al.
+
+_nvtake() {
+    local cur _nvchecker_conf_mtime
+    _init_completion || return
+
+    _nvchecker_conf_mtime="$(stat -c %Y $HOME/.config/nvchecker/*)"
+    if [ -z "$_nvtake_completion_cache" -o "$_nvchecker_conf_mtime" != "$_nvchecker_conf_mtime_cached" ]; then
+        _nvtake_completion_cache="$(nvcmp -q)"
+        _nvchecker_conf_mtime_cached="$_nvchecker_conf_mtime"
+    fi
+
+    COMPREPLY=( $(compgen -W "$_nvtake_completion_cache" -- "$cur") )
+} &&
+    complete -F _nvtake nvtake
