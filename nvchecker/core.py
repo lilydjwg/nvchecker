@@ -57,7 +57,7 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
   parser.add_argument('-c', '--file',
                       metavar='FILE', type=str,
                       default=default_config,
-                      help='software version configuration file [default: %s]' % default_config)
+                      help=f'software version configuration file [default: {default_config}]')
 
 def process_common_arguments(args: argparse.Namespace) -> bool:
   '''return True if should stop'''
@@ -94,7 +94,7 @@ def process_common_arguments(args: argparse.Namespace) -> bool:
 
   if args.version:
     progname = os.path.basename(sys.argv[0])
-    print('%s v%s' % (progname, __version__))
+    print(f'{progname} v{__version__}')
     return True
   return False
 
