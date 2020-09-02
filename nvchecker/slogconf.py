@@ -27,7 +27,7 @@ def _console_msg(event):
     msg = evt
 
   if 'name' in event:
-    msg = '%s: %s' % (event['name'], msg)
+    msg = f"{event['name']}: {msg}"
     del event['name']
 
   event['msg'] = msg

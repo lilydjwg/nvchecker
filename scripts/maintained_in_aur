@@ -9,10 +9,10 @@ import json
 import urllib.request
 
 def main(user):
-  url = 'https://aur.archlinux.org/rpc.php?type=msearch&arg=' + user
+  url = f'https://aur.archlinux.org/rpc.php?type=msearch&arg={user}'
   res = urllib.request.urlopen(url)
   if res.status != 200:
-    sys.exit('Error: %d %s' % (res.status, res.reason))
+    sys.exit(f'Error: {res.status} {res.reason}')
   d = res.read().decode('utf-8')
   d = json.loads(d)
   print('\n'.join(sorted(pkg['Name'] for pkg in d['results'])))

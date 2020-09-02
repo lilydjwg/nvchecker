@@ -8,7 +8,7 @@ from typing import Optional
 
 from . import __version__
 
-DEFAULT_USER_AGENT = 'lilydjwg/nvchecker %s' % __version__
+DEFAULT_USER_AGENT = f'lilydjwg/nvchecker {__version__}'
 
 tries = ContextVar('tries', default=1)
 proxy: ContextVar[Optional[str]] = ContextVar('proxy', default=None)

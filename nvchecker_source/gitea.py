@@ -36,7 +36,7 @@ async def get_version(
   # Set private token if token exists.
   headers = {}
   if token:
-    headers["Authorization"] = 'token %s' % token
+    headers["Authorization"] = f'token {token}'
 
   data = await cache.get_json(url, headers = headers)
   if use_max_tag:
