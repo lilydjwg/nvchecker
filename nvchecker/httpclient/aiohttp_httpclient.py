@@ -38,6 +38,8 @@ class AiohttpSession(BaseSession):
 
     if proxy is not None:
       kwargs['proxy'] = proxy
+    if json is not None:
+      kwargs['json'] = json
 
     try:
       logger.debug('send request', method=method, url=url, kwargs=kwargs)
