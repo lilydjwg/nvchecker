@@ -89,4 +89,6 @@ def cmp() -> None:
       if args.quiet:
         print(name)
       else:
-        print('%s %s -> %s' % (name, oldver, newver))
+        from .lib.nicelogger import Colors, support_color
+        c = Colors(support_color(sys.stdout))
+        print(f'{name} {c.red}{oldver}{c.normal} -> {c.green}{newver}{c.normal}')
