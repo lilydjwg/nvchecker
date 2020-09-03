@@ -10,6 +10,9 @@ For the old version 1.x, please switch to the ``v1.x`` branch.
 .. image:: https://badge.fury.io/py/nvchecker.svg
    :alt: PyPI version
    :target: https://badge.fury.io/py/nvchecker
+.. image:: https://readthedocs.org/projects/nvchecker/badge/?version=latest
+   :target: https://nvchecker.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 |
 
