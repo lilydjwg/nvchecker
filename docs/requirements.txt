@@ -1,0 +1,5 @@
+toml
+structlog
+appdirs
+tornado>=6
+pycurl
