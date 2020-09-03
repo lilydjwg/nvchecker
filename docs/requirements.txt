@@ -2,3 +2,4 @@ toml
 structlog
 appdirs
 tornado>=6
+sphinx>=3.2
