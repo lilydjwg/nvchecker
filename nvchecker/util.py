@@ -13,6 +13,7 @@ from typing import (
 )
 from pathlib import Path
 import contextvars
+import abc
 
 import toml
 import structlog
@@ -25,11 +26,20 @@ from .ctxvars import user_agent as ctx_ua
 logger = structlog.get_logger(logger_name=__name__)
 
 Entry = Dict[str, Any]
+Entry.__doc__ = '''The configuration `dict` for an entry.'''
 Entries = Dict[str, Entry]
 VersData = Dict[str, str]
 VersionResult = Union[None, str, List[str], Exception]
+VersionResult.__doc__ = '''The result of a `get_version` check.
+
+* `None` - No version found.
+* `str` - A single version string is found.
+* `List[str]` - Multiple version strings are found. :ref:`list options` will be applied.
+* `Exception` - An error occurred.
+'''
 
 class KeyManager:
+  '''Manages data in the keyfile.'''
   def __init__(
     self, file: Optional[Path],
   ) -> None:
@@ -41,12 +51,18 @@ class KeyManager:
     self.keys = keys
 
   def get_key(self, name: str) -> Optional[str]:
+    '''Get the named key (token) in the keyfile.'''
     return self.keys.get(name)
 
 class RawResult(NamedTuple):
+  '''The unprocessed result from a check.'''
   name: str
   version: VersionResult
   conf: Entry
+
+RawResult.name.__doc__ = 'The name (table name) of the entry.'
+RawResult.version.__doc__ = 'The result from the check.'
+RawResult.conf.__doc__ = 'The entry configuration (table content) of the entry.'
 
 class Result(NamedTuple):
   name: str
@@ -54,6 +70,30 @@ class Result(NamedTuple):
   conf: Entry
 
 class BaseWorker:
+  '''The base class for defining `Worker` classes for source plugins.
+
+  .. py:attribute:: token_q
+      :type: Queue[bool]
+
+      This is the rate-limiting queue. Workers should obtain one token before doing one unit of work.
+
+  .. py:attribute:: result_q
+      :type: Queue[RawResult]
+
+      Results should be put into this queue.
+
+  .. py:attribute:: tasks
+      :type: List[Tuple[str, Entry]]
+
+      A list of tasks for the `Worker` to complete. Every task consists of
+      a tuple for the task name (table name in the configuration file) and the
+      content of that table (as a `dict`).
+
+  .. py:attribute:: keymanager
+      :type: KeyManager
+
+      The `KeyManager` for retrieving keys from the keyfile.
+  '''
   def __init__(
     self,
     token_q: Queue[bool],
@@ -68,6 +108,8 @@ class BaseWorker:
 
   @contextlib.asynccontextmanager
   async def acquire_token(self) -> AsyncGenerator[None, None]:
+    '''A context manager to obtain a token from the `token_q` on entrance and
+    release it on exit.'''
     token = await self.token_q.get()
     logger.debug('got token')
     try:
@@ -76,8 +118,13 @@ class BaseWorker:
       await self.token_q.put(token)
       logger.debug('return token')
 
+  @abc.abstractmethod
+  async def run(self) -> None:
+    '''Run the `tasks`. Subclasses should implement this method.'''
+    raise NotImplementedError
 
 class AsyncCache:
+  '''A cache for use with async funtions.'''
   cache: Dict[Hashable, Any]
   lock: asyncio.Lock
 
@@ -96,6 +143,10 @@ class AsyncCache:
     self, url: str, *,
     headers: Dict[str, str] = {},
   ) -> Any:
+    '''Get specified ``url`` and return the response content as JSON.
+
+    The returned data will be cached for reuse.
+    '''
     key = '_jsonurl', url, tuple(sorted(headers.items()))
     return await self.get(
       key , self._get_json) # type: ignore
@@ -105,6 +156,13 @@ class AsyncCache:
     key: Hashable,
     func: Callable[[Hashable], Coroutine[Any, Any, Any]],
   ) -> Any:
+    '''Run async ``func`` and cache its return value by ``key``.
+
+    The ``key`` should be hashable, and the function will be called with it as
+    its sole argument. For multiple simultaneous calls with the same key, only
+    one will actually be called, and others will wait and return the same
+    (cached) value.
+    '''
     async with self.lock:
       cached = self.cache.get(key)
       if cached is None:
@@ -180,6 +238,13 @@ class FunctionWorker(BaseWorker):
       await self.result_q.put(RawResult(name, e, entry))
 
 class GetVersionError(Exception):
+  '''An error occurred while getting version information.
+
+  Raise this when a known bad situation happens.
+
+  :param msg: The error message.
+  :param kwargs: Arbitrary additional context for the error.
+  '''
   def __init__(self, msg: str, **kwargs: Any) -> None:
     self.msg = msg
     self.kwargs = kwargs

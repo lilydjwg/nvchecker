@@ -1,5 +1,5 @@
-.. contents::
-   :local:
+Usage of nvchecker commands
+===========================
 
 **nvchecker** (short for *new version checker*) is for checking if a new version of some software has been released.
 
@@ -14,11 +14,8 @@ For the old version 1.x, please switch to the ``v1.x`` branch.
    :alt: PyPI version
    :target: https://badge.fury.io/py/nvchecker
 
-|
-
-.. image:: https://repology.org/badge/vertical-allrepos/nvchecker.svg
-   :alt: Packaging status
-   :target: https://repology.org/metapackage/nvchecker/versions
+.. contents::
+   :local:
 
 Dependency
 ----------
