@@ -46,7 +46,7 @@ async def get_latest_tag(key: Tuple[str, str, str]) -> str:
   repo, query, token = key
   owner, reponame = repo.split('/')
   headers = {
-    f'Authorization': 'bearer {token}',
+    'Authorization': f'bearer {token}',
     'Content-Type': 'application/json',
   }
   q = QUERY_LATEST_TAG.format(
