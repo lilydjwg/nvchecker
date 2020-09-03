@@ -18,7 +18,8 @@ def take() -> None:
   parser.add_argument('--ignore-nonexistent', action='store_true',
                       help='ignore nonexistent names')
   parser.add_argument('names', metavar='NAME', nargs='*',
-                      help='software name to be updated')
+                      help='software name to be updated. use NAME=VERSION to update '
+                           'to a specific version instead of the new version.')
   args = parser.parse_args()
   if core.process_common_arguments(args):
     return
@@ -41,17 +42,21 @@ def take() -> None:
     oldvers.update(newvers)
   else:
     for name in args.names:
-      try:
-        oldvers[name] = newvers[name]
-      except KeyError:
-        if args.ignore_nonexistent:
-          logger.warning('nonexistent in newver, ignored', name=name)
-          continue
+      if "=" in name:
+        name, newver = name.split("=")
+        oldvers[name] = newver
+      else:
+        try:
+          oldvers[name] = newvers[name]
+        except KeyError:
+          if args.ignore_nonexistent:
+            logger.warning('nonexistent in newver, ignored', name=name)
+            continue
 
-        logger.critical(
-          "doesn't exist in 'newver' set.", name=name,
-        )
-        sys.exit(2)
+          logger.critical(
+            "doesn't exist in 'newver' set.", name=name,
+          )
+          sys.exit(2)
 
   try:
     oldverf.rename(
