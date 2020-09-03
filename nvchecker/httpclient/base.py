@@ -45,6 +45,7 @@ class BaseSession:
     p = proxy.get()
     ua = user_agent.get()
 
+    headers = headers.copy()
     headers.setdefault('User-Agent', ua)
 
     for i in range(1, t+1):
