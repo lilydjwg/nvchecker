@@ -23,5 +23,5 @@ async def test_debianpkg_strip_release(get_version):
 async def test_debianpkg_suite(get_version):
     assert await get_version("sigrok-firmware-fx2lafw", {
         "source": "debianpkg",
-        "suite": "jessie",
-    }) == "0.1.2-1"
+        "suite": "buster",
+    }) == "0.1.6-1"
