@@ -46,7 +46,7 @@ async def get_latest_tag(key: Tuple[str, str, str]) -> str:
   repo, query, token = key
   owner, reponame = repo.split('/')
   headers = {
-    'Authorization': 'bearer %s' % token,
+    'Authorization': f'bearer {token}',
     'Content-Type': 'application/json',
   }
   q = QUERY_LATEST_TAG.format(
@@ -109,7 +109,7 @@ async def get_version_real(
     'Accept': 'application/vnd.github.quicksilver-preview+json',
   }
   if token:
-    headers['Authorization'] = 'token %s' % token
+    headers['Authorization'] = f'token {token}'
 
   data = await cache.get_json(url, headers = headers)
 
@@ -140,9 +140,8 @@ def check_ratelimit(exc, name):
   n = int(res.headers.get('X-RateLimit-Remaining', -1))
   if n == 0:
     reset = int(res.headers.get('X-RateLimit-Reset'))
-    logger.error('rate limited, resetting at %s. '
-                 'Or get an API token to increase the allowance if not yet'
-                 % time.ctime(reset),
+    logger.error(f'rate limited, resetting at {time.ctime(reset)}. '
+                  'Or get an API token to increase the allowance if not yet',
                  name = name,
                  reset = reset)
   else:
