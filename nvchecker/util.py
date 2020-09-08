@@ -124,7 +124,7 @@ class BaseWorker:
     raise NotImplementedError
 
 class AsyncCache:
-  '''A cache for use with async funtions.'''
+  '''A cache for use with async functions.'''
   cache: Dict[Hashable, Any]
   lock: asyncio.Lock
 
