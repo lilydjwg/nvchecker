@@ -140,11 +140,23 @@ class Options(NamedTuple):
   proxy: Optional[str]
   keymanager: KeyManager
 
+class FileLoadError(Exception):
+  def __init__(self, kind, exc):
+    self.kind = kind
+    self.exc = exc
+
+  def __str__(self):
+    return f'failed to load {self.kind}: {self.exc}'
+
 def load_file(
   file: str, *,
   use_keymanager: bool,
 ) -> Tuple[Entries, Options]:
-  config = toml.load(file)
+  try:
+    config = toml.load(file)
+  except OSError as e:
+    raise FileLoadError('version configuration file', e)
+
   ver_files: Optional[Tuple[Path, Path]] = None
   keymanager = KeyManager(None)
 
@@ -167,7 +179,10 @@ def load_file(
         keyfile_s = os.path.expandvars(
           os.path.expanduser(c.get('keyfile')))
         keyfile = d / keyfile_s
-      keymanager = KeyManager(keyfile)
+      try:
+        keymanager = KeyManager(keyfile)
+      except OSError as e:
+        raise FileLoadError('keyfile', e)
 
     max_concurrency = c.get('max_concurrency', 20)
     proxy = c.get('proxy')

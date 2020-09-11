@@ -33,8 +33,8 @@ def main() -> None:
   try:
     entries, options = core.load_file(
       args.file, use_keymanager=not bool(args.keyfile))
-  except FileNotFoundError:
-    sys.exit('version configuration file not given and default does not exist')
+  except core.FileLoadError as e:
+    sys.exit(str(e))
 
   if args.keyfile:
     keymanager = KeyManager(Path(args.keyfile))
