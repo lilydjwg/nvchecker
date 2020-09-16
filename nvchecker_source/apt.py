@@ -23,7 +23,7 @@ async def get_url(url):
 
 async def get_version(name, conf, *, cache, **kwargs):
   pkg = conf.get('apt') or name
-  mirror = conf.get('mirror', "http://ftp.debian.org/debian/")
+  mirror = conf.get('mirror', "http://deb.debian.org/debian/")
   suite = conf.get('suite', 'sid')
   repo = conf.get('repo', 'main')
   arch = conf.get('arch', 'amd64')

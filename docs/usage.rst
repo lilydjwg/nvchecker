@@ -622,7 +622,7 @@ apt
   Name of the APT package.
 
 mirror
-  URL of the repository (defaults to http://ftp.debian.org/debian/)
+  URL of the repository (defaults to http://deb.debian.org/debian/)
 
 suite
   Name of the APT repository release (jessie, wheezy, etc, defaults to sid)
