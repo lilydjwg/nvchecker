@@ -22,7 +22,7 @@ async def get_url(url):
   return data.decode('utf-8')
 
 async def get_version(name, conf, *, cache, **kwargs):
-  source_pkg = conf.get('source_pkg')
+  srcpkg = conf.get('srcpkg')
   pkg = conf.get('pkg')
   mirror = conf.get('mirror', "http://deb.debian.org/debian/")
   suite = conf.get('suite', 'sid')
@@ -30,9 +30,9 @@ async def get_version(name, conf, *, cache, **kwargs):
   arch = conf.get('arch', 'amd64')
   strip_release = conf.get('strip_release', False)
 
-  if source_pkg and pkg:
-    raise GetVersionError('Setting both source_pkg and pkg is ambigious')
-  elif not source_pkg and not pkg:
+  if srcpkg and pkg:
+    raise GetVersionError('Setting both srcpkg and pkg is ambigious')
+  elif not srcpkg and not pkg:
     pkg = name
 
   apt_release = await cache.get(APT_RELEASE_URL % (mirror, suite), get_url)
@@ -49,7 +49,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   for line in apt_packages.split("\n"):
     if pkg and line == "Package: " + pkg:
       pkg_found = True
-    if source_pkg and line == "Source: " + source_pkg:
+    if srcpkg and line == "Source: " + srcpkg:
       pkg_found = True
     if pkg_found and line.startswith("Version: "):
       version = line[9:]

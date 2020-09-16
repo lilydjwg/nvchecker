@@ -621,7 +621,7 @@ This enables you to track the update of an arbitary APT repository, without need
 pkg
   Name of the APT binary package.
 
-source_pkg
+srcpkg
   Name of the APT source package.
 
 mirror
@@ -639,7 +639,7 @@ arch
 strip_release
   Strip the release part.
 
-Note that either pkg or source_pkg needs to be specified (but not both) or the item name will be used as package.
+Note that either pkg or srcpkg needs to be specified (but not both) or the item name will be used as pkg.
 
 Manually updating
 ~~~~~~~~~~~~~~~~~
