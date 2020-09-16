@@ -618,8 +618,11 @@ Check APT repository
 
 This enables you to track the update of an arbitary APT repository, without needing of apt and an updated local APT database.
 
-apt
-  Name of the APT package.
+pkg
+  Name of the APT binary package.
+
+source_pkg
+  Name of the APT source package.
 
 mirror
   URL of the repository (defaults to http://deb.debian.org/debian/)
@@ -635,6 +638,8 @@ arch
 
 strip_release
   Strip the release part.
+
+Note that either pkg or source_pkg needs to be specified (but not both) or the item name will be used as package.
 
 Manually updating
 ~~~~~~~~~~~~~~~~~
