@@ -610,6 +610,32 @@ host
 
 This source returns tags and supports :ref:`list options`.
 
+Check APT repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "apt"
+
+This enables you to track the update of an arbitary APT repository, without needing of apt and an updated local APT database.
+
+apt
+  Name of the APT package.
+
+mirror
+  URL of the repository (defaults to http://ftp.debian.org/debian/)
+
+suite
+  Name of the APT repository release (jessie, wheezy, etc, defaults to sid)
+
+repo
+  Name of the APT repository (main, contrib, etc, defaults to main)
+
+arch
+  Architecture of the repository (i386, amd64, etc, defaults to amd64)
+
+strip_release
+  Strip the release part.
+
 Manually updating
 ~~~~~~~~~~~~~~~~~
 ::
