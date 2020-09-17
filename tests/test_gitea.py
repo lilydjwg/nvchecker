@@ -20,7 +20,7 @@ async def test_gitea_max_tag(get_version):
         "source": "gitea",
         "gitea": "gitea/tea",
         "use_max_tag": True,
-    }) == "v0.4.0"
+    }) == "v0.4.1"
 
 @flaky(max_runs=10)
 async def test_gitea_max_tag_with_ignored(get_version):
@@ -28,7 +28,7 @@ async def test_gitea_max_tag_with_ignored(get_version):
         "source": "gitea",
         "gitea": "gitea/tea",
         "use_max_tag": True,
-        "ignored": "v0.4.0",
+        "ignored": "v0.4.0 v0.4.1",
     }) == "v0.3.1"
 
 @flaky(max_runs=10)
