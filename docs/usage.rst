@@ -625,10 +625,10 @@ srcpkg
   Name of the APT source package.
 
 mirror
-  URL of the repository (defaults to http://deb.debian.org/debian/)
+  URL of the repository.
 
 suite
-  Name of the APT repository release (jessie, wheezy, etc, defaults to sid)
+  Name of the APT repository release (jessie, wheezy, etc)
 
 repo
   Name of the APT repository (main, contrib, etc, defaults to main)

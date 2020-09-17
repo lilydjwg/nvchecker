@@ -24,8 +24,8 @@ async def get_url(url):
 async def get_version(name, conf, *, cache, **kwargs):
   srcpkg = conf.get('srcpkg')
   pkg = conf.get('pkg')
-  mirror = conf.get('mirror', "http://deb.debian.org/debian/")
-  suite = conf.get('suite', 'sid')
+  mirror = conf['mirror']
+  suite = conf['suite']
   repo = conf.get('repo', 'main')
   arch = conf.get('arch', 'amd64')
   strip_release = conf.get('strip_release', False)
