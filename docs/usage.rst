@@ -610,6 +610,37 @@ host
 
 This source returns tags and supports :ref:`list options`.
 
+Check APT repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "apt"
+
+This enables you to track the update of an arbitary APT repository, without needing of apt and an updated local APT database.
+
+pkg
+  Name of the APT binary package.
+
+srcpkg
+  Name of the APT source package.
+
+mirror
+  URL of the repository.
+
+suite
+  Name of the APT repository release (jessie, wheezy, etc)
+
+repo
+  Name of the APT repository (main, contrib, etc, defaults to main)
+
+arch
+  Architecture of the repository (i386, amd64, etc, defaults to amd64)
+
+strip_release
+  Strip the release part.
+
+Note that either pkg or srcpkg needs to be specified (but not both) or the item name will be used as pkg.
+
 Manually updating
 ~~~~~~~~~~~~~~~~~
 ::
