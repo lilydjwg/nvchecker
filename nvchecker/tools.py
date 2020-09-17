@@ -71,6 +71,12 @@ def cmp() -> None:
   core.add_common_arguments(parser)
   parser.add_argument('-q', '--quiet', action='store_true',
                       help="Quiet mode, output only the names.")
+  parser.add_argument('-s', '--sort',
+                      choices=('parse_version', 'vercmp'), default='parse_version',
+                      help='Version compare method to backwards the arrow '
+                           '(default: parse_version)')
+  parser.add_argument('-n', '--newer', action='store_true',
+                      help='Shows only the newer ones according to --sort.')
   args = parser.parse_args()
   if core.process_common_arguments(args):
     return
@@ -96,4 +102,14 @@ def cmp() -> None:
       else:
         from .lib.nicelogger import Colors, support_color
         c = Colors(support_color(sys.stdout))
-        print(f'{name} {c.red}{oldver}{c.normal} -> {c.green}{newver}{c.normal}')
+
+        arrow = "->"
+        if args.sort != "none" and oldver is not None and newver is not None:
+          from .sortversion import sort_version_keys
+          version = sort_version_keys[args.sort]
+          if version(oldver) > version(newver):
+            arrow = f'{c.red}<-{c.normal}'
+            if args.newer:
+              continue
+
+        print(f'{name} {c.red}{oldver}{c.normal} {arrow} {c.green}{newver}{c.normal}')
