@@ -1,27 +1,43 @@
 # MIT licensed
 # Copyright (c) 2020 Felix Yan <felixonmars@archlinux.org>, et al.
 
-from nvchecker.api import session, GetVersionError
+import asyncio
+
+from nvchecker.api import (
+  session, GetVersionError,
+  VersionResult, Entry, AsyncCache, KeyManager,
+)
 
 APT_RELEASE_URL = "%s/dists/%s/Release"
 APT_PACKAGES_PATH = "%s/binary-%s/Packages%s"
 APT_PACKAGES_URL = "%s/dists/%s/%s"
 APT_PACKAGES_SUFFIX_PREFER = (".xz", ".gz", "")
 
-async def get_url(url):
-  res = await session.get(url)
-  data = res.body
-
+def _decompress_data(url: str, data: bytes) -> str:
   if url.endswith(".xz"):
     import lzma
     data = lzma.decompress(data)
   elif url.endswith(".gz"):
     import gzip
     data = gzip.decompress(data)
+  else:
+    raise NotImplementedError(url)
 
   return data.decode('utf-8')
 
-async def get_version(name, conf, *, cache, **kwargs):
+async def get_url(url: str) -> str:
+  res = await session.get(url)
+  data = res.body
+  loop = asyncio.get_running_loop()
+  return await loop.run_in_executor(
+    None, _decompress_data,
+    url, data)
+
+async def get_version(
+  name: str, conf: Entry, *,
+  cache: AsyncCache, keymanager: KeyManager,
+  **kwargs,
+) -> VersionResult:
   srcpkg = conf.get('srcpkg')
   pkg = conf.get('pkg')
   mirror = conf['mirror']
@@ -35,7 +51,8 @@ async def get_version(name, conf, *, cache, **kwargs):
   elif not srcpkg and not pkg:
     pkg = name
 
-  apt_release = await cache.get(APT_RELEASE_URL % (mirror, suite), get_url)
+  apt_release = await cache.get(
+    APT_RELEASE_URL % (mirror, suite), get_url) # type: ignore
   for suffix in APT_PACKAGES_SUFFIX_PREFER:
     packages_path = APT_PACKAGES_PATH % (repo, arch, suffix)
     if " " + packages_path in apt_release:
@@ -43,7 +60,8 @@ async def get_version(name, conf, *, cache, **kwargs):
   else:
     raise GetVersionError('Packages file not found in APT repository')
 
-  apt_packages = await cache.get(APT_PACKAGES_URL % (mirror, suite, packages_path), get_url)
+  apt_packages = await cache.get(
+    APT_PACKAGES_URL % (mirror, suite, packages_path), get_url) # type: ignore
 
   pkg_found = False
   for line in apt_packages.split("\n"):
