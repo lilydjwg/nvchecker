@@ -1,6 +1,8 @@
 # MIT licensed
 # Copyright (c) 2020 Felix Yan <felixonmars@archlinux.org>, et al.
 
+from __future__ import annotations
+
 import asyncio
 
 from nvchecker.api import (
