@@ -5,9 +5,8 @@ from __future__ import annotations
 
 import asyncio
 from asyncio import Queue
-import contextlib
 from typing import (
-  Dict, Optional, List, AsyncGenerator, NamedTuple, Union,
+  Dict, Optional, List, NamedTuple, Union,
   Any, Tuple, Callable, Coroutine, Hashable,
   TYPE_CHECKING,
 )
@@ -72,10 +71,10 @@ class Result(NamedTuple):
 class BaseWorker:
   '''The base class for defining `Worker` classes for source plugins.
 
-  .. py:attribute:: token_q
-      :type: Queue[bool]
+  .. py:attribute:: task_sem
+      :type: asyncio.Semaphore
 
-      This is the rate-limiting queue. Workers should obtain one token before doing one unit of work.
+      This is the rate-limiting semaphore. Workers should acquire it while doing one unit of work.
 
   .. py:attribute:: result_q
       :type: Queue[RawResult]
@@ -96,27 +95,15 @@ class BaseWorker:
   '''
   def __init__(
     self,
-    token_q: Queue[bool],
+    task_sem: asyncio.Semaphore,
     result_q: Queue[RawResult],
     tasks: List[Tuple[str, Entry]],
     keymanager: KeyManager,
   ) -> None:
-    self.token_q = token_q
+    self.task_sem = task_sem
     self.result_q = result_q
     self.keymanager = keymanager
     self.tasks = tasks
-
-  @contextlib.asynccontextmanager
-  async def acquire_token(self) -> AsyncGenerator[None, None]:
-    '''A context manager to obtain a token from the `token_q` on entrance and
-    release it on exit.'''
-    token = await self.token_q.get()
-    logger.debug('got token')
-    try:
-      yield
-    finally:
-      await self.token_q.put(token)
-      logger.debug('return token')
 
   @abc.abstractmethod
   async def run(self) -> None:
@@ -227,7 +214,7 @@ class FunctionWorker(BaseWorker):
       ctx_ua.set(ua)
 
     try:
-      async with self.acquire_token():
+      async with self.task_sem:
         version = await self.func(
           name, entry,
           cache = self.cache,

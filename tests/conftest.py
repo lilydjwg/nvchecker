@@ -18,7 +18,7 @@ use_keyfile = False
 async def run(
   entries: Entries, max_concurrency: int = 20,
 ) -> VersData:
-  token_q = core.token_queue(max_concurrency)
+  task_sem = asyncio.Semaphore(max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
   keyfile = os.environ.get('KEYFILE')
   if use_keyfile and keyfile:
@@ -28,7 +28,7 @@ async def run(
     keymanager = core.KeyManager(None)
 
   futures = core.dispatch(
-    entries, token_q, result_q,
+    entries, task_sem, result_q,
     keymanager, 1,
   )
 

@@ -44,11 +44,11 @@ def main() -> None:
   if options.proxy is not None:
     ctx_proxy.set(options.proxy)
 
-  token_q = core.token_queue(options.max_concurrency)
+  task_sem = asyncio.Semaphore(options.max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
   try:
     futures = core.dispatch(
-      entries, token_q, result_q,
+      entries, task_sem, result_q,
       keymanager, args.tries,
     )
   except ModuleNotFoundError as e:

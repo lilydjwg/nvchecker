@@ -193,17 +193,9 @@ def load_file(
   return cast(Entries, config), Options(
     ver_files, max_concurrency, proxy, keymanager)
 
-def token_queue(maxsize: int) -> Queue[bool]:
-  token_q: Queue[bool] = Queue(maxsize=maxsize)
-
-  for _ in range(maxsize):
-    token_q.put_nowait(True)
-
-  return token_q
-
 def dispatch(
   entries: Entries,
-  token_q: Queue[bool],
+  task_sem: asyncio.Semaphore,
   result_q: Queue[RawResult],
   keymanager: KeyManager,
   tries: int,
@@ -232,7 +224,7 @@ def dispatch(
     ctx = root_ctx.copy()
     worker = ctx.run(
       worker_cls,
-      token_q, result_q, tasks, keymanager,
+      task_sem, result_q, tasks, keymanager,
     )
     if worker_cls is FunctionWorker:
       func = mod.get_version # type: ignore

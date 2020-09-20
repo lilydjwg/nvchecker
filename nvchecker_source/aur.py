@@ -67,7 +67,7 @@ class Worker(BaseWorker):
   ) -> None:
     task_by_name: Dict[str, Entry] = dict(self.tasks)
 
-    async with self.acquire_token():
+    async with self.task_sem:
       results = await _run_batch_impl(batch, aur_results)
       for name, version in results.items():
         r = RawResult(name, version, task_by_name[name])

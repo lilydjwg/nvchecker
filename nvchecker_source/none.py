@@ -10,7 +10,7 @@ from nvchecker.api import (
 class Worker(BaseWorker):
   async def run(self) -> None:
     exc = GetVersionError('no source specified')
-    async with self.acquire_token():
+    async with self.task_sem:
       for name, conf in self.tasks:
         await self.result_q.put(
           RawResult(name, exc, conf))

@@ -20,8 +20,6 @@ def _decompress_data(url: str, data: bytes) -> str:
   elif url.endswith(".gz"):
     import gzip
     data = gzip.decompress(data)
-  else:
-    raise NotImplementedError(url)
 
   return data.decode('utf-8')
 
