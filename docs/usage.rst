@@ -25,7 +25,7 @@ Dependency
 
   * tornado + pycurl
   * aiohttp
-  * httpx with http2 support
+  * httpx with http2 support (experimental; only latest version is supported)
   * tornado
 
 - All commands used in your software version configuration files

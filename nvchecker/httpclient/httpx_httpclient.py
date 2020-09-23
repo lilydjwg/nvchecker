@@ -25,7 +25,7 @@ class HttpxSession(BaseSession):
     client = self.clients.get(proxy)
     if not client:
       client = httpx.AsyncClient(
-        timeout = httpx.Timeout(20, pool_timeout=None),
+        timeout = httpx.Timeout(20, pool=None),
         http2 = True,
         proxies = {'all://': proxy},
       )
