@@ -641,6 +641,19 @@ strip_release
 
 Note that either pkg or srcpkg needs to be specified (but not both) or the item name will be used as pkg.
 
+Check Git repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "git"
+
+This enables you to check tags of an arbitrary git repository, also useful for scenarios like a github project having too many tags.
+
+url
+  URL of the Git repository.
+
+This source returns tags and supports :ref:`list options`.
+
 Manually updating
 ~~~~~~~~~~~~~~~~~
 ::
