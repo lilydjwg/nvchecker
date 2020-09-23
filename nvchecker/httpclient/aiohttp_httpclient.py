@@ -42,7 +42,7 @@ class AiohttpSession(BaseSession):
     if json is not None:
       kwargs['json'] = json
     if body is not None:
-      kwargs['body'] = body
+      kwargs['data'] = body
 
     try:
       logger.debug('send request', method=method, url=url, kwargs=kwargs)
