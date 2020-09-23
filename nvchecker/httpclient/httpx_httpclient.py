@@ -21,6 +21,7 @@ class HttpxSession(BaseSession):
     headers: Dict[str, str] = {},
     params = (),
     json = None,
+    body = None,
   ) -> Response:
     client = self.clients.get(proxy)
     if not client:
@@ -36,6 +37,7 @@ class HttpxSession(BaseSession):
         method, url, json = json,
         headers = headers,
         params = params,
+        content = body,
       )
       if r.status_code >= 500:
         raise TemporaryError(

@@ -38,6 +38,7 @@ class TornadoSession(BaseSession):
     headers: Dict[str, str] = {},
     params = (),
     json = None,
+    body = None,
   ) -> Response:
     kwargs: Dict[str, Any] = {
       'method': method,
@@ -46,6 +47,8 @@ class TornadoSession(BaseSession):
 
     if json:
       kwargs['body'] = _json.dumps(json)
+    if body:
+      kwargs['body'] = body
     kwargs['prepare_curl_callback'] = try_use_http2
 
     if proxy:

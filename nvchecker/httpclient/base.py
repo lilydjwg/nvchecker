@@ -40,6 +40,7 @@ class BaseSession:
     headers: Dict[str, str] = {},
     params = (),
     json = None,
+    body = None,
   ) -> Response:
     t = tries.get()
     p = proxy.get()
@@ -56,6 +57,7 @@ class BaseSession:
           headers = headers,
           params = params,
           json = json,
+          body = body,
           proxy = p or None,
         )
       except TemporaryError as e:

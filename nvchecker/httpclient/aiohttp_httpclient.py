@@ -30,6 +30,7 @@ class AiohttpSession(BaseSession):
     headers: Dict[str, str] = {},
     params = (),
     json = None,
+    body = None,
   ) -> Response:
     kwargs = {
       'headers': headers,
@@ -40,6 +41,8 @@ class AiohttpSession(BaseSession):
       kwargs['proxy'] = proxy
     if json is not None:
       kwargs['json'] = json
+    if body is not None:
+      kwargs['body'] = body
 
     try:
       logger.debug('send request', method=method, url=url, kwargs=kwargs)
