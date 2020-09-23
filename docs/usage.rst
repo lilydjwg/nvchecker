@@ -616,7 +616,7 @@ Check APT repository
 
   source = "apt"
 
-This enables you to track the update of an arbitary APT repository, without needing of apt and an updated local APT database.
+This enables you to track the update of an arbitrary APT repository, without needing of apt and an updated local APT database.
 
 pkg
   Name of the APT binary package.
