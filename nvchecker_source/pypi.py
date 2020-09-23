@@ -3,7 +3,6 @@
 
 import xmlrpc.client
 from typing import List, Tuple, Union
-from pkg_resources import parse_version
 
 from nvchecker.api import session
 
@@ -23,10 +22,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   data = await cache.get((url, package, use_pre_release), pypi_xmlrpc_request)
 
   if use_pre_release:
-    version = sorted(
-      data,
-      key = parse_version,
-    )[-1]
+    version = data[0]
   else:
     version = data
   return version
