@@ -77,6 +77,7 @@ class BaseSession:
     headers: Dict[str, str] = {},
     params = (),
     json = None,
+    body = None,
   ) -> Response:
     ''':meta private:'''
     raise NotImplementedError
