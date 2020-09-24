@@ -9,5 +9,5 @@ async def get_version(
   git = conf['git']
   cmd = f"git ls-remote -t --refs {git}"
   data = await cache.get(cmd, run_cmd)
-  versions = list(map(lambda line: line.split("refs/tags/")[1], data.split("\n")))
+  versions = [line.split("refs/tags/")[1] for line in data.splitlines()]
   return versions
