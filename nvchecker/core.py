@@ -11,7 +11,7 @@ import logging
 import argparse
 from typing import (
   Tuple, NamedTuple, Optional, List, Union,
-  cast, Dict, Awaitable, Sequence,
+  cast, Dict, Awaitable, Sequence, Any,
 )
 import types
 from pathlib import Path
@@ -139,6 +139,7 @@ class Options(NamedTuple):
   max_concurrency: int
   proxy: Optional[str]
   keymanager: KeyManager
+  source_configs: Dict[str, Dict[str, Any]]
 
 class FileLoadError(Exception):
   def __init__(self, kind, exc):
@@ -159,6 +160,7 @@ def load_file(
 
   ver_files: Optional[Tuple[Path, Path]] = None
   keymanager = KeyManager(None)
+  source_configs = {}
 
   if '__config__' in config:
     c = config.pop('__config__')
@@ -184,6 +186,9 @@ def load_file(
       except OSError as e:
         raise FileLoadError('keyfile', e)
 
+    if 'source' in c:
+      source_configs = c['source']
+
     max_concurrency = c.get('max_concurrency', 20)
     proxy = c.get('proxy')
   else:
@@ -191,7 +196,9 @@ def load_file(
     proxy = None
 
   return cast(Entries, config), Options(
-    ver_files, max_concurrency, proxy, keymanager)
+    ver_files, max_concurrency, proxy, keymanager,
+    source_configs,
+  )
 
 def dispatch(
   entries: Entries,
@@ -199,6 +206,7 @@ def dispatch(
   result_q: Queue[RawResult],
   keymanager: KeyManager,
   tries: int,
+  source_configs: Dict[str, Dict[str, Any]],
 ) -> List[asyncio.Future]:
   mods: Dict[str, Tuple[types.ModuleType, List]] = {}
   ctx_tries.set(tries)
@@ -210,6 +218,9 @@ def dispatch(
       mod = import_module('nvchecker_source.' + source)
       tasks: List[Tuple[str, Entry]] = []
       mods[source] = mod, tasks
+      config = source_configs.get(source)
+      if config and getattr(mod, 'configure'):
+        mod.configure(config) # type: ignore
     else:
       tasks = mods[source][1]
     tasks.append((name, entry))

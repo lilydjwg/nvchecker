@@ -79,3 +79,18 @@ put results in :attr:`result_q <nvchecker.api.BaseWorker.result_q>`. See
 ``nvchecker_source/aur.py`` for a complete, batching example.
 
 For details about these objects, see :mod:`the API documentation <nvchecker.api>`.
+
+You can also receive a configuration section from the configuration as
+``__config__.source.SOURCE_NAME``, where ``SOURCE_None`` is what your plugin is
+called. This can be used to specify a mirror site for your plugin to use, e.g.
+the ``npm`` plugin accepts the following config::
+
+  [__config__.source.npm]
+  registry = "https://registry.npm.taobao.org"
+
+When such a configuration exists for your plugin, you need to define a function
+named ``configure`` to receive it::
+
+  def configure(config):
+    '''use the "config" dict in some way'''
+    ...

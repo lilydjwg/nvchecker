@@ -50,6 +50,7 @@ def main() -> None:
     futures = core.dispatch(
       entries, task_sem, result_q,
       keymanager, args.tries,
+      options.source_configs,
     )
   except ModuleNotFoundError as e:
     sys.exit(f'Error: {e}')

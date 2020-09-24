@@ -446,6 +446,12 @@ Check `NPM Registry <https://registry.npmjs.org/>`_ for updates.
 npm
   The name used on NPM Registry, e.g. ``coffee-script``.
 
+To configure which registry to query, a source plugin option is available.
+You can specify like this::
+
+  [__config__.source.npm]
+  registry = "https://registry.npm.taobao.org"
+
 Check Hackage
 ~~~~~~~~~~~~~
 ::

@@ -29,7 +29,7 @@ async def run(
 
   futures = core.dispatch(
     entries, task_sem, result_q,
-    keymanager, 1,
+    keymanager, 1, {},
   )
 
   oldvers: VersData = {}
