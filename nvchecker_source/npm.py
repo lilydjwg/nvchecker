@@ -9,7 +9,8 @@ NPM_URL = 'https://registry.npmjs.org/%s'
 
 def configure(config):
   global NPM_URL
-  if url := config.get('registry'):
+  url = config.get('registry')
+  if url:
     NPM_URL = f'{url.rstrip("/")}/%s'
 
 async def get_first_1k(url):
