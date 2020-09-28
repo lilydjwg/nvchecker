@@ -46,8 +46,13 @@ def main() -> None:
 
   task_sem = asyncio.Semaphore(options.max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
+  dispatcher = core.setup_httpclient(
+    options.max_concurrency,
+    options.httplib,
+    options.http_timeout,
+  )
   try:
-    futures = core.dispatch(
+    futures = dispatcher.dispatch(
       entries, task_sem, result_q,
       keymanager, args.tries,
       options.source_configs,

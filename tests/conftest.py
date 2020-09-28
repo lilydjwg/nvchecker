@@ -27,7 +27,8 @@ async def run(
   else:
     keymanager = core.KeyManager(None)
 
-  futures = core.dispatch(
+  dispatcher = core.setup_httpclient()
+  futures = dispatcher.dispatch(
     entries, task_sem, result_q,
     keymanager, 1, {},
   )

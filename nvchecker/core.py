@@ -33,6 +33,7 @@ from .util import (
 from . import __version__
 from .sortversion import sort_version_keys
 from .ctxvars import tries as ctx_tries
+from . import httpclient
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -140,6 +141,8 @@ class Options(NamedTuple):
   proxy: Optional[str]
   keymanager: KeyManager
   source_configs: Dict[str, Dict[str, Any]]
+  httplib: Optional[str]
+  http_timeout: int
 
 class FileLoadError(Exception):
   def __init__(self, kind, exc):
@@ -191,59 +194,75 @@ def load_file(
 
     max_concurrency = c.get('max_concurrency', 20)
     proxy = c.get('proxy')
+    httplib = c.get('httplib', None)
+    http_timeout = c.get('http_timeout', 20)
   else:
     max_concurrency = 20
     proxy = None
+    httplib = None
+    http_timeout = 20
 
   return cast(Entries, config), Options(
     ver_files, max_concurrency, proxy, keymanager,
-    source_configs,
+    source_configs, httplib, http_timeout,
   )
 
-def dispatch(
-  entries: Entries,
-  task_sem: asyncio.Semaphore,
-  result_q: Queue[RawResult],
-  keymanager: KeyManager,
-  tries: int,
-  source_configs: Dict[str, Dict[str, Any]],
-) -> List[asyncio.Future]:
-  mods: Dict[str, Tuple[types.ModuleType, List]] = {}
-  ctx_tries.set(tries)
-  root_ctx = contextvars.copy_context()
+def setup_httpclient(
+  max_concurrency: int = 20,
+  httplib: Optional[str] = None,
+  http_timeout: int = 20,
+) -> Dispatcher:
+  httplib_ = httplib or httpclient.find_best_httplib()
+  httpclient.setup(
+    httplib_, max_concurrency, http_timeout)
+  return Dispatcher()
 
-  for name, entry in entries.items():
-    source = entry.get('source', 'none')
-    if source not in mods:
-      mod = import_module('nvchecker_source.' + source)
-      tasks: List[Tuple[str, Entry]] = []
-      mods[source] = mod, tasks
-      config = source_configs.get(source)
-      if config and getattr(mod, 'configure'):
-        mod.configure(config) # type: ignore
-    else:
-      tasks = mods[source][1]
-    tasks.append((name, entry))
+class Dispatcher:
+  def dispatch(
+    self,
+    entries: Entries,
+    task_sem: asyncio.Semaphore,
+    result_q: Queue[RawResult],
+    keymanager: KeyManager,
+    tries: int,
+    source_configs: Dict[str, Dict[str, Any]],
+  ) -> List[asyncio.Future]:
+    mods: Dict[str, Tuple[types.ModuleType, List]] = {}
+    ctx_tries.set(tries)
+    root_ctx = contextvars.copy_context()
 
-  ret = []
-  for mod, tasks in mods.values():
-    if hasattr(mod, 'Worker'):
-      worker_cls = mod.Worker # type: ignore
-    else:
-      worker_cls = FunctionWorker
+    for name, entry in entries.items():
+      source = entry.get('source', 'none')
+      if source not in mods:
+        mod = import_module('nvchecker_source.' + source)
+        tasks: List[Tuple[str, Entry]] = []
+        mods[source] = mod, tasks
+        config = source_configs.get(source)
+        if config and getattr(mod, 'configure'):
+          mod.configure(config) # type: ignore
+      else:
+        tasks = mods[source][1]
+      tasks.append((name, entry))
 
-    ctx = root_ctx.copy()
-    worker = ctx.run(
-      worker_cls,
-      task_sem, result_q, tasks, keymanager,
-    )
-    if worker_cls is FunctionWorker:
-      func = mod.get_version # type: ignore
-      ctx.run(worker.initialize, func)
+    ret = []
+    for mod, tasks in mods.values():
+      if hasattr(mod, 'Worker'):
+        worker_cls = mod.Worker # type: ignore
+      else:
+        worker_cls = FunctionWorker
 
-    ret.append(ctx.run(worker.run))
+      ctx = root_ctx.copy()
+      worker = ctx.run(
+        worker_cls,
+        task_sem, result_q, tasks, keymanager,
+      )
+      if worker_cls is FunctionWorker:
+        func = mod.get_version # type: ignore
+        ctx.run(worker.initialize, func)
 
-  return ret
+      ret.append(ctx.run(worker.run))
+
+    return ret
 
 def substitute_version(
   version: str, conf: Entry,

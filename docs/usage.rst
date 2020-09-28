@@ -134,6 +134,9 @@ proxy
 max_concurrency
   Max number of concurrent jobs. Default: 20.
 
+http_timeout
+  Time in seconds to wait for HTTP requests. Default: 20.
+
 keyfile
   Specify an ini config file containing key (token) information. This file
   should contain a ``keys`` table, mapping key names to key values. See

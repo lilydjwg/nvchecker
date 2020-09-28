@@ -16,10 +16,14 @@ logger = structlog.get_logger(logger_name=__name__)
 connector = aiohttp.TCPConnector(limit=20)
 
 class AiohttpSession(BaseSession):
-  def __init__(self):
+  def setup(
+    self,
+    concurreny: int = 20,
+    timeout: int = 20,
+  ) -> None:
     self.session = aiohttp.ClientSession(
-      connector = aiohttp.TCPConnector(limit=20),
-      timeout = aiohttp.ClientTimeout(total=20),
+      connector = aiohttp.TCPConnector(limit=concurreny),
+      timeout = aiohttp.ClientTimeout(total=timeout),
       trust_env = True,
     )
 

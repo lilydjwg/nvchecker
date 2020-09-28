@@ -52,8 +52,8 @@ If you want to send an HTTP request, it's preferred to use :meth:
 `nvchecker.api.session` object. It will use the auto-selected HTTP backend and
 handle the ``proxy`` option automatically.
 
-For details about these objects, see :mod:`the API documentation <nvchecker.api>
-`, or take existing source plugins as examples.
+For details about these objects, see :mod:`the API documentation <nvchecker.api>`,
+or take existing source plugins as examples.
 
 How to write a more powerful plugin
 -----------------------------------

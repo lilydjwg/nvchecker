@@ -9,7 +9,6 @@ from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
 try:
   import pycurl
-  AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient", max_clients=20)
 except ImportError:
   pycurl = None # type: ignore
 
@@ -31,6 +30,20 @@ def try_use_http2(curl):
     curl.setopt(pycurl.HTTP_VERSION, 4)
 
 class TornadoSession(BaseSession):
+  def setup(
+    self,
+    concurreny: int = 20,
+    timeout: int = 20,
+  ) -> None:
+    impl: Optional[str]
+    if pycurl:
+      impl = "tornado.curl_httpclient.CurlAsyncHTTPClient"
+    else:
+      impl = None
+    AsyncHTTPClient.configure(
+      impl, max_clients = concurreny)
+    self.timeout = timeout
+
   async def request_impl(
     self, url: str, *,
     method: str,
@@ -42,6 +55,7 @@ class TornadoSession(BaseSession):
     kwargs: Dict[str, Any] = {
       'method': method,
       'headers': headers,
+      'request_timeout': self.timeout,
     }
 
     if json:

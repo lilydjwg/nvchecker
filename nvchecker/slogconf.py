@@ -10,7 +10,7 @@ import sys
 
 import structlog
 
-from .httpclient.base import TemporaryError
+from .httpclient import TemporaryError
 
 def _console_msg(event):
   evt = event['event']

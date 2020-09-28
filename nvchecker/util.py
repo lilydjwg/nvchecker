@@ -17,7 +17,7 @@ import abc
 import toml
 import structlog
 
-from .httpclient import session # type: ignore
+from .httpclient import session
 from .ctxvars import tries as ctx_tries
 from .ctxvars import proxy as ctx_proxy
 from .ctxvars import user_agent as ctx_ua

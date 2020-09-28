@@ -11,8 +11,13 @@ from .base import BaseSession, TemporaryError, Response
 __all__ = ['session']
 
 class HttpxSession(BaseSession):
-  def __init__(self):
-    self.clients = {}
+  def setup(
+    self,
+    concurreny: int = 20,
+    timeout: int = 20,
+  ) -> None:
+    self.clients: Dict[Optional[str], httpx.AsyncClient] = {}
+    self.timeout = timeout
 
   async def request_impl(
     self, url: str, *,
@@ -25,7 +30,7 @@ class HttpxSession(BaseSession):
     client = self.clients.get(proxy)
     if not client:
       client = httpx.AsyncClient(
-        timeout = httpx.Timeout(20, pool=None),
+        timeout = httpx.Timeout(self.timeout, pool=None),
         http2 = True,
         proxies = {'all://': proxy},
       )

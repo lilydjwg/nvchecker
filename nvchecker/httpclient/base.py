@@ -24,6 +24,13 @@ class Response:
 
 class BaseSession:
   '''The base class for different HTTP backend.'''
+  def setup(
+    self,
+    concurreny: int = 20,
+    timeout: int = 20,
+  ) -> None:
+    pass
+
   async def get(self, *args, **kwargs):
     '''Shortcut for ``GET`` request.'''
     return await self.request(
