@@ -15,23 +15,6 @@ async def test_gitea(get_version):
     assert ver.isdigit()
 
 @flaky(max_runs=10)
-async def test_gitea_max_tag(get_version):
-    assert await get_version("example", {
-        "source": "gitea",
-        "gitea": "gitea/tea",
-        "use_max_tag": True,
-    }) == "v0.4.1"
-
-@flaky(max_runs=10)
-async def test_gitea_max_tag_with_ignored(get_version):
-    assert await get_version("example", {
-        "source": "gitea",
-        "gitea": "gitea/tea",
-        "use_max_tag": True,
-        "ignored": "v0.4.0 v0.4.1",
-    }) == "v0.3.1"
-
-@flaky(max_runs=10)
 async def test_gitea_max_tag_with_include(get_version):
     assert await get_version("example", {
         "source": "gitea",
