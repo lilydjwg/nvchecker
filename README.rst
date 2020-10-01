@@ -1,8 +1,6 @@
 **nvchecker** (short for *new version checker*) is for checking if a new version of some software has been released.
 
-This is the version 2.0 branch that is in beta. Things may still change without backward-compatibility.
-
-For the old version 1.x, please switch to the ``v1.x`` branch.
+This is the version 2.0 branch. For the old version 1.x, please switch to the ``v1.x`` branch.
 
 .. image:: https://travis-ci.org/lilydjwg/nvchecker.svg?branch=master
    :alt: Build Status
