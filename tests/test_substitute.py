@@ -34,6 +34,14 @@ async def test_substitute_regex_missing_ok(get_version):
         "to_pattern": r"r\1.\2",
     }) == "r15"
 
+async def test_substitute_regex_empty_to_pattern(get_version):
+    assert await get_version("example", {
+        "source": "manual",
+        "manual": "15-debian",
+        "from_pattern": r"-\w+$",
+        "to_pattern": r"",
+    }) == "15"
+
 async def test_substitute_prefix_has_higher_priority(get_version):
     assert await get_version("example", {
         "source": "manual",
