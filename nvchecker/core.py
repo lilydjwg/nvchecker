@@ -280,7 +280,7 @@ def substitute_version(
   from_pattern = conf.get('from_pattern')
   if from_pattern:
     to_pattern = conf.get('to_pattern')
-    if not to_pattern:
+    if to_pattern is None:
       raise ValueError("from_pattern exists but to_pattern doesn't")
 
     return re.sub(from_pattern, to_pattern, version)
