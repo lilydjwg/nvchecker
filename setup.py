@@ -20,7 +20,7 @@ setup(
   platforms = 'any',
   zip_safe = True,
 
-  packages = find_namespace_packages(exclude=['tests', 'build*']),
+  packages = find_namespace_packages(exclude=['tests', 'build*', 'docs']),
   install_requires = ['setuptools', 'toml', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
