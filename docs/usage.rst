@@ -142,7 +142,8 @@ keyfile
 
 Global Options
 ~~~~~~~~~~~~~~
-The following options apply to all check sources.
+The following options apply to every check sources. You can use them in any
+item in your configuration file.
 
 prefix
   Strip the prefix string if the version string starts with it. Otherwise the
@@ -164,8 +165,8 @@ proxy
   Set it to ``""`` (empty string) to override the global setting.
 
   This only works when the source implementation uses the builtin HTTP client,
-  and doesn't work with the ``aur`` source because it's batched. However the
-  global proxy config applies.
+  and doesn't work with the ``aur`` source because it's batched (however the
+  global proxy config still applies).
 
 user_agent
   The user agent string to use for HTTP requests.
