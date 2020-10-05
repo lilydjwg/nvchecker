@@ -657,7 +657,7 @@ Check Git repository
 
 This enables you to check tags of an arbitrary git repository, also useful for scenarios like a github project having too many tags.
 
-url
+git
   URL of the Git repository.
 
 This source returns tags and supports :ref:`list options`.
