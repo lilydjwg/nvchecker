@@ -134,7 +134,7 @@ def read_verfile(file: Path) -> VersData:
 def write_verfile(file: Path, versions: VersData) -> None:
   # sort and indent to make it friendly to human and git
   data = json.dumps(
-    dict(sorted(versions)),
+    dict(sorted(versions.items())),
     indent=2,
     ensure_ascii=False,
   ) + '\n'
