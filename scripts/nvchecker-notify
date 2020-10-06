@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+# MIT licensed
+# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
+
+'''
+A simple wrapper to show desktop notifications while running nvchecker.
+'''
+
+import os
+import subprocess
+import json
+
+import gi
+gi.require_version('Notify', '0.7')
+from gi.repository import Notify
+
+def get_args():
+  import argparse
+  parser = argparse.ArgumentParser(description='show desktop notifications while running nvchecker')
+  parser.add_argument('-c', '--file',
+                      metavar='FILE', type=str,
+                      help='software version configuration file if not default')
+  return parser.parse_args()
+
+def main():
+  args = get_args()
+
+  Notify.init('nvchecker')
+  notif = Notify.Notification()
+  updates = []
+
+  rfd, wfd = os.pipe()
+  cmd = [
+    'nvchecker', '--logger', 'both', '--json-log-fd', str(wfd),
+  ]
+  if args.file:
+    cmd.extend(['-c', args.file])
+
+  process = subprocess.Popen(cmd, pass_fds=(wfd,))
+  os.close(wfd)
+
+  output = os.fdopen(rfd)
+  for l in output:
+    j = json.loads(l)
+    event = j['event']
+    if event == 'updated':
+      updates.append('%(name)s updated to version %(version)s' % j)
+      notif.update('nvchecker', '\n'.join(updates))
+      notif.show()
+
+  ret = process.wait()
+  if ret != 0:
+    raise subprocess.CalledProcessError(ret, cmd)
+
+if __name__ == '__main__':
+  main()
