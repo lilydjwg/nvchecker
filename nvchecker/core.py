@@ -132,7 +132,12 @@ def read_verfile(file: Path) -> VersData:
   return v
 
 def write_verfile(file: Path, versions: VersData) -> None:
-  data = json.dumps(versions, ensure_ascii=False) + '\n'
+  # sort and indent to make it friendly to human and git
+  data = json.dumps(
+    dict(sorted(versions)),
+    indent=2,
+    ensure_ascii=False,
+  ) + '\n'
   safe_overwrite(str(file), data)
 
 class Options(NamedTuple):
