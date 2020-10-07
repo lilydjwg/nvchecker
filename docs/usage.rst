@@ -662,6 +662,22 @@ git
 
 This source returns tags and supports :ref:`list options`.
 
+Check container registry
+~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "container"
+
+This enables you to check tags of images on a container registry like Docker.
+
+container
+  The path for the container image. For official Docker images, use namespace ``library/`` (e.g. ``library/python``).
+
+registry
+  The container registry host. Default: ``docker.io``
+
+This source returns tags and supports :ref:`list options`.
+
 Manually updating
 ~~~~~~~~~~~~~~~~~
 ::

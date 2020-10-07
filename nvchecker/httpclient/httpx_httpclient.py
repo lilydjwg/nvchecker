@@ -6,7 +6,7 @@ from typing import Dict, Optional
 
 import httpx
 
-from .base import BaseSession, TemporaryError, Response
+from .base import BaseSession, TemporaryError, Response, HTTPError
 
 __all__ = ['session']
 
@@ -42,14 +42,17 @@ class HttpxSession(BaseSession):
         headers = headers,
         params = params,
       )
+      err_cls: Optional[type] = None
       if r.status_code >= 500:
-        raise TemporaryError(
+        err_cls = TemporaryError
+      elif r.status_code >= 400:
+        err_cls = HTTPError
+      if err_cls is not None:
+        raise err_cls(
           r.status_code,
           r.reason_phrase,
           r,
         )
-      else:
-        r.raise_for_status()
 
     except httpx.TransportError as e:
       raise TemporaryError(599, repr(e), e)

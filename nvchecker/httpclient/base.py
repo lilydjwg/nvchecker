@@ -86,10 +86,14 @@ class BaseSession:
     ''':meta private:'''
     raise NotImplementedError
 
-class TemporaryError(Exception):
-  '''A temporary error (e.g. network error) happens.'''
+class BaseHTTPError(Exception):
   def __init__(self, code, message, response):
     self.code = code
     self.message = message
     self.response = response
 
+class TemporaryError(BaseHTTPError):
+  '''A temporary error (e.g. network error) happens.'''
+
+class HTTPError(BaseHTTPError):
+  ''' An HTTP 4xx error happens '''

@@ -3,7 +3,7 @@
 
 from typing import Optional
 
-from .base import TemporaryError
+from .base import TemporaryError, HTTPError
 
 class Proxy:
   _obj = None
