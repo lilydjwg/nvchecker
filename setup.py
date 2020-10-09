@@ -38,7 +38,10 @@ setup(
       'nvcmp = nvchecker.tools:cmp',
     ],
   },
-  scripts=['scripts/nvchecker-ini2toml'],
+  scripts = [
+    'scripts/nvchecker-ini2toml',
+    'scripts/nvchecker-notify',
+  ],
 
   classifiers = [
     "Development Status :: 5 - Production/Stable",
