@@ -20,6 +20,9 @@ def get_args():
   parser.add_argument('-c', '--file',
                       metavar='FILE', type=str,
                       help='software version configuration file if not default')
+  parser.add_argument('-k', '--keyfile',
+                      metavar='FILE', type=str,
+                      help='use specified keyfile (override the one in configuration file)')
   return parser.parse_args()
 
 def main():
@@ -35,6 +38,8 @@ def main():
   ]
   if args.file:
     cmd.extend(['-c', args.file])
+  if args.keyfile:
+    cmd.extend(['-k', args.keyfile])
 
   process = subprocess.Popen(cmd, pass_fds=(wfd,))
   os.close(wfd)
