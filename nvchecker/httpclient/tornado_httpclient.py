@@ -12,7 +12,7 @@ try:
 except ImportError:
   pycurl = None # type: ignore
 
-from .base import BaseSession, TemporaryError, Response
+from .base import BaseSession, TemporaryError, Response, HTTPError
 
 __all__ = ['session']
 
@@ -74,12 +74,15 @@ class TornadoSession(BaseSession):
     r = HTTPRequest(url, **kwargs)
     res = await AsyncHTTPClient().fetch(
       r, raise_error=False)
+    err_cls: Optional[type] = None
     if res.code >= 500:
-      raise TemporaryError(
+      err_cls = TemporaryError
+    elif res.code >= 400:
+      err_cls = HTTPError
+    if err_cls is not None:
+      raise err_cls(
         res.code, res.reason, res
       )
-    else:
-      res.rethrow()
 
     return Response(res.body)
 

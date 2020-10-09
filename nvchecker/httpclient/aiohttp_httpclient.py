@@ -8,7 +8,7 @@ from typing import Optional, Dict
 import structlog
 import aiohttp
 
-from .base import BaseSession, TemporaryError, Response
+from .base import BaseSession, TemporaryError, Response, HTTPError
 
 __all__ = ['session']
 
@@ -54,10 +54,13 @@ class AiohttpSession(BaseSession):
     ) as e:
       raise TemporaryError(599, repr(e), e)
 
+    err_cls: Optional[type] = None
     if res.status >= 500:
-      raise TemporaryError(res.status, res.reason, res)
-    else:
-      res.raise_for_status()
+      err_cls = TemporaryError
+    elif res.status >= 400:
+      err_cls = HTTPError
+    if err_cls is not None:
+      raise err_cls(res.status, res.reason, res)
 
     body = await res.content.read()
     return Response(body)
