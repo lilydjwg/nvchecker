@@ -437,6 +437,8 @@ Check `RubyGems <https://rubygems.org/>`_ for updates.
 gems
   The name used on RubyGems, e.g. ``sass``.
 
+This source supports :ref:`list options`.
+
 Check NPM Registry
 ~~~~~~~~~~~~~~~~~~
 ::
