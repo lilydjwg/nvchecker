@@ -6,4 +6,4 @@ GEMS_URL = 'https://rubygems.org/api/v1/versions/%s.json'
 async def get_version(name, conf, *, cache, **kwargs):
   key = conf.get('gems', name)
   data = await cache.get_json(GEMS_URL % key)
-  return data[0]['number']
+  return [item['number'] for item in data]
