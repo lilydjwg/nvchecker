@@ -20,10 +20,10 @@ async def test_archpkg_strip_release(get_version):
 
 @flaky
 async def test_archpkg_provided(get_version):
-    assert await get_version("jsoncpp", {
+    assert await get_version("dbus", {
         "source": "archpkg",
-        "provided": "libjsoncpp.so",
-    }) == "24-64"
+        "provided": "libdbus-1.so",
+    }) == "3-64"
 
 @flaky
 async def test_archpkg_provided_strip(get_version):
