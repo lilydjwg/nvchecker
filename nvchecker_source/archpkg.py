@@ -22,7 +22,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   r = [r for r in data['results'] if r['repo'] != 'testing'][0]
 
   if provided:
-    provides = dict(x.split('=', 1) for x in r['provides'])
+    provides = dict(x.split('=', 1) for x in r['provides'] if '=' in x)
     version = provides.get(provided, None)
     if strip_release:
       version = version.split('-', 1)[0]
