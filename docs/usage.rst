@@ -83,7 +83,7 @@ There are several backward-incompatible changes from the previous 1.x version.
 4. Several options have been renamed. ``max_concurrent`` to ``max_concurrency``, and all option names have their ``-`` be replaced with ``_``.
 5. All software configuration tables need a ``source`` option to specify which source is to be used rather than being figured out from option names in use. This enables additional source plugins to be discovered.
 6. The version record files have been changed to use JSON format (the old format will be converted on writing).
-7. The ``vcs`` source is removed. (It's available inside `lilac <https://github.com/archlinuxcn/lilac>`_ at the moment.)
+7. The ``vcs`` source is removed. (It's available inside `lilac <https://github.com/archlinuxcn/lilac>`_ at the moment.) A ``git`` source is provided.
 8. ``include_tags_pattern`` and ``ignored_tags`` are removed. Use :ref:`list options` instead.
 
 Version Record Files
