@@ -37,14 +37,26 @@ VersionResult.__doc__ = '''The result of a `get_version` check.
 * `Exception` - An error occurred.
 '''
 
+class FileLoadError(Exception):
+  def __init__(self, kind, filename, exc):
+    self.kind = kind
+    self.filename = filename
+    self.exc = exc
+
+  def __str__(self):
+    return f'failed to load {self.kind} {self.filename!r}: {self.exc}'
+
 class KeyManager:
   '''Manages data in the keyfile.'''
   def __init__(
     self, file: Optional[Path],
   ) -> None:
     if file is not None:
-      with file.open() as f:
-        keys = toml.load(f)['keys']
+      try:
+        with file.open() as f:
+          keys = toml.load(f)['keys']
+      except (OSError, toml.TomlDecodeError) as e:
+        raise FileLoadError('keyfile', str(file), e)
     else:
       keys = {}
     self.keys = keys

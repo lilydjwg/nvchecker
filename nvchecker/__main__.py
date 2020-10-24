@@ -33,13 +33,13 @@ def main() -> None:
   try:
     entries, options = core.load_file(
       args.file, use_keymanager=not bool(args.keyfile))
+
+    if args.keyfile:
+      keymanager = KeyManager(Path(args.keyfile))
+    else:
+      keymanager = options.keymanager
   except core.FileLoadError as e:
     sys.exit(str(e))
-
-  if args.keyfile:
-    keymanager = KeyManager(Path(args.keyfile))
-  else:
-    keymanager = options.keymanager
 
   if options.proxy is not None:
     ctx_proxy.set(options.proxy)

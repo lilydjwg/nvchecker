@@ -29,6 +29,7 @@ from . import slogconf
 from .util import (
   Entry, Entries, KeyManager, RawResult, Result, VersData,
   FunctionWorker, GetVersionError,
+  FileLoadError,
 )
 from . import __version__
 from .sortversion import sort_version_keys
@@ -149,22 +150,14 @@ class Options(NamedTuple):
   httplib: Optional[str]
   http_timeout: int
 
-class FileLoadError(Exception):
-  def __init__(self, kind, exc):
-    self.kind = kind
-    self.exc = exc
-
-  def __str__(self):
-    return f'failed to load {self.kind}: {self.exc}'
-
 def load_file(
   file: str, *,
   use_keymanager: bool,
 ) -> Tuple[Entries, Options]:
   try:
     config = toml.load(file)
-  except OSError as e:
-    raise FileLoadError('version configuration file', e)
+  except (OSError, toml.TomlDecodeError) as e:
+    raise FileLoadError('version configuration file', file, e)
 
   ver_files: Optional[Tuple[Path, Path]] = None
   keymanager = KeyManager(None)
@@ -189,10 +182,7 @@ def load_file(
         keyfile_s = os.path.expandvars(
           os.path.expanduser(c.get('keyfile')))
         keyfile = d / keyfile_s
-      try:
-        keymanager = KeyManager(keyfile)
-      except OSError as e:
-        raise FileLoadError('keyfile', e)
+      keymanager = KeyManager(keyfile)
 
     if 'source' in c:
       source_configs = c['source']
