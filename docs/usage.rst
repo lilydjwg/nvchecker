@@ -568,6 +568,11 @@ repology
 repo
   Check the version in this repo. This field is required.
 
+subrepo
+  Check the version in this subrepo. This field is optional.
+  When ommited all subrepos are queried and first entry
+  (not the highest version) is returned.
+
 Check Anitya
 ~~~~~~~~~~~~
 ::
