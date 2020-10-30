@@ -26,4 +26,4 @@ async def get_version(name, conf, *, cache, **kwargs):
                               repo=repo, subrepo=subrepo)
 
   versions = [pkg['version'] for pkg in pkgs]
-  return versions[0]
+  return versions

@@ -570,8 +570,9 @@ repo
 
 subrepo
   Check the version in this subrepo. This field is optional.
-  When ommited all subrepos are queried and first entry
-  (not the highest version) is returned.
+  When ommited all subrepos are queried.
+
+This source supports :ref:`list options`.
 
 Check Anitya
 ~~~~~~~~~~~~
