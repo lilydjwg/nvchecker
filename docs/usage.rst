@@ -689,6 +689,29 @@ registry
 
 This source returns tags and supports :ref:`list options`.
 
+Check ALPM database
+~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "alpm"
+
+Check package updates in a local ALPM database.
+
+alpm
+  Name of the package.
+
+repo
+  Name of the package repository in which the package resides.
+
+dbpath
+  Path to the ALPM database directory. Default: ``/var/lib/pacman``.
+
+strip_release
+  Strip the release part, only return the part before ``-``.
+
+provided
+  Instead of the package version, return the version this package provides. Its value is what the package provides, and ``strip_release`` takes effect too. This is best used with libraries.
+
 Manually updating
 ~~~~~~~~~~~~~~~~~
 ::
