@@ -2,11 +2,11 @@
 # Copyright (c) 2020 DDoSolitary <DDoSolitary@gmail.com>, et al.
 
 import pathlib
-import pytest
-import os
 import shutil
 import subprocess
 import tempfile
+
+import pytest
 
 pytestmark = [
   pytest.mark.asyncio,
@@ -31,7 +31,7 @@ def setup_module(module):
       'arch=(any)\n'
       'provides=("test-provides=5.6-7" "test-provides-unversioned")\n'
     )
-  subprocess.check_call(['makepkg'], cwd=pkg_path)
+  subprocess.check_call(['makepkg', '--nosign'], cwd=pkg_path)
   pkg_file = subprocess.check_output(['makepkg', '--packagelist'], cwd=pkg_path, text=True).strip()
   db_path = pkg_path / 'test-db'
   db_path.mkdir()
