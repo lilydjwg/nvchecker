@@ -25,6 +25,8 @@ def main() -> None:
                       help='use specified keyfile (override the one in configuration file)')
   parser.add_argument('-t', '--tries', default=1, type=int, metavar='N',
                       help='try N times when network errors occur')
+  parser.add_argument('-e', '--entry', type=str,
+                      help='only execute on specified entry (useful for debugging)')
   core.add_common_arguments(parser)
   args = parser.parse_args()
   if core.process_common_arguments(args):
@@ -33,6 +35,11 @@ def main() -> None:
   try:
     entries, options = core.load_file(
       args.file, use_keymanager=not bool(args.keyfile))
+
+    if args.entry:
+      if args.entry not in entries:
+        sys.exit('Specified entry not found in config')
+      entries = {args.entry: entries[args.entry]}
 
     if args.keyfile:
       keymanager = KeyManager(Path(args.keyfile))
