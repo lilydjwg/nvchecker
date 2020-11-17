@@ -673,6 +673,19 @@ git
 
 This source returns tags and supports :ref:`list options`.
 
+Check Mercurial repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "mercurial"
+
+This enables you to check tags of an arbitrary mercurial repository.
+
+mercurial
+  URL of the Mercurial repository.
+
+This source returns tags and supports :ref:`list options`.
+
 Check container registry
 ~~~~~~~~~~~~~~~~~~~~~~~~
 ::
