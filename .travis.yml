@@ -5,6 +5,7 @@ cache: pip
 python:
   - "3.7"
   - "3.8"
+  - "3.9"
   - "nightly"
 before_install: if [[ -n $KEY ]]; then openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml; fi
 install: pip install -U $DEPS pytest pytest-asyncio pytest-httpbin flaky structlog toml appdirs
