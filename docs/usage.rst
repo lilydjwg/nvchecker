@@ -48,6 +48,24 @@ Run with one or more software version files::
 
 You normally will like to specify some "version record files"; see below.
 
+Docker
+------
+Nvchecker can be run in a Docker container without the need to install locally.
+
+To build the container::
+
+    docker build . --tag nvchecker
+
+To run the container and see available options::
+
+    docker run nvchecker nvchecker --help
+
+Because nvchecker persists version record files, you may wish to mount a volume
+for configuration and version record files. This example assumes that the
+configuration file and both version record files are location in ``/config``::
+
+    docker run -v $(pwd)/config:/config nvchecker nvchecker -c /config/nvchecker.toml
+
 JSON logging
 ~~~~~~~~~~~~
 With ``--logger=json`` or ``--logger=both``, you can get a structured logging
