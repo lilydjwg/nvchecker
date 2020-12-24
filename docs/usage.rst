@@ -666,12 +666,18 @@ Check Git repository
 
   source = "git"
 
-This enables you to check tags of an arbitrary git repository, also useful for scenarios like a github project having too many tags.
+This enables you to check tags or branch commits of an arbitrary git repository, also useful for scenarios like a github project having too many tags.
 
 git
   URL of the Git repository.
 
-This source returns tags and supports :ref:`list options`.
+use_commit
+  Return a commit hash instead of tags.
+
+branch
+  When ``use_commit`` is true, return the commit on the specified branch instead of the default one.
+
+When this source returns tags (``use_commit`` is not true) it supports :ref:`list options`.
 
 Check container registry
 ~~~~~~~~~~~~~~~~~~~~~~~~
