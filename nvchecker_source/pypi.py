@@ -1,7 +1,7 @@
 # MIT licensed
-# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2021 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from pkg_resources import parse_version
+from packaging.version import Version
 
 async def get_version(name, conf, *, cache, **kwargs):
   package = conf.get('pypi') or name
@@ -14,7 +14,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   if use_pre_release:
     version = sorted(
       data['releases'].keys(),
-      key = parse_version,
+      key = Version,
     )[-1]
   else:
     version = data['info']['version']
