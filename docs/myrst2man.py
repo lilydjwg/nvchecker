@@ -2,6 +2,7 @@
 
 import time
 import locale
+import os
 import sys
 try:
   locale.setlocale(locale.LC_ALL, '')
@@ -50,7 +51,13 @@ class MyTranslator(manpage.Translator):
         self._docinfo['subtitle'] = 'New version checker for software releases'
         self._docinfo['title_upper'] = 'nvchecker'.upper()
         self._docinfo['manual_section'] = '1'
-        self._docinfo['date'] = time.strftime('%Y-%m-%d')
+        # Make the generated man page reproducible. Based on the patch from
+        # https://sourceforge.net/p/docutils/patches/132/#5333
+        source_date_epoch = os.environ.get('SOURCE_DATE_EPOCH')
+        if source_date_epoch:
+            self._docinfo['date'] = time.strftime('%Y-%m-%d', time.gmtime(int(source_date_epoch)))
+        else:
+            self._docinfo['date'] = time.strftime('%Y-%m-%d')
         self._docinfo['version'] = nvchecker.__version__
       raise
 
