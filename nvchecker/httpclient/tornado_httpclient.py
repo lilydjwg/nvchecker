@@ -84,6 +84,6 @@ class TornadoSession(BaseSession):
         res.code, res.reason, res
       )
 
-    return Response(res.body)
+    return Response(res.headers, res.body)
 
 session = TornadoSession()

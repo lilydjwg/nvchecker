@@ -63,7 +63,7 @@ class AiohttpSession(BaseSession):
       raise err_cls(res.status, res.reason, res)
 
     body = await res.content.read()
-    return Response(body)
+    return Response(res.headers, body)
 
 @atexit.register
 def cleanup():

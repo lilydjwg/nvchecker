@@ -58,7 +58,7 @@ class HttpxSession(BaseSession):
       raise TemporaryError(599, repr(e), e)
 
     body = await r.aread()
-    return Response(body)
+    return Response(r.headers, body)
 
   async def aclose(self):
     for client in self.clients.values():

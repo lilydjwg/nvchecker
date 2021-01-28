@@ -2,7 +2,7 @@
 # Copyright (c) 2019-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import structlog
-from typing import Optional, Dict
+from typing import Optional, Dict, Mapping
 import json as _json
 
 from ..ctxvars import tries, proxy, user_agent
@@ -14,8 +14,16 @@ class Response:
 
   .. py:attribute:: body
      :type: bytes
+
+  .. py:attribute:: headers
+     :type: Mapping[str, str]
   '''
-  def __init__(self, body):
+  def __init__(
+    self,
+    headers: Mapping[str, str],
+    body: bytes,
+  ) -> None:
+    self.headers = headers
     self.body = body
 
   def json(self):
@@ -30,6 +38,11 @@ class BaseSession:
     timeout: int = 20,
   ) -> None:
     pass
+
+  async def head(self, *args, **kwargs):
+    '''Shortcut for ``HEAD`` request.'''
+    return await self.request(
+      method='HEAD', *args, **kwargs)
 
   async def get(self, *args, **kwargs):
     '''Shortcut for ``GET`` request.'''
