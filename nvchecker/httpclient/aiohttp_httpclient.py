@@ -32,12 +32,14 @@ class AiohttpSession(BaseSession):
     method: str,
     proxy: Optional[str] = None,
     headers: Dict[str, str] = {},
+    follow_redirects: bool = True,
     params = (),
     json = None,
   ) -> Response:
     kwargs = {
       'headers': headers,
       'params': params,
+      'allow_redirects': follow_redirects,
     }
 
     if proxy is not None:

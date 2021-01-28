@@ -24,6 +24,7 @@ class HttpxSession(BaseSession):
     method: str,
     proxy: Optional[str] = None,
     headers: Dict[str, str] = {},
+    follow_redirects: bool = True,
     params = (),
     json = None,
   ) -> Response:
@@ -40,6 +41,7 @@ class HttpxSession(BaseSession):
       r = await client.request(
         method, url, json = json,
         headers = headers,
+        allow_redirects = follow_redirects,
         params = params,
       )
       err_cls: Optional[type] = None

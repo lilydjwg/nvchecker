@@ -49,6 +49,7 @@ class TornadoSession(BaseSession):
     method: str,
     proxy: Optional[str] = None,
     headers: Dict[str, str] = {},
+    follow_redirects: bool = True,
     params = (),
     json = None,
   ) -> Response:
@@ -56,6 +57,7 @@ class TornadoSession(BaseSession):
       'method': method,
       'headers': headers,
       'request_timeout': self.timeout,
+      'follow_redirects': follow_redirects,
     }
 
     if json:

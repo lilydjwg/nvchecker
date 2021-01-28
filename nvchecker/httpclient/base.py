@@ -58,6 +58,7 @@ class BaseSession:
     self, url: str, *,
     method: str,
     headers: Dict[str, str] = {},
+    follow_redirects: bool = True,
     params = (),
     json = None,
   ) -> Response:
@@ -75,6 +76,7 @@ class BaseSession:
           method = method,
           headers = headers,
           params = params,
+          follow_redirects = follow_redirects,
           json = json,
           proxy = p or None,
         )
@@ -93,6 +95,7 @@ class BaseSession:
     method: str,
     proxy: Optional[str] = None,
     headers: Dict[str, str] = {},
+    follow_redirects: bool = True,
     params = (),
     json = None,
   ) -> Response:
