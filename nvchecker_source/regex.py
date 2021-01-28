@@ -25,7 +25,6 @@ async def get_version_impl(info):
   try:
     version = regex.findall(body)
   except ValueError:
-    version = None
     if not conf.get('missing_ok', False):
       raise GetVersionError('version string not found.')
   return version

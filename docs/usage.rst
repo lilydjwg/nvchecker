@@ -235,6 +235,34 @@ regex
 
 This source supports :ref:`list options`.
 
+Search in an HTTP header
+~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "httpheader"
+
+Send an HTTP request and search through a specific header.
+
+url
+  The URL of the HTTP request.
+
+header
+  (*Optional*) The header to look at. Default is ``Location``. Another useful header is ``Content-Disposition``.
+
+regex
+  A regular expression used to find the version string.
+
+  It can have zero or one capture group. The capture group or the whole match is the version string.
+
+  When multiple version strings are found, the maximum of those is chosen.
+
+method
+  (*Optional*) The HTTP method to use. Default is ``HEAD``.
+
+follow_redirects
+  (*Optional*) Whether to follow 3xx HTTP redirects. Default is ``false``. If you are looking at a ``Location`` header, you shouldn't change this.
+
+
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~
 ::
