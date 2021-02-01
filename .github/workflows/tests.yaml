@@ -3,7 +3,6 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ contains(matrix.python-version, 'pypy') }}
     strategy:
       fail-fast: false
       matrix:
@@ -11,7 +10,11 @@ jobs:
         - "3.7"
         - "3.8"
         - "3.9"
-        - pypy-3.7
+        # pypy fails in some cases but we don't care much about that
+        # with github actions we can't mark some jobs to not affect the overall
+        # conclusion so we have to omit "allow-failure" tests.
+        # See https://github.com/actions/toolkit/issues/399
+        # - pypy-3.7
         deps:
         - tornado pycurl
         - aiohttp
