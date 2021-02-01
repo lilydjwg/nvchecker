@@ -7,6 +7,16 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
+    - name: Setup Cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-pipmypy
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.cache-name }}-
+          ${{ runner.os }}-cache-pip-
     - name: Install deps
       run: pip3 install -U tornado pytest pytest-asyncio pytest-httpbin flaky structlog toml aiohttp httpx mypy
     - name: Run mypy

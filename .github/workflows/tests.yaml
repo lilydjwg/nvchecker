@@ -1,0 +1,47 @@
+name: run tests
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ contains(matrix.python-version, 'pypy') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+        - "3.7"
+        - "3.8"
+        - "3.9"
+        - pypy-3.7
+        deps:
+        - tornado pycurl
+        - aiohttp
+        - tornado
+        - httpx[http2]>=0.14.0
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Setup Cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-pip
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-
+          ${{ runner.os }}-${{ env.cache-name }}-
+    - name: Install pycurl deps
+      if: ${{ contains(matrix.deps, 'pycurl') }}
+      run: sudo apt install -y libcurl4-openssl-dev
+    - name: Install Python deps
+      run: pip install -U ${{ matrix.deps }} pytest pytest-asyncio pytest-httpbin flaky structlog toml appdirs
+    - name: Decrypt keys
+      env:
+        KEY: ${{ secrets.KEY }}
+      run: if [[ -n $KEY ]]; then openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml; fi
+    - name: Run pytest
+      run: if [[ -f keyfile.toml ]]; then KEYFILE=keyfile.toml pytest; else pytest; fi
