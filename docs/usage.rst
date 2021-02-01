@@ -5,9 +5,9 @@ Usage of nvchecker commands
 
 This is the version 2.0 branch. For the old version 1.x, please switch to the ``v1.x`` branch.
 
-.. image:: https://travis-ci.org/lilydjwg/nvchecker.svg?branch=master
-   :alt: Build Status
-   :target: https://travis-ci.org/lilydjwg/nvchecker
+.. image:: https://github.com/lilydjwg/nvchecker/workflows/run%20tests/badge.svg?branch=master
+   :alt: Test Status
+   :target: https://github.com/lilydjwg/nvchecker/actions?query=workflow%3A%22run+tests%22
 .. image:: https://badge.fury.io/py/nvchecker.svg
    :alt: PyPI version
    :target: https://badge.fury.io/py/nvchecker
