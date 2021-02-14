@@ -21,7 +21,7 @@ async def test_apt_srcpkg(get_version):
         "srcpkg": "golang-github-dataence-porter2",
         "mirror": "http://deb.debian.org/debian/",
         "suite": "sid",
-    }) == "0.0~git20150829.56e4718-2"
+    }) == "0.0~git20150829.56e4718-3"
 
 @flaky(max_runs=10)
 async def test_apt_strip_release(get_version):
