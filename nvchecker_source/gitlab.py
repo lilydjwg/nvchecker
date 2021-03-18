@@ -10,7 +10,7 @@ from nvchecker.api import (
   TemporaryError,
 )
 
-GITLAB_URL = 'https://%s/api/v4/projects/%s/repository/commits?ref_name=%s'
+GITLAB_URL = 'https://%s/api/v4/projects/%s/repository/commits'
 GITLAB_MAX_TAG = 'https://%s/api/v4/projects/%s/repository/tags'
 
 logger = structlog.get_logger(logger_name=__name__)
@@ -27,14 +27,16 @@ async def get_version_real(
   **kwargs,
 ) -> VersionResult:
   repo = urllib.parse.quote_plus(conf['gitlab'])
-  br = conf.get('branch', 'master')
+  br = conf.get('branch')
   host = conf.get('host', "gitlab.com")
   use_max_tag = conf.get('use_max_tag', False)
 
   if use_max_tag:
     url = GITLAB_MAX_TAG % (host, repo)
   else:
-    url = GITLAB_URL % (host, repo, br)
+    url = GITLAB_URL % (host, repo)
+    if br:
+      url += '?ref_name=%s' % br
 
   # Load token from config
   token = conf.get('token')

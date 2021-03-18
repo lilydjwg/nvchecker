@@ -12,6 +12,15 @@ async def test_gitlab(get_version):
     assert len(ver) == 8
     assert ver.isdigit()
 
+async def test_gitlab_blm(get_version):
+    # repo with a custom main branch
+    ver = await get_version("example", {
+        "source": "gitlab",
+        "gitlab": "asus-linux/asus-nb-ctrl",
+    })
+    assert len(ver) == 8
+    assert ver.isdigit()
+
 async def test_gitlab_max_tag(get_version):
     assert await get_version("example", {
         "source": "gitlab",
