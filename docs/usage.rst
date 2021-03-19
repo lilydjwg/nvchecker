@@ -421,7 +421,7 @@ gitlab
   The gitlab repository, with author, e.g. ``Deepin/deepin-music``.
 
 branch
-  Which branch to track? Default: ``master``.
+  Which branch to track?
 
 use_max_tag
   Set this to ``true`` to check for the max tag on GitLab. Will return the biggest one
