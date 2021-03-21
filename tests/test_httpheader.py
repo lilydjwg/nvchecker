@@ -3,7 +3,7 @@
 
 import pytest
 
-pytestmark = pytest.mark.asyncio
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_redirection(get_version):
     assert await get_version("unifiedremote", {
