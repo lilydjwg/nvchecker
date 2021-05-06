@@ -16,7 +16,7 @@ async def test_gitlab_blm(get_version):
     # repo with a custom main branch
     ver = await get_version("example", {
         "source": "gitlab",
-        "gitlab": "asus-linux/asus-nb-ctrl",
+        "gitlab": "asus-linux/asusctl",
     })
     assert len(ver) == 8
     assert ver.isdigit()

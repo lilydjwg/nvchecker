@@ -17,7 +17,7 @@ async def test_android_package(get_version):
         "source": "android_sdk",
         "android_sdk": "cmake;",
         "repo": "package",
-    }) == "3.6.4111459"
+    }) == "3.18.1"
 
 
 async def test_android_package_channel(get_version):
@@ -26,4 +26,4 @@ async def test_android_package_channel(get_version):
         "android_sdk": "cmake;",
         "repo": "package",
         "channel": "beta,dev,canary",
-    }) == "3.18.1"
+    }) == None
