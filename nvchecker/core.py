@@ -305,8 +305,8 @@ def apply_list_options(
   if not versions:
     return None
 
-  sort_version_key = sort_version_keys[
-    conf.get("sort_version_key", "parse_version")]
+  sort_version_key = sort_version_keys(
+    conf.get("sort_version_key", "packaging"))
   versions.sort(key=sort_version_key)
 
   return versions[-1]

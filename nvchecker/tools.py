@@ -72,9 +72,9 @@ def cmp() -> None:
   parser.add_argument('-q', '--quiet', action='store_true',
                       help="Quiet mode, output only the names.")
   parser.add_argument('-s', '--sort',
-                      choices=('parse_version', 'vercmp'), default='parse_version',
+                      choices=('packaging', 'parse_version', 'vercmp'), default='packaging',
                       help='Version compare method to backwards the arrow '
-                           '(default: parse_version)')
+                           '(default: packaging)')
   parser.add_argument('-n', '--newer', action='store_true',
                       help='Shows only the newer ones according to --sort.')
   args = parser.parse_args()
@@ -106,7 +106,7 @@ def cmp() -> None:
         arrow = "->"
         if args.sort != "none" and oldver is not None and newver is not None:
           from .sortversion import sort_version_keys
-          version = sort_version_keys[args.sort]
+          version = sort_version_keys(args.sort)
           if version(oldver) > version(newver):
             arrow = f'{c.red}<-{c.normal}'
             if args.newer:

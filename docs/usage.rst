@@ -203,9 +203,9 @@ exclude_regex
 
 sort_version_key
   Sort the version string using this key function. Choose between
-  ``parse_version`` and ``vercmp``. Default value is ``parse_version``.
-  ``parse_version`` use ``pkg_resources.parse_version``. ``vercmp`` use
-  ``pyalpm.vercmp``.
+  ``packaging``, ``parse_version`` and ``vercmp``. Default value is ``packaging``.
+  ``packaging`` use ``packaging.version``, ``parse_version`` use ``pkg_resources.parse_version``.
+  ``vercmp`` use ``pyalpm.vercmp``.
 
 ignored
   Version strings that are explicitly ignored, separated by whitespace. This
@@ -368,7 +368,7 @@ branch
 
 use_max_tag
   Set this to ``true`` to check for the max tag on Gitea. Will return the biggest one
-  sorted by ``pkg_resources.parse_version``. Will return the tag name instead of date.
+  sorted by ``packaging.version``. Will return the tag name instead of date.
 
 host
   Hostname for self-hosted Gitea instance.
@@ -400,7 +400,7 @@ branch
 
 use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
-  sorted by ``pkg_resources.parse_version``. Will return the tag name instead of date.
+  sorted by ``packaging.version``. Will return the tag name instead of date.
 
 max_page
   How many pages do we search for the max tag? Default is 3. This works when
@@ -425,7 +425,7 @@ branch
 
 use_max_tag
   Set this to ``true`` to check for the max tag on GitLab. Will return the biggest one
-  sorted by ``pkg_resources.parse_version``. Will return the tag name instead of date.
+  sorted by ``packaging.version``. Will return the tag name instead of date.
 
 host
   Hostname for self-hosted GitLab instance.

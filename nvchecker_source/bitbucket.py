@@ -1,8 +1,6 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from nvchecker.api import sort_version_keys
-
 # doc: https://confluence.atlassian.com/display/BITBUCKET/commits+or+commit+Resource
 BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
 BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/2.0/repositories/%s/refs/tags'
