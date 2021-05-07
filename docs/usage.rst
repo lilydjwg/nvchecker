@@ -233,6 +233,17 @@ regex
 
   When multiple version strings are found, the maximum of those is chosen.
 
+token
+  (*Optional*) A personal authorization token used to call the url. The token type depends the authorization required. 
+
+  - For Bearer token set : ``Bearer Your_bearer_token``
+  - For Basic token set : ``Basic Your_base64_encoded_token``
+
+To set an authorization token, you can set:
+
+- a key named ``regex_<app_name>`` in the keyfile
+- the token option
+
 This source supports :ref:`list options`.
 
 Search in an HTTP header
@@ -262,6 +273,41 @@ method
 follow_redirects
   (*Optional*) Whether to follow 3xx HTTP redirects. Default is ``false``. If you are looking at a ``Location`` header, you shouldn't change this.
 
+token
+  (*Optional*) A personal authorization token used to call the url. The token type depends the authorization required. 
+
+  - For Bearer token set : ``Bearer Your_bearer_token``
+  - For Basic token set : ``Basic Your_base64_encoded_token``
+
+To set an authorization token, you can set:
+
+- a key named ``httpheader_<app_name>`` in the keyfile
+- the token option
+
+Search with an HTML Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "htmlparser"
+
+Send an HTTP request and search through the body a specific xpath.
+
+url
+  The URL of the HTTP request.
+
+xpath
+  A xpath expression used to find the version string
+
+token
+  (*Optional*) A personal authorization token used to call the url. The token type depends the authorization required. 
+
+  - For Bearer token set : ``Bearer Your_bearer_token``
+  - For Basic token set : ``Basic Your_base64_encoded_token``
+
+To set an authorization token, you can set:
+
+- a key named ``htmlparser_<app_name>`` in the keyfile
+- the token option
 
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~
