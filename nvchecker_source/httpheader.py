@@ -5,7 +5,7 @@ import re
 import sre_constants
 from nvchecker.api import (
     VersionResult, Entry, KeyManager,
-    TemporaryError,session, GetVersionError
+    TemporaryError, session, GetVersionError
 )
 
 async def get_version(name, conf, **kwargs):

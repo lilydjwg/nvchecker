@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2020 Ypsilik <tt2laurent.maud@gmail.com>, et al.
 
 from lxml import html, etree
 
@@ -9,18 +9,15 @@ from nvchecker.api import (
 )
 
 async def get_version(name, conf, **kwargs):
-    try:
-        return await get_version_real(name, conf, **kwargs)
-    except TemporaryError as e:
-        check_ratelimit(e, name)
+    return await get_version_real(name, conf, **kwargs)
 
 async def get_version_real(
     name: str, conf: Entry, *, keymanager: KeyManager,
     **kwargs,
 ) -> VersionResult:
 
-    encoding = conf.get('encoding', 'latin1')                                                      
-    
+    encoding = conf.get('encoding', 'latin1')
+
     # Load token from config
     token = conf.get('token')
     # Load token from keyman
@@ -33,7 +30,7 @@ async def get_version_real(
     if token:
         headers["Authorization"] = token
 
-    data = await session.get(conf.get('url'), headers = headers)
+    data = await session.get(conf.get('url'), headers=headers)
     body = html.fromstring(data.body.decode(encoding))
     try:
         checkxpath = body.xpath(conf.get('xpath'))

@@ -8,13 +8,8 @@ from nvchecker.api import (
     TemporaryError, session, GetVersionError
 )
 
-
 async def get_version(name, conf, **kwargs):
-    try:
-        return await get_version_real(name, conf, **kwargs)
-    except TemporaryError as e:
-        check_ratelimit(e, name)
-
+    return await get_version_real(name, conf, **kwargs)
 
 async def get_version_real(
     name: str, conf: Entry, *, keymanager: KeyManager,

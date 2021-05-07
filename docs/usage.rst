@@ -234,10 +234,10 @@ regex
   When multiple version strings are found, the maximum of those is chosen.
 
 token
-  (*Optional*) A personal authorization token used to call the url. The token type depends the authorization required. 
+  (*Optional*) A personal authorization token used to call the url. The type of token depends on the authorization required. 
 
-  - For Bearer token set : ``Bearer Your_bearer_token``
-  - For Basic token set : ``Basic Your_base64_encoded_token``
+  - For Bearer token set : ``Bearer <Your_bearer_token>``
+  - For Basic token set : ``Basic <Your_base64_encoded_token>``
 
 To set an authorization token, you can set:
 
@@ -274,10 +274,10 @@ follow_redirects
   (*Optional*) Whether to follow 3xx HTTP redirects. Default is ``false``. If you are looking at a ``Location`` header, you shouldn't change this.
 
 token
-  (*Optional*) A personal authorization token used to call the url. The token type depends the authorization required. 
+  (*Optional*) A personal authorization token used to call the url. The type of token depends on the authorization required. 
 
-  - For Bearer token set : ``Bearer Your_bearer_token``
-  - For Basic token set : ``Basic Your_base64_encoded_token``
+  - For Bearer token set : ``Bearer <Your_bearer_token>``
+  - For Basic token set : ``Basic <<Your_base64_encoded_token>>``
 
 To set an authorization token, you can set:
 
@@ -299,10 +299,10 @@ xpath
   A xpath expression used to find the version string
 
 token
-  (*Optional*) A personal authorization token used to call the url. The token type depends the authorization required. 
+  (*Optional*) A personal authorization token used to call the url. The type of token depends on the authorization required. 
 
-  - For Bearer token set : ``Bearer Your_bearer_token``
-  - For Basic token set : ``Basic Your_base64_encoded_token``
+  - For Bearer token set : ``Bearer <Your_bearer_token>``
+  - For Basic token set : ``Basic <<Your_base64_encoded_token>>``
 
 To set an authorization token, you can set:
 

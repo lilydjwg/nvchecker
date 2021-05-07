@@ -5,7 +5,7 @@ import base64
 
 import pytest
 import pytest_httpbin
-assert pytest_httpbin # for pyflakes
+assert pytest_httpbin  # for pyflakes
 
 pytestmark = pytest.mark.asyncio
 
@@ -42,7 +42,7 @@ async def test_missing_ok(get_version, httpbin):
         "regex": "foobar",
         "missing_ok": True,
     }) is None
-    
+
 async def test_regex_with_tokenBasic(get_version, httpbin):
     assert await get_version("example", {
         "source": "regex",
@@ -50,7 +50,7 @@ async def test_regex_with_tokenBasic(get_version, httpbin):
         "token": "Basic dXNlcm5hbWU6c3VwZXJwYXNzd29yZA==",
         "regex": r'"user":"([a-w]+)"',
     }) == "username"
-    
+
 async def test_regex_with_tokenBearer(get_version, httpbin):
     assert await get_version("example", {
         "source": "regex",
@@ -58,4 +58,3 @@ async def test_regex_with_tokenBearer(get_version, httpbin):
         "token": "Bearer username:password",
         "regex": r'"token":"([a-w]+):.*"',
     }) == "username"
-
