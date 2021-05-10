@@ -21,6 +21,7 @@ from .httpclient import session
 from .ctxvars import tries as ctx_tries
 from .ctxvars import proxy as ctx_proxy
 from .ctxvars import user_agent as ctx_ua
+from .ctxvars import httptoken as ctx_httpt
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -224,7 +225,13 @@ class FunctionWorker(BaseWorker):
     ua = entry.get('user_agent', None)
     if ua is not None:
       ctx_ua.set(ua)
-
+    httpt = entry.get('httptoken_'+name, None)
+    if httpt is not None:
+      ctx_httpt.set(httpt)
+    else:
+      httpt = self.keymanager.get_key('httptoken_'+name)
+      if httpt is not None:
+        ctx_httpt.set(httpt)
     try:
       async with self.task_sem:
         version = await self.func(
@@ -235,6 +242,7 @@ class FunctionWorker(BaseWorker):
       await self.result_q.put(RawResult(name, version, entry))
     except Exception as e:
       await self.result_q.put(RawResult(name, e, entry))
+
 
 class GetVersionError(Exception):
   '''An error occurred while getting version information.

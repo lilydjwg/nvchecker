@@ -7,4 +7,4 @@ from .util import (
   AsyncCache, KeyManager, GetVersionError,
 )
 from .sortversion import sort_version_keys
-from .ctxvars import tries, proxy, user_agent
+from .ctxvars import tries, proxy, user_agent, httptoken

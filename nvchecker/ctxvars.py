@@ -13,3 +13,4 @@ DEFAULT_USER_AGENT = f'lilydjwg/nvchecker {__version__}'
 tries = ContextVar('tries', default=1)
 proxy: ContextVar[Optional[str]] = ContextVar('proxy', default=None)
 user_agent = ContextVar('user_agent', default=DEFAULT_USER_AGENT)
+httptoken = ContextVar('httptoken', default=None)

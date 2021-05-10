@@ -5,7 +5,7 @@ import structlog
 from typing import Optional, Dict, Mapping
 import json as _json
 
-from ..ctxvars import tries, proxy, user_agent
+from ..ctxvars import tries, proxy, user_agent, httptoken
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -65,9 +65,11 @@ class BaseSession:
     t = tries.get()
     p = proxy.get()
     ua = user_agent.get()
+    httpt = httptoken.get()
 
     headers = headers.copy()
     headers.setdefault('User-Agent', ua)
+    headers.setdefault('Authorization', httpt)
 
     for i in range(1, t+1):
       try:

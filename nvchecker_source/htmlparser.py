@@ -1,45 +1,31 @@
 # MIT licensed
 # Copyright (c) 2020 Ypsilik <tt2laurent.maud@gmail.com>, et al.
+# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
+import re
+import sre_constants
 from lxml import html, etree
 
-from nvchecker.api import (
-    VersionResult, Entry, KeyManager,
-    TemporaryError, session
-)
+from nvchecker.api import session, GetVersionError
 
-async def get_version(name, conf, **kwargs):
-    return await get_version_real(name, conf, **kwargs)
+async def get_version(name, conf, *, cache, **kwargs):
+  key = tuple(sorted(conf.items()))
+  return await cache.get(key, get_version_impl)
 
-async def get_version_real(
-    name: str, conf: Entry, *, keymanager: KeyManager,
-    **kwargs,
-) -> VersionResult:
+async def get_version_impl(info):
+  conf = dict(info)
+  encoding = conf.get('encoding', 'latin1')
 
-    encoding = conf.get('encoding', 'latin1')
-
-    # Load token from config
-    token = conf.get('token')
-    # Load token from keyman
-    if token is None:
-        key_name = 'htmlparser_' + name
-        token = keymanager.get_key(key_name)
-
-    # Set private token if token exists.
-    headers = {}
-    if token:
-        headers["Authorization"] = token
-
-    data = await session.get(conf.get('url'), headers=headers)
-    body = html.fromstring(data.body.decode(encoding))
-    try:
-        checkxpath = body.xpath(conf.get('xpath'))
-    except etree.XPathEvalError as e:
-        raise GetVersionError('bad xpath', exc_info=e)
-
-    try:
-        version = body.xpath(conf.get('xpath'))
-    except ValueError:
-        if not conf.get('missing_ok', False):
-            raise GetVersionError('version string not found.')
-    return version
+  res = await session.get(conf['url'])
+  body = html.fromstring(res.body.decode(encoding))
+  try:
+    checkxpath = body.xpath(conf.get('xpath'))
+  except etree.XPathEvalError as e:
+    raise GetVersionError('bad xpath', exc_info=e)
+  
+  try:
+    version = body.xpath(conf.get('xpath'))
+  except ValueError:
+    if not conf.get('missing_ok', False):
+      raise GetVersionError('version string not found.')
+  return version
