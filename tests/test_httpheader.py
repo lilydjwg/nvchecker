@@ -17,7 +17,7 @@ async def test_get_version_withtoken(get_version, httpbin):
     assert await get_version("unifiedremote", {
         "source": "httpheader",
         "url": httpbin.url + "/basic-auth/username/superpassword",
-        "httptoken_unifiedremote": "Basic dXNlcm5hbWU6c3VwZXJwYXNzd29yZA==",
+        "httptoken": "Basic dXNlcm5hbWU6c3VwZXJwYXNzd29yZA==",
         "header": "server",
         "regex": r'([0-9.]+)*',
     }) != None

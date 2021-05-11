@@ -47,7 +47,7 @@ async def test_regex_with_tokenBasic(get_version, httpbin):
     assert await get_version("example", {
         "source": "regex",
         "url": httpbin.url + "/basic-auth/username/superpassword",
-        "httptoken_example": "Basic dXNlcm5hbWU6c3VwZXJwYXNzd29yZA==",
+        "httptoken": "Basic dXNlcm5hbWU6c3VwZXJwYXNzd29yZA==",
         "regex": r'"user":"([a-w]+)"',
     }) == "username"
 
@@ -55,6 +55,6 @@ async def test_regex_with_tokenBearer(get_version, httpbin):
     assert await get_version("example", {
         "source": "regex",
         "url": httpbin.url + "/bearer",
-        "httptoken_example": "Bearer username:password",
+        "httptoken": "Bearer username:password",
         "regex": r'"token":"([a-w]+):.*"',
     }) == "username"
