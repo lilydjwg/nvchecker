@@ -69,7 +69,8 @@ class BaseSession:
 
     headers = headers.copy()
     headers.setdefault('User-Agent', ua)
-    headers.setdefault('Authorization', httpt)
+    if httpt is not None:
+      headers.setdefault('Authorization', httpt)
 
     for i in range(1, t+1):
       try:
