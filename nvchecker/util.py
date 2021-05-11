@@ -225,7 +225,7 @@ class FunctionWorker(BaseWorker):
     ua = entry.get('user_agent', None)
     if ua is not None:
       ctx_ua.set(ua)
-    httpt = entry.get('httptoken_'+name, None)
+    httpt = entry.get('httptoken', None)
     if httpt is not None:
       ctx_httpt.set(httpt)
     else:

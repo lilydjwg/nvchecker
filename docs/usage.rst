@@ -176,6 +176,14 @@ tries
 
   This only works when the source implementation uses the builtin HTTP client.
 
+httptoken
+  A personal authorization token used to call the url. The type of token depends on the authorization required. 
+
+  - For Bearer token set : ``Bearer <Your_bearer_token>``
+  - For Basic token set : ``Basic <Your_base64_encoded_token>``
+
+  In the keyfile add ``httptoken_{name}`` token.
+
 If both ``prefix`` and ``from_pattern``/``to_pattern`` are used,
 ``from_pattern``/``to_pattern`` are ignored. If you want to strip the prefix
 and then do something special, just use ``from_pattern```/``to_pattern``. For
@@ -233,17 +241,6 @@ regex
 
   When multiple version strings are found, the maximum of those is chosen.
 
-token
-  (*Optional*) A personal authorization token used to call the url. The type of token depends on the authorization required. 
-
-  - For Bearer token set : ``Bearer <Your_bearer_token>``
-  - For Basic token set : ``Basic <Your_base64_encoded_token>``
-
-To set an authorization token, you can set:
-
-- a key named ``regex_<app_name>`` in the keyfile
-- the token option
-
 This source supports :ref:`list options`.
 
 Search in an HTTP header
@@ -273,17 +270,6 @@ method
 follow_redirects
   (*Optional*) Whether to follow 3xx HTTP redirects. Default is ``false``. If you are looking at a ``Location`` header, you shouldn't change this.
 
-token
-  (*Optional*) A personal authorization token used to call the url. The type of token depends on the authorization required. 
-
-  - For Bearer token set : ``Bearer <Your_bearer_token>``
-  - For Basic token set : ``Basic <<Your_base64_encoded_token>>``
-
-To set an authorization token, you can set:
-
-- a key named ``httpheader_<app_name>`` in the keyfile
-- the token option
-
 Search with an HTML Parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
@@ -297,17 +283,6 @@ url
 
 xpath
   A xpath expression used to find the version string
-
-token
-  (*Optional*) A personal authorization token used to call the url. The type of token depends on the authorization required. 
-
-  - For Bearer token set : ``Bearer <Your_bearer_token>``
-  - For Basic token set : ``Basic <<Your_base64_encoded_token>>``
-
-To set an authorization token, you can set:
-
-- a key named ``htmlparser_<app_name>`` in the keyfile
-- the token option
 
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~
