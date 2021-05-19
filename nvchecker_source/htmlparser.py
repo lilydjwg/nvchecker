@@ -14,18 +14,17 @@ async def get_version(name, conf, *, cache, **kwargs):
 
 async def get_version_impl(info):
   conf = dict(info)
-  encoding = conf.get('encoding', 'latin1')
 
+  encoding = conf.get('encoding')
+  parser = html.HTMLParser(encoding=encoding)
   res = await session.get(conf['url'])
-  body = html.fromstring(res.body.decode(encoding))
+  doc = html.fromstring(res.body, base_url=conf['url'], parser=parser)
+
   try:
-    checkxpath = body.xpath(conf.get('xpath'))
-  except etree.XPathEvalError as e:
-    raise GetVersionError('bad xpath', exc_info=e)
-  
-  try:
-    version = body.xpath(conf.get('xpath'))
+    version = doc.xpath(conf.get('xpath'))
   except ValueError:
     if not conf.get('missing_ok', False):
       raise GetVersionError('version string not found.')
+  except etree.XPathEvalError as e:
+    raise GetVersionError('bad xpath', exc_info=e)
   return version
