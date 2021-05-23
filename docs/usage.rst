@@ -721,6 +721,22 @@ container
 registry
   The container registry host. Default: ``docker.io``
 
+``registry`` and ``container`` are the host and the path used in the pull
+command. Note that the ``docker`` command allows omitting some parts of the
+container name while this plugin requires the full name. If the host part is
+omitted, use ``docker.io``, and if there is no slash in the path, prepend
+``library/`` to the path. Here are some examples:
+
++----------------------------------------------+-----------+--------------------------+
+| Pull command                                 | registry  | container                |
++==============================================+===========+==========================+
+| docker pull quay.io/prometheus/node-exporter | quay.io   | prometheus/node-exporter |
++----------------------------------------------+-----------+--------------------------+
+| docker pull nvidia/cuda                      | docker.io | nvidia/cuda              |
++----------------------------------------------+-----------+--------------------------+
+| docker pull python                           | docker.io | library/python           |
++----------------------------------------------+-----------+--------------------------+
+
 This source returns tags and supports :ref:`list options`.
 
 Check ALPM database
