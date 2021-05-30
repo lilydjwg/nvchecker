@@ -506,6 +506,17 @@ Check `MetaCPAN <https://metacpan.org/>`_ for updates.
 cpan
   The name used on CPAN, e.g. ``YAML``.
 
+Check CRAN
+~~~~~~~~~~
+::
+
+  source = "cran"
+
+Check `CRAN <https://cran.r-project.org/>`_ for updates.
+
+cran
+  The name used on CRAN, e.g. ``ggplot2``.
+
 Check Packagist
 ~~~~~~~~~~~~~~~
 ::
