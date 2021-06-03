@@ -9,4 +9,4 @@ async def test_anitya(get_version):
   assert await get_version("shutter", {
     "source": "anitya",
     "anitya": "fedora/shutter",
-  }) == "0.95"
+  }) == "0.96"
