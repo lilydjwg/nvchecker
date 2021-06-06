@@ -3,6 +3,7 @@
 
 from typing import Dict, List, NamedTuple, Optional, Tuple
 from urllib.request import parse_http_list
+from urllib.parse import urljoin
 
 from nvchecker.api import session, HTTPError
 
@@ -65,11 +66,29 @@ async def get_container_tags(info: Tuple[str, str, AuthInfo]) -> List[str]:
   res = await session.get(auth_info.realm, params=auth_params)
   token = res.json()['token']
 
-  res = await session.get(f'https://{registry_host}/v2/{image_path}/tags/list', headers={
-    'Authorization': f'Bearer {token}',
-    'Accept': 'application/json',
-  })
-  return res.json()['tags']
+  tags = []
+  url = f'https://{registry_host}/v2/{image_path}/tags/list'
+
+  while True:
+    res = await session.get(url, headers={
+      'Authorization': f'Bearer {token}',
+      'Accept': 'application/json',
+    })
+    tags += res.json()['tags']
+    link = res.headers.get('Link')
+    if link is None:
+      break
+    else:
+      url = urljoin(url, parse_next_link(link))
+
+  return tags
+
+def parse_next_link(value: str) -> str:
+  ending = '>; rel="next"'
+  if value.endswith(ending):
+    return value[1:-len(ending)]
+  else:
+    raise ValueError(value)
 
 async def get_version(name, conf, *, cache, **kwargs):
   image_path = conf.get('container', name)
