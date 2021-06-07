@@ -177,8 +177,9 @@ tries
   This only works when the source implementation uses the builtin HTTP client.
 
 httptoken
-  A personal authorization token used to call the url. The type of token depends on the authorization required. 
-
+  A personal authorization token used to fetch the url with the ``Authorization`` header. 
+  The type of token depends on the authorization required. 
+  
   - For Bearer token set : ``Bearer <Your_bearer_token>``
   - For Basic token set : ``Basic <Your_base64_encoded_token>``
 
@@ -282,7 +283,10 @@ url
   The URL of the HTTP request.
 
 xpath
-  A xpath expression used to find the version string
+  An xpath expression used to find the version string.
+
+.. note:: 
+  An additional dependency "lxml" is required
 
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~

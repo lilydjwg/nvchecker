@@ -226,12 +226,11 @@ class FunctionWorker(BaseWorker):
     if ua is not None:
       ctx_ua.set(ua)
     httpt = entry.get('httptoken', None)
-    if httpt is not None:
-      ctx_httpt.set(httpt)
-    else:
+    if httpt is None:
       httpt = self.keymanager.get_key('httptoken_'+name)
-      if httpt is not None:
+    if httpt is not None:
         ctx_httpt.set(httpt)
+
     try:
       async with self.task_sem:
         version = await self.func(

@@ -2,8 +2,6 @@
 # Copyright (c) 2020 Ypsilik <tt2laurent.maud@gmail.com>, et al.
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import re
-import sre_constants
 from lxml import html, etree
 
 from nvchecker.api import session, GetVersionError
