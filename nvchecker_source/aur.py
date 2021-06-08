@@ -58,7 +58,7 @@ class Worker(BaseWorker):
       fu = self._run_batch(batch, aur_results)
       ret.append(fu)
 
-    await asyncio.wait(ret)
+    await asyncio.gather(*ret)
 
   async def _run_batch(
     self,

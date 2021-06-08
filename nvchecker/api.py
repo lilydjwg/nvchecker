@@ -4,7 +4,8 @@
 from .httpclient import session, TemporaryError, HTTPError
 from .util import (
   Entry, BaseWorker, RawResult, VersionResult,
-  AsyncCache, KeyManager, GetVersionError,
+  AsyncCache, KeyManager, GetVersionError, EntryWaiter,
 )
 from .sortversion import sort_version_keys
-from .ctxvars import tries, proxy, user_agent, httptoken
+
+from .ctxvars import tries, proxy, user_agent, httptoken, entry_waiter

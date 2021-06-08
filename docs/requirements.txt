@@ -3,3 +3,5 @@ structlog
 appdirs
 tornado>=6
 sphinx>=3.2
+# <5 has strange bottom margins for p, and no list indicators
+sphinx-rtd-theme>=0.5

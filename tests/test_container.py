@@ -10,3 +10,10 @@ async def test_container(get_version):
     "container": "library/hello-world",
     "include_regex": "linux",
   }) == "linux"
+
+async def test_container_paging(get_version):
+  assert await get_version("prometheus-operator", {
+    "source": "container",
+    "registry": "quay.io",
+    "container": "prometheus-operator/prometheus-operator",
+  }) == "v0.48.1"

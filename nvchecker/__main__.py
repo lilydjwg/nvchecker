@@ -13,7 +13,7 @@ from pathlib import Path
 import structlog
 
 from . import core
-from .util import VersData, RawResult, KeyManager
+from .util import VersData, RawResult, KeyManager, EntryWaiter
 from .ctxvars import proxy as ctx_proxy
 
 logger = structlog.get_logger(logger_name=__name__)
@@ -58,10 +58,12 @@ def main() -> None:
     options.httplib,
     options.http_timeout,
   )
+  entry_waiter = EntryWaiter()
   try:
     futures = dispatcher.dispatch(
       entries, task_sem, result_q,
-      keymanager, args.tries,
+      keymanager, entry_waiter,
+      args.tries,
       options.source_configs,
     )
   except ModuleNotFoundError as e:
@@ -71,7 +73,7 @@ def main() -> None:
     oldvers = core.read_verfile(options.ver_files[0])
   else:
     oldvers = {}
-  result_coro = core.process_result(oldvers, result_q)
+  result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 
   # asyncio.run doesn't work because it always creates new eventloops
