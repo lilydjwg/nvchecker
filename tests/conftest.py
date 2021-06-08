@@ -28,13 +28,14 @@ async def run(
     keymanager = core.KeyManager(None)
 
   dispatcher = core.setup_httpclient()
+  entry_waiter = core.EntryWaiter()
   futures = dispatcher.dispatch(
     entries, task_sem, result_q,
-    keymanager, 1, {},
+    keymanager, entry_waiter, 1, {},
   )
 
   oldvers: VersData = {}
-  result_coro = core.process_result(oldvers, result_q)
+  result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 
   return await main.run(result_coro, runner_coro)

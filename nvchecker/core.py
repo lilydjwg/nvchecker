@@ -29,11 +29,12 @@ from . import slogconf
 from .util import (
   Entry, Entries, KeyManager, RawResult, Result, VersData,
   FunctionWorker, GetVersionError,
-  FileLoadError,
+  FileLoadError, EntryWaiter,
 )
 from . import __version__
 from .sortversion import sort_version_keys
 from .ctxvars import tries as ctx_tries
+from .ctxvars import entry_waiter as ctx_entry_waiter
 from . import httpclient
 
 logger = structlog.get_logger(logger_name=__name__)
@@ -219,11 +220,13 @@ class Dispatcher:
     task_sem: asyncio.Semaphore,
     result_q: Queue[RawResult],
     keymanager: KeyManager,
+    entry_waiter: EntryWaiter,
     tries: int,
     source_configs: Dict[str, Dict[str, Any]],
   ) -> List[asyncio.Future]:
     mods: Dict[str, Tuple[types.ModuleType, List]] = {}
     ctx_tries.set(tries)
+    ctx_entry_waiter.set(entry_waiter)
     root_ctx = contextvars.copy_context()
 
     for name, entry in entries.items():
@@ -311,7 +314,7 @@ def apply_list_options(
 
   return versions[-1]
 
-def _process_result(r: RawResult) -> Optional[Result]:
+def _process_result(r: RawResult) -> Union[Result, Exception]:
   version = r.version
   conf = r.conf
   name = r.name
@@ -320,11 +323,11 @@ def _process_result(r: RawResult) -> Optional[Result]:
     kw = version.kwargs
     kw['name'] = name
     logger.error(version.msg, **kw)
-    return None
+    return version
   elif isinstance(version, Exception):
     logger.error('unexpected error happened',
                   name=r.name, exc_info=r.version)
-    return None
+    return version
   elif isinstance(version, list):
     version_str = apply_list_options(version, conf)
   else:
@@ -336,10 +339,12 @@ def _process_result(r: RawResult) -> Optional[Result]:
     try:
       version_str = substitute_version(version_str, conf)
       return Result(name, version_str, conf)
-    except (ValueError, re.error):
+    except (ValueError, re.error) as e:
       logger.exception('error occurred in version substitutions', name=name)
+      return e
 
-  return None
+  else:
+    return ValueError('no version returned')
 
 def check_version_update(
   oldvers: VersData, name: str, version: str,
@@ -353,15 +358,18 @@ def check_version_update(
 async def process_result(
   oldvers: VersData,
   result_q: Queue[RawResult],
+  entry_waiter: EntryWaiter,
 ) -> VersData:
   ret = {}
   try:
     while True:
       r = await result_q.get()
       r1 = _process_result(r)
-      if r1 is None:
+      if isinstance(r1, Exception):
+        entry_waiter.set_exception(r.name, r1)
         continue
       check_version_update(oldvers, r1.name, r1.version)
+      entry_waiter.set_result(r1.name, r1.version)
       ret[r1.name] = r1.version
   except asyncio.CancelledError:
     return ret

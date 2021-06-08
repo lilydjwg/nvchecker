@@ -4,12 +4,16 @@
 from __future__ import annotations
 
 from contextvars import ContextVar
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from . import __version__
 
 DEFAULT_USER_AGENT = f'lilydjwg/nvchecker {__version__}'
 
+if TYPE_CHECKING:
+  from .util import EntryWaiter
+
 tries = ContextVar('tries', default=1)
 proxy: ContextVar[Optional[str]] = ContextVar('proxy', default=None)
 user_agent = ContextVar('user_agent', default=DEFAULT_USER_AGENT)
+entry_waiter: ContextVar[EntryWaiter] = ContextVar('entry_waiter')

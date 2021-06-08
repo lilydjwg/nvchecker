@@ -18,3 +18,8 @@
 .. autodata:: nvchecker.api.proxy
 .. autodata:: nvchecker.api.user_agent
 .. autodata:: nvchecker.api.tries
+
+.. py:data:: nvchecker.api.entry_waiter
+   :type: contextvars.ContextVar
+
+   This :class:`ContextVar <contextvars.ContextVar>` contains an :class:`EntryWaiter <nvchecker.api.EntryWaiter>` instance for waiting on other entries.
