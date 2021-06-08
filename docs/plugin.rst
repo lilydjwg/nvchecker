@@ -81,7 +81,7 @@ put results in :attr:`result_q <nvchecker.api.BaseWorker.result_q>`. See
 For details about these objects, see :mod:`the API documentation <nvchecker.api>`.
 
 You can also receive a configuration section from the configuration as
-``__config__.source.SOURCE_NAME``, where ``SOURCE_None`` is what your plugin is
+``__config__.source.SOURCE_NAME``, where ``SOURCE_NAME`` is what your plugin is
 called. This can be used to specify a mirror site for your plugin to use, e.g.
 the ``npm`` plugin accepts the following config::
 
