@@ -762,6 +762,37 @@ strip_release
 provided
   Instead of the package version, return the version this package provides. Its value is what the package provides, and ``strip_release`` takes effect too. This is best used with libraries.
 
+Combine others' results
+~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "combiner"
+
+This source can combine results from other entries.
+
+from
+  A list of entry names to wait results for.
+
+format
+  A format string to combine the results into the final string.
+
+Example:
+
+.. code-block:: toml
+
+  [entry-1]
+  source = "cmd"
+  cmd = "echo 1"
+
+  [entry-2]
+  source = "cmd"
+  cmd = "echo 2"
+
+  [entry-3]
+  source = "combiner"
+  from = ["entry-1", "entry-2"]
+  format = "$1-$2"
+
 Manually updating
 ~~~~~~~~~~~~~~~~~
 ::
