@@ -42,3 +42,19 @@ async def test_missing_ok(get_version, httpbin):
         "regex": "foobar",
         "missing_ok": True,
     }) is None
+
+async def test_regex_with_tokenBasic(get_version, httpbin):
+    assert await get_version("example", {
+        "source": "regex",
+        "url": httpbin.url + "/basic-auth/username/superpassword",
+        "httptoken": "Basic dXNlcm5hbWU6c3VwZXJwYXNzd29yZA==",
+        "regex": r'"user":"([a-w]+)"',
+    }) == "username"
+
+async def test_regex_with_tokenBearer(get_version, httpbin):
+    assert await get_version("example", {
+        "source": "regex",
+        "url": httpbin.url + "/bearer",
+        "httptoken": "Bearer username:password",
+        "regex": r'"token":"([a-w]+):.*"',
+    }) == "username"

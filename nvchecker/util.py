@@ -21,6 +21,7 @@ from .httpclient import session
 from .ctxvars import tries as ctx_tries
 from .ctxvars import proxy as ctx_proxy
 from .ctxvars import user_agent as ctx_ua
+from .ctxvars import httptoken as ctx_httpt
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -246,6 +247,11 @@ class FunctionWorker(BaseWorker):
     ua = entry.get('user_agent', None)
     if ua is not None:
       ctx_ua.set(ua)
+    httpt = entry.get('httptoken', None)
+    if httpt is None:
+      httpt = self.keymanager.get_key('httptoken_'+name)
+    if httpt is not None:
+      ctx_httpt.set(httpt)
 
     try:
       async with self.task_sem:

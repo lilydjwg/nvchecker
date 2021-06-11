@@ -41,7 +41,7 @@ jobs:
       if: ${{ contains(matrix.deps, 'pycurl') }}
       run: sudo apt install -y libcurl4-openssl-dev
     - name: Install Python deps
-      run: pip install -U ${{ matrix.deps }} pytest pytest-asyncio pytest-httpbin flaky structlog toml appdirs
+      run: pip install -U ${{ matrix.deps }} pytest pytest-asyncio pytest-httpbin flaky structlog toml appdirs lxml
     - name: Decrypt keys
       env:
         KEY: ${{ secrets.KEY }}

@@ -176,6 +176,15 @@ tries
 
   This only works when the source implementation uses the builtin HTTP client.
 
+httptoken
+  A personal authorization token used to fetch the url with the ``Authorization`` header. 
+  The type of token depends on the authorization required. 
+  
+  - For Bearer token set : ``Bearer <Your_bearer_token>``
+  - For Basic token set : ``Basic <Your_base64_encoded_token>``
+
+  In the keyfile add ``httptoken_{name}`` token.
+
 If both ``prefix`` and ``from_pattern``/``to_pattern`` are used,
 ``from_pattern``/``to_pattern`` are ignored. If you want to strip the prefix
 and then do something special, just use ``from_pattern```/``to_pattern``. For
@@ -262,6 +271,22 @@ method
 follow_redirects
   (*Optional*) Whether to follow 3xx HTTP redirects. Default is ``false``. If you are looking at a ``Location`` header, you shouldn't change this.
 
+Search with an HTML Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "htmlparser"
+
+Send an HTTP request and search through the body a specific xpath.
+
+url
+  The URL of the HTTP request.
+
+xpath
+  An xpath expression used to find the version string.
+
+.. note:: 
+  An additional dependency "lxml" is required.
 
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~
