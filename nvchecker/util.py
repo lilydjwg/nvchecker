@@ -251,7 +251,7 @@ class FunctionWorker(BaseWorker):
     if httpt is None:
       httpt = self.keymanager.get_key('httptoken_'+name)
     if httpt is not None:
-        ctx_httpt.set(httpt)
+      ctx_httpt.set(httpt)
 
     try:
       async with self.task_sem:
