@@ -286,7 +286,7 @@ xpath
   An xpath expression used to find the version string.
 
 .. note:: 
-  An additional dependency "lxml" is required
+  An additional dependency "lxml" is required.
 
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~

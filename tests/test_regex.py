@@ -5,7 +5,7 @@ import base64
 
 import pytest
 import pytest_httpbin
-assert pytest_httpbin  # for pyflakes
+assert pytest_httpbin # for pyflakes
 
 pytestmark = pytest.mark.asyncio
 

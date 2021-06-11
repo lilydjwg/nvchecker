@@ -264,7 +264,6 @@ class FunctionWorker(BaseWorker):
     except Exception as e:
       await self.result_q.put(RawResult(name, e, entry))
 
-
 class GetVersionError(Exception):
   '''An error occurred while getting version information.
 
