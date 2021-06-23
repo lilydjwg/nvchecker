@@ -5,7 +5,7 @@ import structlog
 from typing import Optional, Dict, Mapping
 import json as _json
 
-from ..ctxvars import tries, proxy, user_agent, httptoken
+from ..ctxvars import tries, proxy, user_agent, httptoken, verify_cert
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -66,6 +66,7 @@ class BaseSession:
     p = proxy.get()
     ua = user_agent.get()
     httpt = httptoken.get()
+    verify = verify_cert.get()
 
     headers = headers.copy()
     headers.setdefault('User-Agent', ua)
@@ -82,6 +83,7 @@ class BaseSession:
           follow_redirects = follow_redirects,
           json = json,
           proxy = p or None,
+          verify_cert = verify,
         )
       except TemporaryError as e:
         if i == t:
@@ -101,6 +103,7 @@ class BaseSession:
     follow_redirects: bool = True,
     params = (),
     json = None,
+    verify_cert: bool = True,
   ) -> Response:
     ''':meta private:'''
     raise NotImplementedError

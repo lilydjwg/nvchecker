@@ -185,6 +185,9 @@ httptoken
 
   In the keyfile add ``httptoken_{name}`` token.
 
+verify_cert
+  Whether to verify the HTTPS certificate or not. Default is ``true``.
+
 If both ``prefix`` and ``from_pattern``/``to_pattern`` are used,
 ``from_pattern``/``to_pattern`` are ignored. If you want to strip the prefix
 and then do something special, just use ``from_pattern```/``to_pattern``. For

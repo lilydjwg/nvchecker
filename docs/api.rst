@@ -18,6 +18,7 @@
 .. autodata:: nvchecker.api.proxy
 .. autodata:: nvchecker.api.user_agent
 .. autodata:: nvchecker.api.tries
+.. autodata:: nvchecker.api.verify_cert
 
 .. py:data:: nvchecker.api.entry_waiter
    :type: contextvars.ContextVar

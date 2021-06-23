@@ -52,12 +52,14 @@ class TornadoSession(BaseSession):
     follow_redirects: bool = True,
     params = (),
     json = None,
+    verify_cert: bool = True,
   ) -> Response:
     kwargs: Dict[str, Any] = {
       'method': method,
       'headers': headers,
       'request_timeout': self.timeout,
       'follow_redirects': follow_redirects,
+      'validate_cert': verify_cert,
     }
 
     if json:

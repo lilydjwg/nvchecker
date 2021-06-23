@@ -22,6 +22,7 @@ from .ctxvars import tries as ctx_tries
 from .ctxvars import proxy as ctx_proxy
 from .ctxvars import user_agent as ctx_ua
 from .ctxvars import httptoken as ctx_httpt
+from .ctxvars import verify_cert as ctx_verify_cert
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -252,6 +253,9 @@ class FunctionWorker(BaseWorker):
       httpt = self.keymanager.get_key('httptoken_'+name)
     if httpt is not None:
       ctx_httpt.set(httpt)
+    verify_cert = entry.get('verify_cert', None)
+    if verify_cert is not None:
+      ctx_verify_cert.set(verify_cert)
 
     try:
       async with self.task_sem:

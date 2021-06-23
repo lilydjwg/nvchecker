@@ -19,5 +19,10 @@ jobs:
           ${{ runner.os }}-cache-pip-
     - name: Install deps
       run: pip3 install -U tornado pytest pytest-asyncio pytest-httpbin flaky structlog toml aiohttp httpx mypy
+    - name: Run mypy for --install-types
+      run: PATH=$HOME/.local/bin:$PATH mypy nvchecker nvchecker_source tests
+      continue-on-error: true
+    - name: Install types
+      run: PATH=$HOME/.local/bin:$PATH yes | mypy --install-types
     - name: Run mypy
       run: PATH=$HOME/.local/bin:$PATH mypy nvchecker nvchecker_source tests

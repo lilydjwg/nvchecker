@@ -2,7 +2,7 @@
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import atexit
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import httpx
 
@@ -16,7 +16,7 @@ class HttpxSession(BaseSession):
     concurreny: int = 20,
     timeout: int = 20,
   ) -> None:
-    self.clients: Dict[Optional[str], httpx.AsyncClient] = {}
+    self.clients: Dict[Tuple[Optional[str], bool], httpx.AsyncClient] = {}
     self.timeout = timeout
 
   async def request_impl(
@@ -27,15 +27,17 @@ class HttpxSession(BaseSession):
     follow_redirects: bool = True,
     params = (),
     json = None,
+    verify_cert: bool = True,
   ) -> Response:
-    client = self.clients.get(proxy)
+    client = self.clients.get((proxy, verify_cert))
     if not client:
       client = httpx.AsyncClient(
         timeout = httpx.Timeout(self.timeout, pool=None),
         http2 = True,
         proxies = {'all://': proxy},
+        verify = verify_cert,
       )
-      self.clients[proxy] = client
+      self.clients[(proxy, verify_cert)] = client
 
     try:
       r = await client.request(

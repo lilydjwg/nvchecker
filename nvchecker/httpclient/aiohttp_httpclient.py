@@ -35,12 +35,15 @@ class AiohttpSession(BaseSession):
     follow_redirects: bool = True,
     params = (),
     json = None,
+    verify_cert: bool = True,
   ) -> Response:
     kwargs = {
       'headers': headers,
       'params': params,
       'allow_redirects': follow_redirects,
     }
+    if not verify_cert:
+      kwargs['ssl'] = False
 
     if proxy is not None:
       kwargs['proxy'] = proxy

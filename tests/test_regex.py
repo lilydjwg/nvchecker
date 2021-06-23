@@ -58,3 +58,24 @@ async def test_regex_with_tokenBearer(get_version, httpbin):
         "httptoken": "Bearer username:password",
         "regex": r'"token":"([a-w]+):.*"',
     }) == "username"
+
+async def test_regex_no_verify_ssl(get_version, httpbin_secure):
+    assert await get_version("example", {
+        "source": "regex",
+        "url": httpbin_secure.url + "/base64/" + base64_encode("version 1.12 released"),
+        "regex": r'version ([0-9.]+)',
+        "verify_cert": False,
+    }) == "1.12"
+
+async def test_regex_bad_ssl(get_version, httpbin_secure):
+    try:
+        await get_version("example", {
+            "source": "regex",
+            "url": httpbin_secure.url + "/base64/" + base64_encode("version 1.12 released"),
+            "regex": r'version ([0-9.]+)',
+        })
+    except Exception:
+        pass
+    else:
+        assert False, 'certificate should not be trusted'
+
