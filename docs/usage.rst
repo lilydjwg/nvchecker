@@ -153,6 +153,9 @@ from_pattern, to_pattern
   Both are Python-compatible regular expressions. If ``from_pattern`` is found
   in the version string, it will be replaced with ``to_pattern``.
 
+  If ``from_pattern`` is not found, the version string remains unchanged and no
+  error is emitted.
+
 missing_ok
   Suppress warnings and errors if a version checking module finds nothing.
   Currently only ``regex`` supports it.
