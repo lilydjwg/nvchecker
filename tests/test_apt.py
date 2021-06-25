@@ -39,3 +39,14 @@ async def test_apt_deepin(get_version):
         "mirror": "https://community-packages.deepin.com/deepin",
         "suite": "apricot",
     }) == "0.1.6-1"
+
+@flaky(max_runs=10)
+async def test_apt_multiversions(get_version):
+    assert await get_version("ms-teams", {
+        "source": "apt",
+        "mirror": "https://packages.microsoft.com/repos/ms-teams",
+        "pkg": "teams",
+        "suite": "stable",
+        "repo": "main",
+        "arch": "amd64",
+    }) == "1.4.00.13653"
