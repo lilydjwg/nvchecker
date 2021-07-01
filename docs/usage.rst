@@ -136,9 +136,18 @@ http_timeout
   Time in seconds to wait for HTTP requests. Default: 20.
 
 keyfile
-  Specify an ini config file containing key (token) information. This file
+  Specify a toml config file containing key (token) information. This file
   should contain a ``keys`` table, mapping key names to key values. See
   specific source for the key name(s) to use.
+
+  Sample ``keyfile.toml``:
+
+  ```toml
+  [keys]
+  # https://github.com/settings/tokens
+  # scope: repo -> public_repo
+  github = "ghp_<stripped>"
+  ```
 
 Global Options
 ~~~~~~~~~~~~~~
