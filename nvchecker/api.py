@@ -8,4 +8,4 @@ from .util import (
 )
 from .sortversion import sort_version_keys
 
-from .ctxvars import tries, proxy, user_agent, httptoken, entry_waiter
+from .ctxvars import tries, proxy, user_agent, httptoken, entry_waiter, verify_cert

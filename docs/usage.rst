@@ -44,7 +44,19 @@ To see available options::
 
 Run with one or more software version files::
 
-  nvchecker -c config_file
+  nvchecker -c config_file.toml
+
+A simple config file may look like:
+
+.. code-block:: toml
+
+  [nvchecker]
+  source = "github"
+  github = "lilydjwg/nvchecker"
+
+  [python-toml]
+  source = "pypi"
+  pypi = "toml"
 
 You normally will like to specify some "version record files"; see below.
 
@@ -110,7 +122,7 @@ Configuration Files
 -------------------
 The software version source files are in `toml`_ format. The *key name* is the name of the software. Following fields are used to tell nvchecker how to determine the current version of that software.
 
-See ``sample_source.toml`` for an example.
+See `sample_source.toml <https://github.com/lilydjwg/nvchecker/blob/master/sample_config.toml>`_ for an example.
 
 Configuration Table
 ~~~~~~~~~~~~~~~~~~~
@@ -142,12 +154,12 @@ keyfile
 
   Sample ``keyfile.toml``:
 
-  ```toml
-  [keys]
-  # https://github.com/settings/tokens
-  # scope: repo -> public_repo
-  github = "ghp_<stripped>"
-  ```
+  .. code-block:: toml
+
+    [keys]
+    # https://github.com/settings/tokens
+    # scope: repo -> public_repo
+    github = "ghp_<stripped>"
 
 Global Options
 ~~~~~~~~~~~~~~
