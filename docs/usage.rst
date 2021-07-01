@@ -548,6 +548,17 @@ Check `Packagist <https://packagist.org/>`_ for updates.
 packagist
   The name used on Packagist, e.g. ``monolog/monolog``.
 
+Check crates.io
+~~~~~~~~~~~~~~~
+::
+
+  source = "cratesio"
+
+Check `crates.io <https://crates.io/>`_ for updates.
+
+cratesio
+  The crate name on crates.io, e.g. ``tokio``.
+
 Check Local Pacman Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
