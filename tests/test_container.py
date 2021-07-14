@@ -16,4 +16,4 @@ async def test_container_paging(get_version):
     "source": "container",
     "registry": "quay.io",
     "container": "prometheus-operator/prometheus-operator",
-  }) == "v0.48.1"
+  }) == "v0.49.0"
