@@ -836,6 +836,17 @@ Check `Open Vsx <https://open-vsx.org/>`_ for updates.
 openvsx
   The extension's Unique Identifier on open-vsx.org, e.g. ``ritwickdey.LiveServer``.
   
+Check Visual Studio Code Marketplace
+~~~~~~~~~~~~~~~
+::
+
+  source = "vsmarketplace"
+
+Check `Visual Studio Code Marketplace <https://marketplace.visualstudio.com/vscode/>`_ for updates.
+
+vsmarketplace
+  The extension's Unique Identifier on marketplace.visualstudio.com/vscode, e.g. ``ritwickdey.LiveServer``.
+
 Combine others' results
 ~~~~~~~~~~~~~~~~~~~~~~~
 ::
