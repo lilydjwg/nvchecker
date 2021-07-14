@@ -825,6 +825,17 @@ strip_release
 provided
   Instead of the package version, return the version this package provides. Its value is what the package provides, and ``strip_release`` takes effect too. This is best used with libraries.
 
+Check Open Vsx
+~~~~~~~~~~~~~~~
+::
+
+  source = "openvsx"
+
+Check `Open Vsx <https://open-vsx.org/>`_ for updates.
+
+openvsx
+  The extension's Unique Identifier on open-vsx.org, e.g. ``ritwickdey.LiveServer``.
+  
 Combine others' results
 ~~~~~~~~~~~~~~~~~~~~~~~
 ::
