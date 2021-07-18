@@ -91,10 +91,9 @@ class NegativeInfinityType(object):
 
 
 NegativeInfinity = NegativeInfinityType()
+
 if TYPE_CHECKING:  # pragma: no cover
     from typing import Callable, Iterator, List, Optional, SupportsInt, Tuple, Union
-
-    from ._structures import InfinityType, NegativeInfinityType
 
     InfiniteTypes = Union[InfinityType, NegativeInfinityType]
     PrePostDevType = Union[InfiniteTypes, Tuple[str, int]]

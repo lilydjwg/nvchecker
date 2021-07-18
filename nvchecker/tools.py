@@ -107,7 +107,7 @@ def cmp() -> None:
         if args.sort != "none" and oldver is not None and newver is not None:
           from .sortversion import sort_version_keys
           version = sort_version_keys[args.sort]
-          if version(oldver) > version(newver):
+          if version(oldver) > version(newver): # type: ignore
             arrow = f'{c.red}<-{c.normal}'
             if args.newer:
               continue
