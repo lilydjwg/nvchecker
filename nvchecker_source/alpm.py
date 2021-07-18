@@ -9,13 +9,13 @@ async def open_db(info):
   dbpath, repo = info
   handle = Handle('/', dbpath)
   db = handle.register_syncdb(repo, 0)
-  return (handle, db)
+  return handle, db
 
 
 async def get_version(name, conf, *, cache, **kwargs):
   pkgname = conf.get('alpm', name)
   dbpath = conf.get('dbpath', '/var/lib/pacman')
-  repo = conf.get('repo')
+  repo = conf['repo']
   strip_release = conf.get('strip_release', False)
   provided = conf.get('provided')
   db = (await cache.get((dbpath, repo), open_db))[1]
