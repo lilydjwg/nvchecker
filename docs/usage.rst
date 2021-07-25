@@ -814,10 +814,10 @@ alpm
   Name of the package.
 
 repo
-  Name of the package repository in which the package resides.
+  Name of the package repository in which the package resides. If not provided, nvchecker will search ``core``, ``extra``, ``community`` and ``multilib``, in that order.
 
 dbpath
-  Path to the ALPM database directory. Default: ``/var/lib/pacman``.
+  Path to the ALPM database directory. Default: ``/var/lib/pacman``. You need to update the database yourself.
 
 strip_release
   Strip the release part, only return the part before ``-``.
