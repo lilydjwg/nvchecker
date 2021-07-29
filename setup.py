@@ -21,9 +21,11 @@ setup(
   zip_safe = True,
 
   packages = find_namespace_packages(exclude=['tests', 'build*', 'docs*']),
-  install_requires = ['setuptools', 'packaging', 'toml', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
+  install_requires = ['setuptools; python_version<"3.8"', 'toml', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
+    'pypi': ['packaging'],
+    'htmlparser': ['lxml'],
   },
   tests_require = [
     'pytest',
@@ -55,6 +57,7 @@ setup(
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "Topic :: Internet",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development",
