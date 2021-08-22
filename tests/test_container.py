@@ -15,5 +15,5 @@ async def test_container_paging(get_version):
   assert await get_version("prometheus-operator", {
     "source": "container",
     "registry": "quay.io",
-    "container": "prometheus-operator/prometheus-operator",
-  }) == "v0.49.0"
+    "container": "redhattraining/hello-world-nginx",
+  }) == "v1.0"
