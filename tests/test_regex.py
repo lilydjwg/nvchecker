@@ -43,6 +43,14 @@ async def test_missing_ok(get_version, httpbin):
         "missing_ok": True,
     }) is None
 
+async def test_missing(get_version, httpbin):
+    with pytest.raises(RuntimeError):
+      await get_version("example", {
+          "source": "regex",
+          "url": httpbin.url + "/base64/" + base64_encode("something not there"),
+          "regex": "foobar",
+      })
+
 async def test_regex_with_tokenBasic(get_version, httpbin):
     assert await get_version("example", {
         "source": "regex",

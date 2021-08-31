@@ -22,9 +22,7 @@ async def get_version_impl(info):
 
   res = await session.get(conf['url'])
   body = res.body.decode(encoding)
-  try:
-    version = regex.findall(body)
-  except ValueError:
-    if not conf.get('missing_ok', False):
-      raise GetVersionError('version string not found.')
-  return version
+  versions = regex.findall(body)
+  if not versions and not conf.get('missing_ok', False):
+    raise GetVersionError('version string not found.')
+  return versions
