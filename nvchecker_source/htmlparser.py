@@ -15,7 +15,13 @@ async def get_version_impl(info):
 
   encoding = conf.get('encoding')
   parser = html.HTMLParser(encoding=encoding)
-  res = await session.get(conf['url'])
+  data = conf.get('post_data')
+  if data is None:
+    res = await session.get(conf['url'])
+  else:
+    res = await session.post(conf['url'], body = data, headers = {
+        'Content-Type': conf.get('post_data_type', 'application/x-www-form-urlencoded')
+      })
   doc = html.fromstring(res.body, base_url=conf['url'], parser=parser)
 
   try:

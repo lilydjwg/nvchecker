@@ -269,6 +269,12 @@ regex
 
   When multiple version strings are found, the maximum of those is chosen.
 
+post_data
+  (*Optional*) When present, a ``POST`` request (instead of a ``GET``) will be used. The value should be a string containing the full body of the request. The encoding of the string can be specified using the ``post_data_type`` option.
+
+post_data_type
+  (*Optional*) Specifies the ``Content-Type`` of the request body (``post_data``). By default, this is ``application/x-www-form-urlencoded``.
+
 This source supports :ref:`list options`.
 
 Search in an HTTP header
@@ -311,6 +317,12 @@ url
 
 xpath
   An xpath expression used to find the version string.
+
+post_data
+  (*Optional*) When present, a ``POST`` request (instead of a ``GET``) will be used. The value should be a string containing the full body of the request. The encoding of the string can be specified using the ``post_data_type`` option.
+
+post_data_type
+  (*Optional*) Specifies the ``Content-Type`` of the request body (``post_data``). By default, this is ``application/x-www-form-urlencoded``.
 
 .. note::
   An additional dependency "lxml" is required.

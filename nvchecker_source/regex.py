@@ -20,7 +20,13 @@ async def get_version_impl(info):
 
   encoding = conf.get('encoding', 'latin1')
 
-  res = await session.get(conf['url'])
+  data = conf.get('post_data')
+  if data is None:
+    res = await session.get(conf['url'])
+  else:
+    res = await session.post(conf['url'], body = data, headers = {
+        'Content-Type': conf.get('post_data_type', 'application/x-www-form-urlencoded')
+      })
   body = res.body.decode(encoding)
   versions = regex.findall(body)
   if not versions and not conf.get('missing_ok', False):
