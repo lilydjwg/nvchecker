@@ -52,6 +52,7 @@ class TornadoSession(BaseSession):
     follow_redirects: bool = True,
     params = (),
     json = None,
+    body = None,
     verify_cert: bool = True,
   ) -> Response:
     kwargs: Dict[str, Any] = {
@@ -62,7 +63,10 @@ class TornadoSession(BaseSession):
       'validate_cert': verify_cert,
     }
 
-    if json:
+    if body:
+      # By default the content type is already 'application/x-www-form-urlencoded'
+      kwargs['body'] = body
+    elif json:
       kwargs['body'] = _json.dumps(json)
     kwargs['prepare_curl_callback'] = try_use_http2
 

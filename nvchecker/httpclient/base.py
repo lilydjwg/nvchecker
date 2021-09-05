@@ -61,6 +61,7 @@ class BaseSession:
     follow_redirects: bool = True,
     params = (),
     json = None,
+    body = None,
   ) -> Response:
     t = tries.get()
     p = proxy.get()
@@ -82,6 +83,7 @@ class BaseSession:
           params = params,
           follow_redirects = follow_redirects,
           json = json,
+          body = body,
           proxy = p or None,
           verify_cert = verify,
         )
@@ -103,6 +105,7 @@ class BaseSession:
     follow_redirects: bool = True,
     params = (),
     json = None,
+    body = None,
     verify_cert: bool = True,
   ) -> Response:
     ''':meta private:'''
