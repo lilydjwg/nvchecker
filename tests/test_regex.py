@@ -87,3 +87,36 @@ async def test_regex_bad_ssl(get_version, httpbin_secure):
     else:
         assert False, 'certificate should not be trusted'
 
+async def test_regex_post(get_version, httpbin):
+    assert await get_version("example", {
+        "source": "regex",
+        "url": httpbin.url + "/post",
+        "regex": r'"ABCDEF":\s*"(\w+)"',
+        "post_data": "ABCDEF=234&CDEFG=xyz"
+    }) == "234"
+
+async def test_regex_post2(get_version, httpbin):
+    assert await get_version("example", {
+        "source": "regex",
+        "url": httpbin.url + "/post",
+        "regex": r'"CDEFG":\s*"(\w+)"',
+        "post_data": "ABCDEF=234&CDEFG=xyz"
+    }) == "xyz"
+
+async def test_regex_post_json(get_version, httpbin):
+    assert await get_version("example", {
+        "source": "regex",
+        "url": httpbin.url + "/post",
+        "regex": r'"ABCDEF":\s*(\w+)',
+        "post_data": '{"ABCDEF":234,"CDEFG":"xyz"}',
+        "post_data_type": "application/json"
+    }) == "234"
+
+async def test_regex_post_json2(get_version, httpbin):
+    assert await get_version("example", {
+        "source": "regex",
+        "url": httpbin.url + "/post",
+        "regex": r'"CDEFG":\s*"(\w+)"',
+        "post_data": '{"ABCDEF":234,"CDEFG":"xyz"}',
+        "post_data_type": "application/json"
+    }) == "xyz"

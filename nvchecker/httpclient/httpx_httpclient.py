@@ -27,6 +27,7 @@ class HttpxSession(BaseSession):
     follow_redirects: bool = True,
     params = (),
     json = None,
+    body = None,
     verify_cert: bool = True,
   ) -> Response:
     client = self.clients.get((proxy, verify_cert))
@@ -40,8 +41,13 @@ class HttpxSession(BaseSession):
       self.clients[(proxy, verify_cert)] = client
 
     try:
+      if body is not None:
+        # Make sure all backends have the same default encoding for post data.
+        if 'Content-Type' not in headers:
+          headers = {**headers, 'Content-Type': 'application/x-www-form-urlencoded'}
+        body = body.encode()
       r = await client.request(
-        method, url, json = json,
+        method, url, json = json, content = body,
         headers = headers,
         allow_redirects = follow_redirects,
         params = params,

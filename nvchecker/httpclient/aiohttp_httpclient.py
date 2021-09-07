@@ -35,6 +35,7 @@ class AiohttpSession(BaseSession):
     follow_redirects: bool = True,
     params = (),
     json = None,
+    body = None,
     verify_cert: bool = True,
   ) -> Response:
     kwargs = {
@@ -47,7 +48,13 @@ class AiohttpSession(BaseSession):
 
     if proxy is not None:
       kwargs['proxy'] = proxy
-    if json is not None:
+    if body is not None:
+      # Make sure all backends have the same default encoding for post data.
+      if 'Content-Type' not in headers:
+        headers = {**headers, 'Content-Type': 'application/x-www-form-urlencoded'}
+        kwargs['headers'] = headers
+      kwargs['data'] = body.encode()
+    elif json is not None:
       kwargs['json'] = json
 
     try:
