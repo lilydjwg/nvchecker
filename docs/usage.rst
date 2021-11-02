@@ -217,7 +217,7 @@ If both ``prefix`` and ``from_pattern``/``to_pattern`` are used,
 and then do something special, just use ``from_pattern``/``to_pattern``. For
 example, the transformation of ``v1_1_0`` => ``1.1.0`` can be achieved with
 ``from_pattern = 'v(\d+)_(\d+)_(\d+)'`` and ``to_pattern = '\1.\2.\3'``.
-(Note that in TOML it's easiler to write regexes in single quotes so you don't need to escape ``\\``.)
+(Note that in TOML it's easiler to write regexes in single quotes so you don't need to escape ``\``.)
 
 .. _list options:
 
