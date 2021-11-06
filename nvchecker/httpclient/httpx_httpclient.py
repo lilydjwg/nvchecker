@@ -49,7 +49,7 @@ class HttpxSession(BaseSession):
       r = await client.request(
         method, url, json = json, content = body,
         headers = headers,
-        allow_redirects = follow_redirects,
+        follow_redirects = follow_redirects,
         params = params,
       )
       err_cls: Optional[type] = None
