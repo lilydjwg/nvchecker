@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2020-2021 lilydjwg <lilydjwg@gmail.com>, et al.
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
 from flaky import flaky
@@ -16,12 +16,13 @@ async def test_apt(get_version):
 
 @flaky(max_runs=10)
 async def test_apt_srcpkg(get_version):
-    assert await get_version("test", {
+    ver = await get_version("test", {
         "source": "apt",
         "srcpkg": "golang-github-dataence-porter2",
         "mirror": "http://deb.debian.org/debian/",
         "suite": "sid",
-    }) == "0.0~git20150829.56e4718-3"
+    })
+    assert ver.startswith("0.0~git20150829.56e4718-")
 
 @flaky(max_runs=10)
 async def test_apt_strip_release(get_version):
@@ -42,11 +43,12 @@ async def test_apt_deepin(get_version):
 
 @flaky(max_runs=10)
 async def test_apt_multiversions(get_version):
-    assert await get_version("ms-teams", {
+    ver = await get_version("ms-teams", {
         "source": "apt",
         "mirror": "https://packages.microsoft.com/repos/ms-teams",
         "pkg": "teams",
         "suite": "stable",
         "repo": "main",
         "arch": "amd64",
-    }) == "1.4.00.13653"
+    })
+    assert ver.startswith("1.4.00.")
