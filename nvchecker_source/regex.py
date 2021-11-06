@@ -17,6 +17,8 @@ async def get_version_impl(info):
     regex = re.compile(conf['regex'])
   except sre_constants.error as e:
     raise GetVersionError('bad regex', exc_info=e)
+  if regex.groups > 1:
+    raise GetVersionError('multi-group regex')
 
   encoding = conf.get('encoding', 'latin1')
 

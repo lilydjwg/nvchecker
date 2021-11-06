@@ -51,6 +51,14 @@ async def test_missing(get_version, httpbin):
           "regex": "foobar",
       })
 
+async def test_multi_group(get_version, httpbin):
+    with pytest.raises(RuntimeError):
+      await get_version("example", {
+          "source": "regex",
+          "url": httpbin.url + "/base64/" + base64_encode("1.2"),
+          "regex": r"(\d+)\.(\d+)",
+      })
+
 async def test_regex_with_tokenBasic(get_version, httpbin):
     assert await get_version("example", {
         "source": "regex",
