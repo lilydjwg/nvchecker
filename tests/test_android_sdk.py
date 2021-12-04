@@ -27,3 +27,27 @@ async def test_android_package_channel(get_version):
         "repo": "package",
         "channel": "beta,dev,canary",
     }) == "3.22.1"
+
+async def test_android_list(get_version):
+    assert await get_version("android-sdk-cmake-older", {
+        "source": "android_sdk",
+        "android_sdk": "cmake;",
+        "repo": "package",
+        "include_regex": "3\.10.*",
+    }) == "3.10.2"
+
+async def test_android_package_os(get_version):
+    await get_version("android-usb-driver", {
+        "source": "android_sdk",
+        "android_sdk": "extras;google;usb_driver",
+        "repo": "addon",
+        "host_os": "windows"
+    }) == "13"
+
+async def test_android_package_os_missing(get_version):
+    await get_version("android-usb-driver", {
+        "source": "android_sdk",
+        "android_sdk": "extras;google;usb_driver",
+        "repo": "addon",
+        "host_os": "linux"
+    }) == None

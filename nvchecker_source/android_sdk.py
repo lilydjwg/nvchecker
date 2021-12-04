@@ -38,6 +38,8 @@ async def get_version(name, conf, *, cache, **kwargs):
 
   repo_manifest = await cache.get(repo, _get_repo_manifest)
 
+  versions = []
+
   for pkg in repo_manifest.findall('.//remotePackage'):
     if not pkg.attrib['path'].startswith(pkg_path_prefix):
       continue
@@ -46,7 +48,7 @@ async def get_version(name, conf, *, cache, **kwargs):
       continue
     for archive in pkg.findall('./archives/archive'):
       host_os = archive.find('./host-os')
-      if host_os is not None and host_os.text != 'linux':
+      if host_os is not None and host_os.text != conf.get('host_os', 'linux'):
         continue
       archive_url = archive.find('./complete/url').text
       # revision
@@ -62,4 +64,8 @@ async def get_version(name, conf, *, cache, **kwargs):
       mobj = re.match(r'r\d+', rel_str)
       if mobj:
         rev_strs.append(rel_str)
-      return '.'.join(rev_strs)
+      versions.append('.'.join(rev_strs))
+      # A package suitable for the target host OS is found - skip remaining
+      break
+
+  return versions
