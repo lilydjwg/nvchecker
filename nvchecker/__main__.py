@@ -76,9 +76,7 @@ def main() -> None:
   result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 
-  # asyncio.run doesn't work because it always creates new eventloops
-  loop = asyncio.get_event_loop()
-  newvers = loop.run_until_complete(run(result_coro, runner_coro))
+  newvers = asyncio.run(run(result_coro, runner_coro))
 
   if options.ver_files is not None:
     core.write_verfile(options.ver_files[1], newvers)
