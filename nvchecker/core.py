@@ -238,7 +238,7 @@ class Dispatcher:
         mods[source] = mod, tasks
         config = source_configs.get(source)
         if config and getattr(mod, 'configure'):
-          mod.configure(config) # type: ignore
+          mod.configure(config)
       else:
         tasks = mods[source][1]
       tasks.append((name, entry))
@@ -246,7 +246,7 @@ class Dispatcher:
     ret = []
     for mod, tasks in mods.values():
       if hasattr(mod, 'Worker'):
-        worker_cls = mod.Worker # type: ignore
+        worker_cls = mod.Worker
       else:
         worker_cls = FunctionWorker
 
@@ -256,7 +256,7 @@ class Dispatcher:
         task_sem, result_q, tasks, keymanager,
       )
       if worker_cls is FunctionWorker:
-        func = mod.get_version # type: ignore
+        func = mod.get_version
         ctx.run(worker.initialize, func)
 
       ret.append(ctx.run(worker.run))
