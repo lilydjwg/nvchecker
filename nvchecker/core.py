@@ -21,7 +21,7 @@ import contextvars
 import json
 
 import structlog
-import toml
+import tomli
 import appdirs
 
 from .lib import nicelogger
@@ -156,8 +156,9 @@ def load_file(
   use_keymanager: bool,
 ) -> Tuple[Entries, Options]:
   try:
-    config = toml.load(file)
-  except (OSError, toml.TomlDecodeError) as e:
+    with open(file, 'rb') as f:
+      config = tomli.load(f)
+  except (OSError, tomli.TOMLDecodeError) as e:
     raise FileLoadError('version configuration file', file, e)
 
   ver_files: Optional[Tuple[Path, Path]] = None

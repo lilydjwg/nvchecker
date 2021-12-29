@@ -24,7 +24,7 @@ This is the version 2.0 branch. For the old version 1.x, please switch to the ``
 Dependency
 ----------
 - Python 3.7+
-- Python library: structlog, toml, appdirs
+- Python library: structlog, tomli, appdirs
 - One of these Python library combinations (ordered by preference):
 
   * tornado + pycurl

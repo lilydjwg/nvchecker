@@ -6,7 +6,7 @@ import structlog
 import os
 from pathlib import Path
 
-import toml
+import tomli
 import pytest
 
 from nvchecker import core
@@ -52,7 +52,7 @@ async def get_version():
 @pytest.fixture(scope="module")
 async def run_str():
   async def __call__(str):
-    entries = toml.loads(str)
+    entries = tomli.loads(str)
     newvers = await run(entries)
     return newvers.popitem()[1]
 
@@ -61,19 +61,19 @@ async def run_str():
 @pytest.fixture(scope="module")
 async def run_str_multi():
   async def __call__(str):
-    entries = toml.loads(str)
+    entries = tomli.loads(str)
     newvers = await run(entries)
     return newvers
 
   return __call__
 
+loop = asyncio.new_event_loop()
 @pytest.fixture(scope="session")
 def event_loop(request):
   """Override pytest-asyncio's event_loop fixture,
      Don't create an instance of the default event loop for each test case.
      We need the same ioloop across tests for the aiohttp support.
   """
-  loop = asyncio.get_event_loop()
   yield loop
 
 @pytest.fixture(scope="session", autouse=True)

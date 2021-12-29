@@ -14,7 +14,7 @@ from pathlib import Path
 import contextvars
 import abc
 
-import toml
+import tomli
 import structlog
 
 from .httpclient import session
@@ -55,9 +55,9 @@ class KeyManager:
   ) -> None:
     if file is not None:
       try:
-        with file.open() as f:
-          keys = toml.load(f)['keys']
-      except (OSError, toml.TomlDecodeError) as e:
+        with file.open('rb') as f:
+          keys = tomli.load(f)['keys']
+      except (OSError, tomli.TOMLDecodeError) as e:
         raise FileLoadError('keyfile', str(file), e)
     else:
       keys = {}

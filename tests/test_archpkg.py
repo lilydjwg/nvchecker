@@ -31,5 +31,5 @@ async def test_archpkg_provided_strip(get_version):
         "source": "archpkg",
         "provided": "libjsoncpp.so",
         "strip_release": True,
-    }) == "24"
+    }) == "25"
 

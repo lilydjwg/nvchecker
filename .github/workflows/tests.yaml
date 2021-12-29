@@ -44,7 +44,7 @@ jobs:
         sudo apt update
         sudo apt install -y libcurl4-openssl-dev
     - name: Install Python deps
-      run: pip install -U ${{ matrix.deps }} pytest pytest-asyncio pytest-httpbin flaky structlog toml appdirs lxml
+      run: pip install -U ${{ matrix.deps }} pytest pytest-asyncio pytest-httpbin flaky structlog tomli appdirs lxml
     - name: Decrypt keys
       env:
         KEY: ${{ secrets.KEY }}

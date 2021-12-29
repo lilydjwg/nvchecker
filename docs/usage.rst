@@ -18,7 +18,7 @@ This is the version 2.0 branch. For the old version 1.x, please switch to the ``
 Dependency
 ----------
 - Python 3.7+
-- Python library: structlog, toml, appdirs
+- Python library: structlog, tomli, appdirs
 - One of these Python library combinations (ordered by preference):
 
   * tornado + pycurl
@@ -907,5 +907,5 @@ Extending
 It's possible to extend the supported sources by writing
 plugins. See :doc:`plugin` for documentation.
 
-.. _Pacman: https://wiki.archlinux.org/index.php/Pacman
+.. _Pacman: https://wiki.archlinux.org/title/Pacman
 .. _toml: https://toml.io/

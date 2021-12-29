@@ -21,7 +21,7 @@ setup(
   zip_safe = True,
 
   packages = find_namespace_packages(exclude=['tests', 'build*', 'docs*']),
-  install_requires = ['setuptools; python_version<"3.8"', 'toml', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
+  install_requires = ['setuptools; python_version<"3.8"', 'tomli', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
     'pypi': ['packaging'],
