@@ -7,7 +7,7 @@ from __future__ import annotations
 import sys
 import argparse
 import asyncio
-from typing import Coroutine
+from typing import Coroutine, Tuple
 from pathlib import Path
 
 import structlog
@@ -87,9 +87,9 @@ def main() -> None:
     sys.exit(3)
 
 async def run(
-  result_coro: Coroutine[None, None, VersData],
+  result_coro: Coroutine[None, None, Tuple[VersData, bool]],
   runner_coro: Coroutine[None, None, None],
-) -> VersData:
+) -> Tuple[VersData, bool]:
   result_fu = asyncio.create_task(result_coro)
   runner_fu = asyncio.create_task(runner_coro)
   await runner_fu

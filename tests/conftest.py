@@ -38,7 +38,8 @@ async def run(
   result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 
-  return await main.run(result_coro, runner_coro)
+  vers, _has_failures = await main.run(result_coro, runner_coro)
+  return vers
 
 @pytest.fixture(scope="module")
 async def get_version():
