@@ -26,4 +26,4 @@ async def test_android_package_channel(get_version):
         "android_sdk": "cmake;",
         "repo": "package",
         "channel": "beta,dev,canary",
-    }) == None
+    }) == "3.22.1"
