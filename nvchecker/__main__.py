@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # MIT licensed
-# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2022 lilydjwg <lilydjwg@gmail.com>, et al.
 
 from __future__ import annotations
 
@@ -25,6 +25,8 @@ def main() -> None:
                       help='use specified keyfile (override the one in configuration file)')
   parser.add_argument('-t', '--tries', default=1, type=int, metavar='N',
                       help='try N times when network errors occur')
+  parser.add_argument('--failures', action='store_true',
+                      help='exit with code 3 if failures / errors happen during checking')
   parser.add_argument('-e', '--entry', type=str,
                       help='only execute on specified entry (useful for debugging)')
   core.add_common_arguments(parser)
@@ -76,10 +78,13 @@ def main() -> None:
   result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 
-  newvers = asyncio.run(run(result_coro, runner_coro))
+  newvers, has_failures = asyncio.run(run(result_coro, runner_coro))
 
   if options.ver_files is not None:
     core.write_verfile(options.ver_files[1], newvers)
+
+  if args.failures and has_failures:
+    sys.exit(3)
 
 async def run(
   result_coro: Coroutine[None, None, VersData],

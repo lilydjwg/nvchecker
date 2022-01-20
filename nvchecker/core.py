@@ -360,20 +360,22 @@ async def process_result(
   oldvers: VersData,
   result_q: Queue[RawResult],
   entry_waiter: EntryWaiter,
-) -> VersData:
+) -> Tuple[VersData, bool]:
   ret = {}
+  has_failures = False
   try:
     while True:
       r = await result_q.get()
       r1 = _process_result(r)
       if isinstance(r1, Exception):
         entry_waiter.set_exception(r.name, r1)
+        has_failures = True
         continue
       check_version_update(oldvers, r1.name, r1.version)
       entry_waiter.set_result(r1.name, r1.version)
       ret[r1.name] = r1.version
   except asyncio.CancelledError:
-    return ret
+    return ret, has_failures
 
 async def run_tasks(
   futures: Sequence[Awaitable[None]]
