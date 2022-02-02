@@ -5,7 +5,7 @@ from nvchecker.api import sort_version_keys
 
 # doc: https://confluence.atlassian.com/display/BITBUCKET/commits+or+commit+Resource
 BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
-BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/2.0/repositories/%s/refs/tags'
+BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/2.0/repositories/%s/refs/tags?sort=-target.date'
 
 async def get_version(name, conf, *, cache, **kwargs):
   repo = conf['bitbucket']
