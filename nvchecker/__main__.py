@@ -78,7 +78,12 @@ def main() -> None:
   result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 
-  newvers, has_failures = asyncio.run(run(result_coro, runner_coro))
+  if sys.version_info >= (3, 10):
+    # Python 3.10 has deprecated asyncio.get_event_loop
+    newvers, has_failures = asyncio.run(run(result_coro, runner_coro))
+  else:
+    # Python < 3.10 will create an eventloop when asyncio.Queue is initialized
+    newvers, has_failures = asyncio.get_event_loop().run_until_complete(run(result_coro, runner_coro))
 
   if options.ver_files is not None:
     core.write_verfile(options.ver_files[1], newvers)
