@@ -1,12 +1,19 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
+from typing import Any, List
+from nvchecker.api import VersionResult, Entry, AsyncCache
+
 # doc: https://developer.atlassian.com/cloud/bitbucket/rest/api-group-commits/#api-repositories-workspace-repo-slug-commits-get
 BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
 # doc: https://developer.atlassian.com/cloud/bitbucket/rest/api-group-refs/#api-repositories-workspace-repo-slug-refs-tags-get
 BITBUCKET_MAX_TAG = 'https://bitbucket.org/api/2.0/repositories/%s/refs/tags?sort=-target.date'
 
-async def get_version(name, conf, *, cache, **kwargs):
+async def get_version(
+  name: str, conf: Entry, *,
+  cache: AsyncCache,
+  **kwargs: Any,
+) -> VersionResult:
   repo = conf['bitbucket']
   br = conf.get('branch', '')
   use_max_tag = conf.get('use_max_tag', False)
@@ -26,7 +33,11 @@ async def get_version(name, conf, *, cache, **kwargs):
     version = data['values'][0]['date'].split('T', 1)[0].replace('-', '')
   return version
 
-async def _get_tags(url, *, max_page, cache):
+async def _get_tags(
+  url: str, *,
+  max_page: int,
+  cache: AsyncCache,
+) -> List[str]:
   ret = []
 
   for _ in range(max_page):
