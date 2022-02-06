@@ -472,7 +472,7 @@ use_sorted_tags
     ``sort`` keys. Will return the tag name instead of the date.
 
 query
-    A query string use to filter tags when ``use_sorted_tags`` is set (see
+    A query string use to filter tags when ``use_sorted_tags`` set (see
     `here <https://developer.atlassian.com/cloud/bitbucket/rest/intro/#querying>`__
     for examples). The string does not need to be escaped.
 

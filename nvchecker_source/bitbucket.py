@@ -21,29 +21,33 @@ async def get_version(
   use_max_tag = conf.get('use_max_tag', False)
   use_sorted_tags = conf.get('use_sorted_tags', False)
 
-  if use_sorted_tags:
-    url = BITBUCKET_MAX_TAG % repo
+  if use_sorted_tags or use_max_tag:
+    parameters = {'fields': 'values.name,next'}
 
-    parameters = {'sort': conf.get('sort', '-target.date')}
-    if 'query' in conf:
+    if use_sorted_tags:
+      parameters['sort'] = conf.get('sort', '-target.date')
+      if 'query' in conf:
         parameters['q'] = conf['query']
 
+  if use_sorted_tags:
+    url = BITBUCKET_MAX_TAG % repo
     url += '?' + urlencode(parameters)
-    data = await _get_tags(url, max_page=1, cache=cache)
+
+    version = await _get_tags(url, max_page=1, cache=cache)
 
   elif use_max_tag:
     url = BITBUCKET_MAX_TAG % repo
+    url += '?' + urlencode(parameters)
+
     max_page = conf.get('max_page', 3)
-    data = await _get_tags(url, max_page=max_page, cache=cache)
+    version = await _get_tags(url, max_page=max_page, cache=cache)
 
   else:
     url = BITBUCKET_URL % (repo, br)
     data = await cache.get_json(url)
 
-  if use_max_tag or use_sorted_tags:
-    version = data
-  else:
     version = data['values'][0]['date'].split('T', 1)[0].replace('-', '')
+
   return version
 
 async def _get_tags(
@@ -51,7 +55,7 @@ async def _get_tags(
   max_page: int,
   cache: AsyncCache,
 ) -> List[str]:
-  ret = []
+  ret: List[str] = []
 
   for _ in range(max_page):
     data = await cache.get_json(url)
