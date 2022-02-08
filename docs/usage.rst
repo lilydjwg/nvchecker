@@ -467,11 +467,27 @@ use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
   sorted by old ``pkg_resources.parse_version``. Will return the tag name instead of date.
 
+use_sorted_tags
+    If ``true``, tags are queried and sorted according to the ``query`` and
+    ``sort`` keys. Will return the tag name instead of the date.
+
+query
+    A query string use to filter tags when ``use_sorted_tags`` set (see
+    `here <https://developer.atlassian.com/cloud/bitbucket/rest/intro/#querying>`__
+    for examples). The string does not need to be escaped.
+
+sort
+    A field used to sort the tags when ``use_sorted_tags`` is set (see
+    `here <https://developer.atlassian.com/cloud/bitbucket/rest/intro/#filtering>`__
+    for examples). Defaults to ``-target.date`` (sorts tags in descending order
+    by date).
+
 max_page
   How many pages do we search for the max tag? Default is 3. This works when
   ``use_max_tag`` is set.
 
-This source supports :ref:`list options` when ``use_max_tag`` is set.
+This source supports :ref:`list options` when ``use_max_tag`` or
+``use_sorted_tags`` is set.
 
 Check GitLab
 ~~~~~~~~~~~~
@@ -848,7 +864,7 @@ Check `Open Vsx <https://open-vsx.org/>`_ for updates.
 
 openvsx
   The extension's Unique Identifier on open-vsx.org, e.g. ``ritwickdey.LiveServer``.
-  
+
 Check Visual Studio Code Marketplace
 ~~~~~~~~~~~~~~~
 ::
