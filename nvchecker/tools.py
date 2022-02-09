@@ -5,6 +5,7 @@
 import sys
 import argparse
 import structlog
+import json
 
 from . import core
 
@@ -69,10 +70,13 @@ def take() -> None:
 def cmp() -> None:
   parser = argparse.ArgumentParser(description='compare version records of nvchecker')
   core.add_common_arguments(parser)
+  parser.add_argument('-j', '--json', action='store_true',
+                      help='Output JSON array of dictionaries with {name, newver, oldver, [delta]} '
+                           '(or array of names if --quiet)')
   parser.add_argument('-q', '--quiet', action='store_true',
                       help="Quiet mode, output only the names.")
   parser.add_argument('-s', '--sort',
-                      choices=('parse_version', 'vercmp'), default='parse_version',
+                      choices=('parse_version', 'vercmp', 'none'), default='parse_version',
                       help='Version compare method to backwards the arrow '
                            '(default: parse_version)')
   parser.add_argument('-n', '--newer', action='store_true',
@@ -94,22 +98,44 @@ def cmp() -> None:
 
   oldvers = core.read_verfile(oldverf)
   newvers = core.read_verfile(newverf)
-  for name, newver in sorted(newvers.items()):
+
+  differences = []
+
+  for name, newver in sorted(newvers.items()):  # accumulate differences
     oldver = oldvers.get(name, None)
+
     if oldver != newver:
-      if args.quiet:
-        print(name)
-      else:
-        from .lib.nicelogger import Colors, support_color
-        c = Colors(support_color(sys.stdout))
+      diff = {
+        'name': name,
+        'oldver': oldver,
+        'newver': newver
+      }
 
-        arrow = "->"
-        if args.sort != "none" and oldver is not None and newver is not None:
-          from .sortversion import sort_version_keys
-          version = sort_version_keys[args.sort]
-          if version(oldver) > version(newver): # type: ignore
-            arrow = f'{c.red}<-{c.normal}'
-            if args.newer:
-              continue
+      if args.sort != "none" and oldver is not None and newver is not None:
+        from .sortversion import sort_version_keys
+        version = sort_version_keys[args.sort]
 
-        print(f'{name} {c.red}{oldver}{c.normal} {arrow} {c.green}{newver}{c.normal}')
+        if version(oldver) > version(newver):  # type: ignore
+          diff['delta'] = 'old'
+          if args.newer:
+            continue  # don't store this diff
+        else:
+          diff['delta'] = 'new'
+
+      differences.append(diff)
+
+  if args.json:
+    if args.quiet:
+      print(json.dumps([diff['name'] for diff in differences], separators=(',', ':')))
+    else:
+      print(json.dumps(differences, sort_keys=True, separators=(',', ':')))
+
+  elif args.quiet:
+    [print(diff['name']) for diff in differences]
+
+  else:
+    from .lib.nicelogger import Colors, support_color
+    c = Colors(support_color(sys.stdout))
+    arrow = f'{c.red}<-{c.normal}' if diff.get('delta') == 'old' else '->'
+
+    [print(f'{diff["name"]} {c.red}{diff["oldver"]}{c.normal} {arrow} {c.green}{diff["newver"]}{c.normal}') for diff in differences]
