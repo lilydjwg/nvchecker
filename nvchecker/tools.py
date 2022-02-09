@@ -75,6 +75,8 @@ def cmp() -> None:
                            '(or array of names if --quiet)')
   parser.add_argument('-q', '--quiet', action='store_true',
                       help="Quiet mode, output only the names.")
+  parser.add_argument('-a', '--all', action='store_true',
+                      help="Include unchanged versions.")
   parser.add_argument('-s', '--sort',
                       choices=('parse_version', 'vercmp', 'none'), default='parse_version',
                       help='Version compare method to backwards the arrow '
@@ -104,13 +106,13 @@ def cmp() -> None:
   for name, newver in sorted(newvers.items()):  # accumulate differences
     oldver = oldvers.get(name, None)
 
-    if oldver != newver:
-      diff = {
-        'name': name,
-        'oldver': oldver,
-        'newver': newver
-      }
+    diff = {
+      'name': name,
+      'oldver': oldver,
+      'newver': newver
+    }
 
+    if oldver != newver:
       if args.sort != "none" and oldver is not None and newver is not None:
         from .sortversion import sort_version_keys
         version = sort_version_keys[args.sort]
@@ -122,6 +124,8 @@ def cmp() -> None:
         else:
           diff['delta'] = 'new'
 
+      differences.append(diff)
+    elif args.all:
       differences.append(diff)
 
   if args.json:
@@ -136,6 +140,6 @@ def cmp() -> None:
   else:
     from .lib.nicelogger import Colors, support_color
     c = Colors(support_color(sys.stdout))
-    arrow = f'{c.red}<-{c.normal}' if diff.get('delta') == 'old' else '->'
+    arrow = f'{c.red}<-{c.normal}' if diff.get('delta', None) == 'old' else '->'
 
     [print(f'{diff["name"]} {c.red}{diff["oldver"]}{c.normal} {arrow} {c.green}{diff["newver"]}{c.normal}') for diff in differences]
