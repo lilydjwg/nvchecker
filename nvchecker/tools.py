@@ -140,6 +140,18 @@ def cmp() -> None:
   else:
     from .lib.nicelogger import Colors, support_color
     c = Colors(support_color(sys.stdout))
-    arrow = f'{c.red}<-{c.normal}' if diff.get('delta', None) == 'old' else '->'
 
-    [print(f'{diff["name"]} {c.red}{diff["oldver"]}{c.normal} {arrow} {c.green}{diff["newver"]}{c.normal}') for diff in differences]
+    for diff in differences:
+        delta = diff.get('delta', None)
+
+        if delta == 'new':
+            arrow = '->'
+            oldc = c.red
+        elif delta == 'old':
+            arrow = f'{c.red}<-{c.normal}'
+            oldc = c.red
+        else:
+            arrow = '=='
+            oldc = c.green
+
+        print(f'{diff["name"]} {oldc}{diff["oldver"]}{c.normal} {arrow} {c.green}{diff["newver"]}{c.normal}')
