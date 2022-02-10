@@ -129,12 +129,12 @@ def cmp() -> None:
       differences.append(diff)
 
     elif oldver is None:
-      if args.newer:
-        continue  # don't store this diff
       diff['delta'] = 'added'
       differences.append(diff)
 
     elif newver is None:
+      if args.newer:
+        continue  # don't store this diff
       diff['delta'] = 'gone'
       differences.append(diff)
 
