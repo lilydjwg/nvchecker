@@ -112,8 +112,10 @@ def cmp() -> None:
       'newver': newver
     }
 
-    if oldver != newver:
-      if args.sort != "none" and oldver is not None and newver is not None:
+    if oldver is not None and newver is not None:
+      if args.sort == "none":
+        diff['delta'] = 'new'  # assume it's a new version if we're not comparing
+      else:
         from .sortversion import sort_version_keys
         version = sort_version_keys[args.sort]
 
