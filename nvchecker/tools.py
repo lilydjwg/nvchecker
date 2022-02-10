@@ -120,13 +120,24 @@ def cmp() -> None:
         version = sort_version_keys[args.sort]
 
         if version(oldver) > version(newver):  # type: ignore
-          diff['delta'] = 'old'
           if args.newer:
             continue  # don't store this diff
+          diff['delta'] = 'old'
         else:
           diff['delta'] = 'new'
 
       differences.append(diff)
+
+    elif oldver is None:
+      if args.newer:
+        continue  # don't store this diff
+      diff['delta'] = 'added'
+      differences.append(diff)
+
+    elif newver is None:
+      diff['delta'] = 'gone'
+      differences.append(diff)
+
     elif args.all:
       differences.append(diff)
 
@@ -152,6 +163,12 @@ def cmp() -> None:
         elif delta == 'old':
             arrow = f'{c.red}<-{c.normal}'
             oldc = c.red
+        if delta == 'added':
+            arrow = '++'
+            oldc = c.red
+        elif delta == 'gone':
+            arrow = f'{c.red}--{c.normal}'
+            oldc = c.green
         else:
             arrow = '=='
             oldc = c.green
