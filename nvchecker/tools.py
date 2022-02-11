@@ -139,6 +139,7 @@ def cmp() -> None:
       differences.append(diff)
 
     elif args.all:
+      diff['delta'] = 'equal'
       differences.append(diff)
 
   if args.json:
@@ -154,23 +155,30 @@ def cmp() -> None:
     from .lib.nicelogger import Colors, support_color
     c = Colors(support_color(sys.stdout))
 
+    diffstyles = {
+      'new': {
+        'symbol': '->',
+        'oldc': c.red
+      },
+      'old': {
+        'symbol': f'{c.red}<-{c.normal}',
+        'oldc': c.red
+      },
+      'added': {
+        'symbol': '++',
+        'oldc': c.red
+      },
+      'gone': {
+        'symbol': f'{c.red}--{c.normal}',
+        'oldc': c.green
+      },
+      'equal': {
+        'symbol': '==',
+        'oldc': c.green
+      }
+    }
+
     for diff in differences:
-        delta = diff.get('delta', None)
+        style = diffstyles[diff['delta']]
 
-        if delta == 'new':
-            arrow = '->'
-            oldc = c.red
-        elif delta == 'old':
-            arrow = f'{c.red}<-{c.normal}'
-            oldc = c.red
-        if delta == 'added':
-            arrow = '++'
-            oldc = c.red
-        elif delta == 'gone':
-            arrow = f'{c.red}--{c.normal}'
-            oldc = c.green
-        else:
-            arrow = '=='
-            oldc = c.green
-
-        print(f'{diff["name"]} {oldc}{diff["oldver"]}{c.normal} {arrow} {c.green}{diff["newver"]}{c.normal}')
+        print(f'{diff["name"]} {style["oldc"]}{diff["oldver"]}{c.normal} {style["symbol"]} {c.green}{diff["newver"]}{c.normal}')
