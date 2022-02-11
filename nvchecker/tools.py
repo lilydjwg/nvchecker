@@ -113,8 +113,12 @@ def cmp() -> None:
     }
 
     if oldver is not None and newver is not None:
-      if args.sort == "none":
+      if oldver == newver:
+        diff['delta'] = 'equal'
+
+      elif args.sort == "none":
         diff['delta'] = 'new'  # assume it's a new version if we're not comparing
+
       else:
         from .sortversion import sort_version_keys
         version = sort_version_keys[args.sort]
@@ -126,20 +130,15 @@ def cmp() -> None:
         else:
           diff['delta'] = 'new'
 
-      differences.append(diff)
-
     elif oldver is None:
       diff['delta'] = 'added'
-      differences.append(diff)
 
     elif newver is None:
       if args.newer:
         continue  # don't store this diff
       diff['delta'] = 'gone'
-      differences.append(diff)
 
-    elif args.all:
-      diff['delta'] = 'equal'
+    if args.all or diff['delta'] != 'equal':
       differences.append(diff)
 
   if args.json:
