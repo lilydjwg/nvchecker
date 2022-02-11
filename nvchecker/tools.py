@@ -179,6 +179,6 @@ def cmp() -> None:
     }
 
     for diff in differences:
-        style = diffstyles[diff['delta']]
+      style = diffstyles[diff['delta']]
 
-        print(f'{diff["name"]} {style["oldc"]}{diff["oldver"]}{c.normal} {style["symbol"]} {c.green}{diff["newver"]}{c.normal}')
+      print(f'{diff["name"]} {style["oldc"]}{diff["oldver"]}{c.normal} {style["symbol"]} {c.green}{diff["newver"]}{c.normal}')
