@@ -109,13 +109,12 @@ def cmp() -> None:
     diff = {
       'name': name,
       'oldver': oldver,
-      'newver': newver,
-      'delta': 'equal'  # hoping to satisfy mypy
+      'newver': newver
     }
 
     if oldver is not None and newver is not None:
       if oldver == newver:
-        pass  # diff['delta'] = 'equal'
+        diff['delta'] = 'equal'
 
       elif args.sort == "none":
         diff['delta'] = 'new'  # assume it's a new version if we're not comparing
@@ -179,6 +178,6 @@ def cmp() -> None:
     }
 
     for diff in differences:
-      style = diffstyles[diff['delta']]
+      style = diffstyles[diff.get('delta', 'equal')]
 
       print(f'{diff["name"]} {style["oldc"]}{diff["oldver"]}{c.normal} {style["symbol"]} {c.green}{diff["newver"]}{c.normal}')
