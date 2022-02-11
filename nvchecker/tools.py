@@ -109,12 +109,13 @@ def cmp() -> None:
     diff = {
       'name': name,
       'oldver': oldver,
-      'newver': newver
+      'newver': newver,
+      'delta': 'equal'  # hoping to satisfy mypy
     }
 
     if oldver is not None and newver is not None:
       if oldver == newver:
-        diff['delta'] = 'equal'
+        pass  # diff['delta'] = 'equal'
 
       elif args.sort == "none":
         diff['delta'] = 'new'  # assume it's a new version if we're not comparing
