@@ -148,7 +148,8 @@ def cmp() -> None:
       print(json.dumps(differences, sort_keys=True, separators=(',', ':')))
 
   elif args.quiet:
-    [print(diff['name']) for diff in differences]
+    for diff in differences:
+      print(diff['name'])
 
   else:
     from .lib.nicelogger import Colors, support_color
@@ -178,6 +179,6 @@ def cmp() -> None:
     }
 
     for diff in differences:
-      style = diffstyles[diff.get('delta', 'equal')]
+      style = diffstyles[diff.get('delta', 'equal')] # type: ignore # mypy has issues with this line
 
       print(f'{diff["name"]} {style["oldc"]}{diff["oldver"]}{c.normal} {style["symbol"]} {c.green}{diff["newver"]}{c.normal}')
