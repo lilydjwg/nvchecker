@@ -6,32 +6,32 @@ from xml.etree import ElementTree
 
 from nvchecker.api import session
 
-NAMESPACE = "http://www.andymatuschak.org/xml-namespaces/sparkle"
+NAMESPACE = 'http://www.andymatuschak.org/xml-namespaces/sparkle'
 
 
 async def get_version(name, conf, *, cache, **kwargs):
-    sparkle = conf["sparkle"]
-    return await cache.get(sparkle, get_version_impl)
+  sparkle = conf['sparkle']
+  return await cache.get(sparkle, get_version_impl)
 
 
 async def get_version_impl(sparkle):
-    res = await session.get(sparkle)
-    root = ElementTree.fromstring(res.body)
-    item = root.find("./channel/item[1]/enclosure")
+  res = await session.get(sparkle)
+  root = ElementTree.fromstring(res.body)
+  item = root.find('./channel/item[1]/enclosure')
 
-    version_string = item.get(f"{{{NAMESPACE}}}shortVersionString")
-    build_number = item.get(f"{{{NAMESPACE}}}version")
+  version_string = item.get(f'{{{NAMESPACE}}}shortVersionString')
+  build_number = item.get(f'{{{NAMESPACE}}}version')
 
-    if (version_string and version_string.isdigit()) and (
-        build_number and not build_number.isdigit()
-    ):
-        version_string, build_number = build_number, version_string
+  if (version_string and version_string.isdigit()) and (
+    build_number and not build_number.isdigit()
+  ):
+    version_string, build_number = build_number, version_string
 
-    version = []
+  version = []
 
-    if version_string:
-        version.append(version_string)
-    if build_number and (build_number not in version):
-        version.append(build_number)
+  if version_string:
+    version.append(version_string)
+  if build_number and (build_number not in version):
+    version.append(build_number)
 
-    return "-".join(version) if version else None
+  return '-'.join(version) if version else None
