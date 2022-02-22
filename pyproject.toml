@@ -4,3 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 # addopts = -n auto
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+# you may find `tox --skip-missing-interpreters=true` helpful.
+envlist = py3{7,8,9,10}
+
+[testenv]
+usedevelop = false
+deps =
+  pytest
+  pytest-asyncio
+  pytest-httpbin
+  flaky
+extras =
+  htmlparser
+passenv = KEYFILE
+commands = pytest -r fEs {posargs}
+"""
