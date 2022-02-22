@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 # addopts = -n auto
+asyncio_mode = "strict"
 
 [tool.tox]
 legacy_tox_ini = """
