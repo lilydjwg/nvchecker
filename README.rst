@@ -42,7 +42,7 @@ To install::
 
 To use the latest code, you can also clone this repository and run::
 
-  python3 setup.py install
+  pip install .
 
 To see available options::
 
