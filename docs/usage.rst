@@ -365,8 +365,8 @@ Check GitHub
   source = "github"
 
 Check `GitHub <https://github.com/>`_ for updates. The version returned is in
-date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``
-or ``use_max_tag`` is used. See below.
+date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``,
+``use_max_tag``, or ``use_commit_name`` is used. See below.
 
 github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
@@ -392,6 +392,10 @@ use_latest_tag
   Set this to ``true`` to check for the latest tag on GitHub.
 
   This requires a token because it's using the v4 GraphQL API.
+
+use_commit_name
+  Set this to ``true`` to append a plus and the commit name to the version, e.g.
+  ``20130701.012212+e1457aadd30f53f4d50d6c4828d517355c09b8ae``.
 
 query
   When ``use_latest_tag`` is ``true``, this sets a query for the tag. The exact
