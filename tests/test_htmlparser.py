@@ -3,7 +3,17 @@
 
 import pytest
 
-pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
+lxml_available = True
+try:
+  import lxml
+except ImportError:
+  lxml_available = False
+
+pytestmark = [
+  pytest.mark.asyncio,
+  pytest.mark.needs_net,
+  pytest.mark.skipif(not lxml_available, reason="needs lxml"),
+]
 
 async def test_xpath_ok(get_version):
     assert await get_version("unifiedremote", {
