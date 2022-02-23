@@ -409,6 +409,12 @@ use_max_tag
   lightweight ones, and return the largest one sorted by the
   ``sort_version_key`` option. Will return the tag name instead of date.
 
+  This defaults ``list_count`` to 100.
+
+list_count
+  When supporting :ref:`list options` through the v4 GraphQL API, this sets a
+  maximum count of items in the list. By default, ``list_count`` is set to 1.
+
 token
   A personal authorization token used to call the API.
 
@@ -421,6 +427,8 @@ To set an authorization token, you can set:
 - the token option
 
 This source supports :ref:`list options` when ``use_max_tag`` is set.
+Options of this source that support :ref:`list options` may be effected by
+``list_count``.
 
 Check Gitea
 ~~~~~~~~~~~

@@ -1,10 +1,9 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import itertools
 import time
 from urllib.parse import urlencode
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import structlog
 
@@ -77,26 +76,75 @@ async def query_rest(
 
   return await cache.get_json(url = url, headers = headers)
 
-QUERY_LATEST_TAG = '''
-query latestTag(
+QUERY_LATEST_TAGS = '''
+query latestTags(
   $owner: String!, $name: String!,
-  $query: String, $includeCommitName: Boolean = false,
+  $query: String, $orderByCommitDate: Boolean!, $count: Int = 1,
+  $includeCommitName: Boolean = false,
 ) {
   repository(owner: $owner, name: $name) {
-    refs(
+    ... @include(if: $orderByCommitDate) { latestRefs: refs(
       refPrefix: "refs/tags/", query: $query,
-      first: 1, orderBy: {field: TAG_COMMIT_DATE, direction: DESC},
-    ) {
-      edges {
-        node {
-          name
-          ... @include(if: $includeCommitName) { target { oid } }
-        }
-      }
+      first: $count, orderBy: {field: TAG_COMMIT_DATE, direction: DESC}
+    ) { ...tagData } }
+    ... @skip(if: $orderByCommitDate) { maxRefs: refs(
+      refPrefix: "refs/tags/", query: $query,
+      last: $count
+    ) { ...tagData } }
+  }
+}
+fragment tagData on RefConnection {
+  edges {
+    node {
+      name
+      ... @include(if: $includeCommitName) { target { ...commitOid } }
     }
   }
 }
+fragment commitOid on GitObject {
+  ... on Commit { commitOid: oid }
+  ... on Tag { tagTarget: target {
+    ... on Commit { commitOid: oid }
+  } }
+}
 '''
+
+async def query_latest_tags(
+  *,
+  cache: AsyncCache,
+  token: Optional[str] = None,
+  owner: str,
+  name: str,
+  query: Optional[str],
+  order_by_commit_date: bool,
+  count: Optional[int] = None,
+  use_commit_name: bool,
+) -> List[str]:
+  j = await query_graphql(
+    cache = cache,
+    token = token,
+    query = QUERY_LATEST_TAGS,
+    variables = {
+      'owner': owner,
+      'name': name,
+      'query': query,
+      'orderByCommitDate': order_by_commit_date,
+      'count': count,
+      'includeCommitName': use_commit_name,
+    },
+  )
+  refsAlias = 'latestRefs' if order_by_commit_date else 'maxRefs'
+  refs = j['data']['repository'][refsAlias]['edges']
+  if not order_by_commit_date:
+    refs = reversed(refs)
+  tags = [
+    add_commit_name(
+      ref['node']['name'],
+      ref['node']['target']['commitOid'] if use_commit_name else None,
+    )
+    for ref in refs
+  ]
+  return tags
 
 QUERY_LATEST_RELEASE = '''
 query latestRelease(
@@ -128,28 +176,18 @@ async def get_version_real(
 
   if conf.get('use_latest_tag', False):
     owner, reponame = repo.split('/')
-    j = await query_graphql(
+    tags = await query_latest_tags(
       cache = cache,
       token = token,
-      query = QUERY_LATEST_TAG,
-      variables = {
-        'owner': owner,
-        'name': reponame,
-        'query': conf.get('query'),
-        'includeCommitName': use_commit_name,
-      },
+      owner = owner,
+      name = reponame,
+      query = conf.get('query'),
+      order_by_commit_date = True,
+      use_commit_name = use_commit_name,
     )
-    refs = j['data']['repository']['refs']['edges']
-    if not refs:
-      raise GetVersionError('no tag found')
-    ref = next(
-      add_commit_name(
-        ref['node']['name'],
-        ref['node']['target']['oid'] if use_commit_name else None,
-      )
-      for ref in refs
-    )
-    return ref
+    if not tags:
+      raise GetVersionError('No tag found in upstream repository.')
+    return tags[0]
   elif conf.get('use_latest_release', False):
     tag = None
     if token:
@@ -182,18 +220,31 @@ async def get_version_real(
       raise GetVersionError('No release found in upstream repository.')
     return tag
   elif conf.get('use_max_tag', False):
-    data = await query_rest(
-      cache = cache,
-      token = token,
-      url = GITHUB_MAX_TAG % repo,
-    )
-    tags = [
-      add_commit_name(
-        ref['ref'].split('/', 2)[-1],
-        ref['object']['sha'] if use_commit_name else None,
+    if token:
+      owner, reponame = repo.split('/')
+      tags = await query_latest_tags(
+        cache = cache,
+        token = token,
+        owner = owner,
+        name = reponame,
+        query = conf.get('query'),
+        order_by_commit_date = False,
+        count = conf.get('list_count', 100),
+        use_commit_name = use_commit_name,
       )
-      for ref in data
-    ]
+    else:
+      data = await query_rest(
+        cache = cache,
+        token = token,
+        url = GITHUB_MAX_TAG % repo,
+      )
+      tags = [
+        add_commit_name(
+          ref['ref'].split('/', 2)[-1],
+          ref['object']['sha'] if use_commit_name else None,
+        )
+        for ref in data
+      ]
     if not tags:
       raise GetVersionError('No tag found in upstream repository.')
     return tags
@@ -211,11 +262,12 @@ async def get_version_real(
       url = GITHUB_URL % repo,
       parameters = parameters,
     )
-    # YYYYMMDD.HHMMSS
+    date = data[0]['commit']['committer']['date']
+    commit_name = data[0]['sha'] if use_commit_name else None
     version = add_commit_name(
-      data[0]['commit']['committer']['date'] \
-        .rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
-      data[0]['sha'] if use_commit_name else None,
+      # YYYYMMDD.HHMMSS
+      date.rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
+      commit_name,
     )
     return version
 
