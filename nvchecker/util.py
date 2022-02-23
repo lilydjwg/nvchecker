@@ -146,6 +146,14 @@ class BaseWorker:
     '''Run the `tasks`. Subclasses should implement this method.'''
     raise NotImplementedError
 
+def _normalize(x: Any) -> Any:
+  if isinstance(x, list):
+    return tuple(sorted(_normalize(y) for y in x))
+  elif isinstance(x, dict):
+    return tuple(sorted((_normalize(k), _normalize(v)) for k, v in x.items()))
+  else:
+    return x
+
 class AsyncCache:
   '''A cache for use with async functions.'''
   cache: Dict[Hashable, Any]
@@ -156,28 +164,32 @@ class AsyncCache:
     self.lock = asyncio.Lock()
 
   async def _get_json(
-    self, key: Tuple[str, str, Tuple[Tuple[str, str], ...]],
+    self, key: Tuple[str, str, Tuple[Tuple[str, str], ...], object], extra: Any,
   ) -> Any:
-    _, url, headers = key
-    res = await session.get(url, headers=dict(headers))
+    _, url, headers, json = key
+    json = extra # denormalizing json would be a pain, so we sneak it through
+    res = await (session.get(url=url, headers=dict(headers)) if json is None \
+      else session.post(url=url, headers=dict(headers), json=json))
     return res.json()
 
   async def get_json(
     self, url: str, *,
     headers: Dict[str, str] = {},
+    json: Optional[object] = None,
   ) -> Any:
     '''Get specified ``url`` and return the response content as JSON.
 
     The returned data will be cached for reuse.
     '''
-    key = '_jsonurl', url, tuple(sorted(headers.items()))
+    key = '_jsonurl', url, _normalize(headers), _normalize(json)
     return await self.get(
-      key , self._get_json) # type: ignore
+      key, self._get_json, extra=json) # type: ignore
 
   async def get(
     self,
     key: Hashable,
-    func: Callable[[Hashable], Coroutine[Any, Any, Any]],
+    func: Callable[[Hashable, Optional[Any]], Coroutine[Any, Any, Any]],
+    extra: Optional[Any] = None,
   ) -> Any:
     '''Run async ``func`` and cache its return value by ``key``.
 
@@ -189,7 +201,7 @@ class AsyncCache:
     async with self.lock:
       cached = self.cache.get(key)
       if cached is None:
-        coro = func(key)
+        coro = func(key, extra)
         fu = asyncio.create_task(coro)
         self.cache[key] = fu
 
