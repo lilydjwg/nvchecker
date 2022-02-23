@@ -98,6 +98,20 @@ query latestTag(
 }
 '''
 
+QUERY_LATEST_RELEASE = '''
+query latestRelease(
+  $owner: String!, $name: String!,
+  $includeCommitName: Boolean = false,
+) {
+  repository(owner: $owner, name: $name) {
+    latestRelease {
+      tagName
+      ... @include(if: $includeCommitName) { tagCommit { oid } }
+    }
+  }
+}
+'''
+
 async def get_version_real(
   name: str, conf: Entry, *,
   cache: AsyncCache, keymanager: KeyManager,
@@ -137,14 +151,35 @@ async def get_version_real(
     )
     return ref
   elif conf.get('use_latest_release', False):
-    data = await query_rest(
-      cache = cache,
-      token = token,
-      url = GITHUB_LATEST_RELEASE % repo,
-    )
-    if 'tag_name' not in data:
+    tag = None
+    if token:
+      owner, reponame = repo.split('/')
+      j = await query_graphql(
+        cache = cache,
+        token = token,
+        query = QUERY_LATEST_RELEASE,
+        variables = {
+          'owner': owner,
+          'name': reponame,
+          'includeCommitName': use_commit_name,
+        },
+      )
+      release = j['data']['repository']['latestRelease']
+      if release is not None:
+        tag = add_commit_name(
+          release['tagName'],
+          release['tagCommit']['oid'] if use_commit_name else None,
+        )
+    else:
+      data = await query_rest(
+        cache = cache,
+        token = token,
+        url = GITHUB_LATEST_RELEASE % repo,
+      )
+      if 'tag_name' in data:
+        tag = data['tag_name']
+    if tag is None:
       raise GetVersionError('No release found in upstream repository.')
-    tag = data['tag_name']
     return tag
   elif conf.get('use_max_tag', False):
     data = await query_rest(

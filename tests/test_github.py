@@ -35,6 +35,14 @@ async def test_github_latest_release(get_version):
         "use_latest_release": True,
     }) == "release3"
 
+async def test_github_latest_release_commit_name(get_version):
+    assert await get_version("example", {
+        "source": "github",
+        "github": "harry-sanabria/ReleaseTestRepo",
+        "use_latest_release": True,
+        "use_commit_name": True,
+    }) == "release3+2b3cdf6134b07ae6ac77f11b586dc1ae6d1521db"
+
 async def test_github_max_tag(get_version):
     assert await get_version("example", {
         "source": "github",

@@ -397,6 +397,8 @@ use_commit_name
   Set this to ``true`` to append a plus and the commit name to the version, e.g.
   ``20130701.012212+e1457aadd30f53f4d50d6c4828d517355c09b8ae``.
 
+  If this isn't showing up, provide a token so it can use the v4 GraphQL API.
+
 query
   When ``use_latest_tag`` is ``true``, this sets a query for the tag. The exact
   matching method is not documented by GitHub.
