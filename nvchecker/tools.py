@@ -83,6 +83,8 @@ def cmp() -> None:
                            '(default: parse_version)')
   parser.add_argument('-n', '--newer', action='store_true',
                       help='Shows only the newer ones according to --sort.')
+  parser.add_argument('--exit-status', action='store_true',
+                      help="exit with status 4 if there are updates")
   args = parser.parse_args()
   if core.process_common_arguments(args):
     return
@@ -182,3 +184,8 @@ def cmp() -> None:
       style = diffstyles[diff.get('delta', 'equal')] # type: ignore # mypy has issues with this line
 
       print(f'{diff["name"]} {style["oldc"]}{diff["oldver"]}{c.normal} {style["symbol"]} {c.green}{diff["newver"]}{c.normal}')
+
+  if args.exit_status and any(
+    diff.get('delta') != 'equal' for diff in differences
+  ):
+    sys.exit(4)
