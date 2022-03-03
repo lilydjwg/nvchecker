@@ -1,10 +1,12 @@
 *.egg-info/
 __pycache__/
 /build/
+/dist/
 .cache/
 .eggs/
 *.pyc
 *.pyo
 .travis.pub
 .pytest_cache/
+.tox/
 keyfile.toml

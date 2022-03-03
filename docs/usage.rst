@@ -204,8 +204,8 @@ httptoken
   A personal authorization token used to fetch the url with the ``Authorization`` header.
   The type of token depends on the authorization required.
 
-  - For Bearer token set : ``Bearer <Your_bearer_token>``
-  - For Basic token set : ``Basic <Your_base64_encoded_token>``
+  - For Bearer token set \: ``Bearer <Your_bearer_token>``
+  - For Basic token set \: ``Basic <Your_base64_encoded_token>``
 
   In the keyfile add ``httptoken_{name}`` token.
 
@@ -365,8 +365,8 @@ Check GitHub
   source = "github"
 
 Check `GitHub <https://github.com/>`_ for updates. The version returned is in
-date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``
-or ``use_max_tag`` is used. See below.
+date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``,
+``use_max_tag``, or ``use_commit_name`` is used. See below.
 
 github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
@@ -393,6 +393,12 @@ use_latest_tag
 
   This requires a token because it's using the v4 GraphQL API.
 
+use_commit_name
+  Set this to ``true`` to append a plus and the commit name to the version, e.g.
+  ``20130701.012212+e1457aadd30f53f4d50d6c4828d517355c09b8ae``.
+
+  If this isn't showing up, provide a token so it can use the v4 GraphQL API.
+
 query
   When ``use_latest_tag`` is ``true``, this sets a query for the tag. The exact
   matching method is not documented by GitHub.
@@ -402,6 +408,12 @@ use_max_tag
   ``use_latest_release``, this option includes both annotated tags and
   lightweight ones, and return the largest one sorted by the
   ``sort_version_key`` option. Will return the tag name instead of date.
+
+  This defaults ``list_count`` to 100.
+
+list_count
+  When supporting :ref:`list options` through the v4 GraphQL API, this sets a
+  maximum count of items in the list. By default, ``list_count`` is set to 1.
 
 token
   A personal authorization token used to call the API.
@@ -415,6 +427,8 @@ To set an authorization token, you can set:
 - the token option
 
 This source supports :ref:`list options` when ``use_max_tag`` is set.
+Options of this source that support :ref:`list options` may be effected by
+``list_count``.
 
 Check Gitea
 ~~~~~~~~~~~
