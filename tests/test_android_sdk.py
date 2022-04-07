@@ -33,7 +33,7 @@ async def test_android_list(get_version):
         "source": "android_sdk",
         "android_sdk": "cmake;",
         "repo": "package",
-        "include_regex": "3\.10.*",
+        "include_regex": r"3\.10.*",
     }) == "3.10.2"
 
 async def test_android_package_os(get_version):
