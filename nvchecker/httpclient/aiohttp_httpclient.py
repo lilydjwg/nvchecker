@@ -1,7 +1,6 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import atexit
 import asyncio
 from typing import Optional, Dict
 
@@ -16,16 +15,15 @@ logger = structlog.get_logger(logger_name=__name__)
 connector = aiohttp.TCPConnector(limit=20)
 
 class AiohttpSession(BaseSession):
+  session = None
+
   def setup(
     self,
     concurreny: int = 20,
     timeout: int = 20,
   ) -> None:
-    self.session = aiohttp.ClientSession(
-      connector = aiohttp.TCPConnector(limit=concurreny),
-      timeout = aiohttp.ClientTimeout(total=timeout),
-      trust_env = True,
-    )
+    self._concurreny = concurreny
+    self._timeout = timeout
 
   async def request_impl(
     self, url: str, *,
@@ -38,6 +36,14 @@ class AiohttpSession(BaseSession):
     body = None,
     verify_cert: bool = True,
   ) -> Response:
+    if self.session is None:
+      # need to create in async context
+      self.session = aiohttp.ClientSession(
+        connector = aiohttp.TCPConnector(limit=self._concurreny),
+        timeout = aiohttp.ClientTimeout(total=self._timeout),
+        trust_env = True,
+      )
+
     kwargs = {
       'headers': headers,
       'params': params,
@@ -76,10 +82,5 @@ class AiohttpSession(BaseSession):
 
     body = await res.content.read()
     return Response(res.headers, body)
-
-@atexit.register
-def cleanup():
-  loop = asyncio.get_event_loop()
-  loop.run_until_complete(session.session.close())
 
 session = AiohttpSession()

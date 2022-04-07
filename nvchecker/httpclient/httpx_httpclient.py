@@ -1,7 +1,6 @@
 # MIT licensed
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import atexit
 from typing import Dict, Optional, Tuple
 
 import httpx
@@ -74,11 +73,5 @@ class HttpxSession(BaseSession):
     for client in self.clients.values():
       await client.aclose()
     del self.clients
-
-@atexit.register
-def cleanup():
-  import asyncio
-  loop = asyncio.get_event_loop()
-  loop.run_until_complete(session.aclose())
 
 session = HttpxSession()
