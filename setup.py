@@ -20,7 +20,7 @@ setup(
   platforms = 'any',
   zip_safe = True,
 
-  packages = find_namespace_packages(exclude=['tests', 'build*', 'docs*']),
+  packages = find_namespace_packages(include=['nvchecker*']),
   install_requires = ['setuptools; python_version<"3.8"', 'tomli', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
