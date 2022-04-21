@@ -27,7 +27,7 @@ class Response:
     self.body = body
 
   def json(self):
-    '''Convert reponse content to JSON.'''
+    '''Convert response content to JSON.'''
     return _json.loads(self.body.decode('utf-8'))
 
 class BaseSession:
@@ -95,7 +95,7 @@ class BaseSession:
                          tries = i, exc_info = e)
           continue
 
-    raise Exception('shoud not reach')
+    raise Exception('should not reach')
 
   async def request_impl(
     self, url: str, *,

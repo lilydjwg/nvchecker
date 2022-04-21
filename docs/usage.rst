@@ -701,7 +701,7 @@ repo
 
 subrepo
   Check the version in this subrepo. This field is optional.
-  When ommited all subrepos are queried.
+  When omitted all subrepos are queried.
 
 This source supports :ref:`list options`.
 
@@ -731,7 +731,7 @@ repo
   Should be one of ``addon`` or ``package``. Packages in ``addon2-1.xml`` use ``addon`` and packages in ``repository2-1.xml`` use ``package``.
 
 channel
-  Choose the target channel from one of ``stable``, ``beta``, ``dev`` or ``canary``. This option also accepts a comma-seperated list to pick from multiple channels. For example, the latest unstable version is picked with ``beta,dev,canary``. The default is ``stable``.
+  Choose the target channel from one of ``stable``, ``beta``, ``dev`` or ``canary``. This option also accepts a comma-separated list to pick from multiple channels. For example, the latest unstable version is picked with ``beta,dev,canary``. The default is ``stable``.
 
 host_os
   Choose the target OS for the tracked package from one of ``linux``, ``macosx``, ``windows``. The default is ``linux``. For OS-independent packages (e.g., Java JARs), this field is ignored.

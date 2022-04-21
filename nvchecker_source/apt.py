@@ -135,7 +135,7 @@ async def get_version(
   strip_release = conf.get('strip_release', False)
 
   if srcpkg and pkg:
-    raise GetVersionError('Setting both srcpkg and pkg is ambigious')
+    raise GetVersionError('Setting both srcpkg and pkg is ambiguous')
   elif not srcpkg and not pkg:
     pkg = name
 
