@@ -51,4 +51,4 @@ async def test_apt_multiversions(get_version):
         "repo": "main",
         "arch": "amd64",
     })
-    assert ver.startswith("1.4.00.")
+    assert ver.startswith("1.5.00.")
