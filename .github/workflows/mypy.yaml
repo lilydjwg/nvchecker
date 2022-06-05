@@ -18,7 +18,7 @@ jobs:
           ${{ runner.os }}-${{ env.cache-name }}-
           ${{ runner.os }}-cache-pip-
     - name: Install deps
-      run: pip3 install -U tornado pytest pytest-asyncio pytest-httpbin flaky structlog tomli aiohttp httpx mypy
+      run: pip3 install -U tornado pytest pytest-asyncio pytest-httpbin flaky structlog tomli aiohttp httpx mypy awesomeversion
     - name: Run mypy for --install-types
       run: PATH=$HOME/.local/bin:$PATH mypy nvchecker nvchecker_source tests
       continue-on-error: true

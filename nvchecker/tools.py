@@ -126,7 +126,7 @@ def cmp() -> None:
         from .sortversion import sort_version_keys
         version = sort_version_keys[args.sort]
 
-        if version(oldver) > version(newver):
+        if version(oldver) > version(newver): # type: ignore
           if args.newer:
             continue  # don't store this diff
           diff['delta'] = 'old'

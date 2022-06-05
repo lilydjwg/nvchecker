@@ -194,7 +194,7 @@ class AsyncCache:
         self.cache[key] = fu
 
     if asyncio.isfuture(cached): # pending
-      return await cached # type: ignore
+      return await cached
     elif cached is not None: # cached
       return cached
     else: # not cached

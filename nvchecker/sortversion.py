@@ -23,7 +23,7 @@ try:
   from awesomeversion import AwesomeVersion
   awesomeversion_available = True
 except ImportError:
-  def AwesomeVersion(k):
+  def AwesomeVersion(k): # type: ignore
     raise NotImplementedError("Using awesomeversion but it can not be imported!")
   awesomeversion_available = False
 
