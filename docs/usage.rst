@@ -239,10 +239,11 @@ exclude_regex
   one, it's excluded even it's also matched by ``include_regex``.
 
 sort_version_key
-  Sort the version string using this key function. Choose between
-  ``parse_version`` and ``vercmp``. Default value is ``parse_version``.
-  ``parse_version`` use an old version of ``pkg_resources.parse_version``.
-  ``vercmp`` use ``pyalpm.vercmp``.
+  Sort the version string using this key function. Choose among
+  ``parse_version``, ``vercmp`` and ``awesomeversion``. Default value is
+  ``parse_version``. ``parse_version`` uses an old version of
+  ``pkg_resources.parse_version``. ``vercmp`` uses ``pyalpm.vercmp``.
+  ``awesomeversion`` uses `awesomeversion <https://github.com/ludeeus/awesomeversion>`_.
 
 ignored
   Version strings that are explicitly ignored, separated by whitespace. This

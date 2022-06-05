@@ -24,6 +24,7 @@ setup(
   install_requires = ['setuptools; python_version<"3.8"', 'tomli', 'structlog', 'appdirs', 'tornado>=6', 'pycurl'],
   extras_require = {
     'vercmp': ['pyalpm'],
+    'awesomeversion': ['awesomeversion'],
     'pypi': ['packaging'],
     'htmlparser': ['lxml'],
   },
