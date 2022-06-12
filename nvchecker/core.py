@@ -366,7 +366,11 @@ async def process_result(
   try:
     while True:
       r = await result_q.get()
-      r1 = _process_result(r)
+      try:
+        r1 = _process_result(r)
+      except Exception as e:
+        logger.exception('error processing result', result=r)
+        r1 = e
       if isinstance(r1, Exception):
         entry_waiter.set_exception(r.name, r1)
         has_failures = True
