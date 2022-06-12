@@ -82,7 +82,11 @@ def raise_on_logger_msg():
   def proc(logger, method_name, event_dict):
     if method_name in ('warning', 'error'):
       if 'exc_info' in event_dict:
-        raise event_dict['exc_info']
+        exc = event_dict['exc_info']
+        if isinstance(exc, Exception):
+          raise exc
+        else: # exc_info=True
+          raise
       if not event_dict['event'].startswith(('rate limited', 'no-result')):
         raise RuntimeError(event_dict['event'])
     return event_dict['event']
