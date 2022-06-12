@@ -19,3 +19,11 @@ async def test_xpath_missing_ok(get_version):
         "xpath": '//pre[@class="test-is-ok"]/text()',
         "missing_ok": True,
     }) is None
+
+async def test_xpath_element(get_version):
+    assert await get_version("unifiedremote", {
+        "source": "htmlparser",
+        "url": "http://httpbin.org/",
+        "xpath": '//pre[@class="version"]',
+    }) != None
+

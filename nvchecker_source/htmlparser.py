@@ -25,10 +25,17 @@ async def get_version_impl(info):
   doc = html.fromstring(res.body, base_url=conf['url'], parser=parser)
 
   try:
-    version = doc.xpath(conf.get('xpath'))
+    els = doc.xpath(conf.get('xpath'))
   except ValueError:
     if not conf.get('missing_ok', False):
       raise GetVersionError('version string not found.')
   except etree.XPathEvalError as e:
     raise GetVersionError('bad xpath', exc_info=e)
+
+  version = [
+    str(el)
+    if isinstance(el, str)
+    else str(el.text_content())
+    for el in els
+  ]
   return version
