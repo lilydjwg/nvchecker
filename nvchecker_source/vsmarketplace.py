@@ -25,7 +25,7 @@ async def get_version(name: str, conf: Entry, *, cache: AsyncCache, **kwargs):
             'value': 'Microsoft.VisualStudio.Code'
           },
           {
-            'filterType': 10,
+            'filterType': 7,
             'value': name
           },
           {
