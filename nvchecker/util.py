@@ -146,6 +146,13 @@ class BaseWorker:
     '''Run the `tasks`. Subclasses should implement this method.'''
     raise NotImplementedError
 
+  async def _run_maynot_raise(self) -> None:
+    try:
+      await self.run()
+    except Exception:
+      # don't let an exception tear down the whole process
+      logger.exception('exception raised by Worker.run')
+
 class AsyncCache:
   '''A cache for use with async functions.'''
   cache: Dict[Hashable, Any]

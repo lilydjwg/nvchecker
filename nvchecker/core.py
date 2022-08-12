@@ -259,7 +259,7 @@ class Dispatcher:
         func = mod.get_version
         ctx.run(worker.initialize, func)
 
-      ret.append(ctx.run(worker.run))
+      ret.append(ctx.run(worker._run_maynot_raise))
 
     return ret
 
