@@ -17,16 +17,16 @@ async def test_android_package(get_version):
         "source": "android_sdk",
         "android_sdk": "cmake;",
         "repo": "package",
-    }) == "3.18.1"
+    }) == "3.22.1"
 
 
 async def test_android_package_channel(get_version):
     assert await get_version("android-sdk-cmake", {
         "source": "android_sdk",
-        "android_sdk": "cmake;",
+        "android_sdk": "ndk;",
         "repo": "package",
         "channel": "beta,dev,canary",
-    }) == "3.22.1"
+    }) == "25.0.8528842"
 
 async def test_android_list(get_version):
     assert await get_version("android-sdk-cmake-older", {
