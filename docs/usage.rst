@@ -859,8 +859,9 @@ Check package updates in a local ALPM database.
 alpm
   Name of the package.
 
-repo
-  Name of the package repository in which the package resides. If not provided, nvchecker will search ``core``, ``extra``, ``community`` and ``multilib``, in that order.
+repo / repos
+  Name of the package repository in which the package resides. If not provided, nvchecker will search ``repos``, if ``repos`` is not provided either, ``core``, ``extra``, ``community`` and ``multilib`` will be used, in that order.
+
 
 dbpath
   Path to the ALPM database directory. Default: ``/var/lib/pacman``. You need to update the database yourself.
