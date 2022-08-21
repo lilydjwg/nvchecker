@@ -20,7 +20,7 @@ async def get_version(name, conf, *, cache, **kwargs):
 
   repo = conf.get('repo')
   if repo is None:
-    repos = ['core', 'extra', 'community', 'multilib']
+    repos = conf.get('repos') or ['core', 'extra', 'community', 'multilib']
   else:
     repos = [repo]
 
