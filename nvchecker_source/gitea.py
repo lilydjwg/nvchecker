@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import urllib.parse
 
-GITEA_URL = 'https://%s/api/v1/repos/%s/commits?sha=%s'
+GITEA_URL = 'https://%s/api/v1/repos/%s/commits'
 GITEA_MAX_TAG = 'https://%s/api/v1/repos/%s/tags'
 
 from nvchecker.api import (
@@ -17,14 +17,16 @@ async def get_version(
   cache: AsyncCache, keymanager: KeyManager,
 ) -> VersionResult:
   repo = urllib.parse.quote(conf['gitea'])
-  br = conf.get('branch', 'master')
+  br = conf.get('branch')
   host = conf.get('host', 'gitea.com')
   use_max_tag = conf.get('use_max_tag', False)
 
   if use_max_tag:
     url = GITEA_MAX_TAG % (host, repo)
   else:
-    url = GITEA_URL % (host, repo, br)
+    url = GITEA_URL % (host, repo)
+    if br:
+      url += '?sha=' + br
 
   # Load token from config
   token = conf.get('token')
