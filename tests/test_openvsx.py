@@ -7,4 +7,4 @@ pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 async def test_openvsx(get_version):
     assert await get_version("usernamehw.indent-one-space", {
         "source": "openvsx",
-    }) == "0.2.7"
+    }) == "0.3.0"
