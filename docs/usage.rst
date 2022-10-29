@@ -886,7 +886,7 @@ openvsx
   The extension's Unique Identifier on open-vsx.org, e.g. ``ritwickdey.LiveServer``.
 
 Check Visual Studio Code Marketplace
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
   source = "vsmarketplace"

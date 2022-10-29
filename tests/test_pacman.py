@@ -11,12 +11,12 @@ pytestmark = [pytest.mark.asyncio,
                                  reason="requires synced pacman databases")]
 
 async def test_pacman(get_version):
-    assert await get_version("ipw2100-fw", {
+    assert await get_version("base", {
         "source": "pacman",
-    }) == "1.3-10"
+    }) == "3-1"
 
 async def test_pacman_strip_release(get_version):
-    assert await get_version("ipw2100-fw", {
+    assert await get_version("base", {
         "source": "pacman",
         "strip_release": 1,
-    }) == "1.3"
+    }) == "3"
