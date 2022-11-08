@@ -373,7 +373,7 @@ github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
 
 branch
-  Which branch to track? Default: ``master``.
+  Which branch to track? Default: the repository's default.
 
 path
   Only commits containing this file path will be returned.
@@ -430,7 +430,7 @@ gitea
   The gitea repository, with author, e.g. ``gitea/tea``.
 
 branch
-  Which branch to track? Default: ``master``.
+  Which branch to track? Default: the repository's default.
 
 use_max_tag
   Set this to ``true`` to check for the max tag on Gitea. Will return the biggest one
@@ -462,7 +462,7 @@ bitbucket
   The bitbucket repository, with author, e.g. ``lilydjwg/dotvim``.
 
 branch
-  Which branch to track? Default is the repository's default.
+  Which branch to track? Default: the repository's default.
 
 use_max_tag
   Set this to ``true`` to check for the max tag on BitBucket. Will return the biggest one
