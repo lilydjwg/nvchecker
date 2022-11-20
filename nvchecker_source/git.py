@@ -1,7 +1,7 @@
 # MIT licensed
 # Copyright (c) 2020 Felix Yan <felixonmars@archlinux.org>, et al.
 
-from .cmd import run_cmd # type: ignore
+from .cmd import run_cmd
 
 async def get_version(
   name, conf, *, cache, keymanager=None
