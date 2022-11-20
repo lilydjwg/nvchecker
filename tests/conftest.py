@@ -8,6 +8,7 @@ from pathlib import Path
 
 import tomli
 import pytest
+import pytest_asyncio
 
 from nvchecker import core
 from nvchecker import __main__ as main
@@ -41,7 +42,7 @@ async def run(
   vers, _has_failures = await main.run(result_coro, runner_coro)
   return vers
 
-@pytest.fixture(scope="module")
+@pytest_asyncio.fixture(scope="module")
 async def get_version():
   async def __call__(name, config):
     entries = {name: config}
@@ -50,7 +51,7 @@ async def get_version():
 
   return __call__
 
-@pytest.fixture(scope="module")
+@pytest_asyncio.fixture(scope="module")
 async def run_str():
   async def __call__(str):
     entries = tomli.loads(str)
@@ -59,7 +60,7 @@ async def run_str():
 
   return __call__
 
-@pytest.fixture(scope="module")
+@pytest_asyncio.fixture(scope="module")
 async def run_str_multi():
   async def __call__(str):
     entries = tomli.loads(str)

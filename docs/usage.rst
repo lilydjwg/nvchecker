@@ -204,8 +204,8 @@ httptoken
   A personal authorization token used to fetch the url with the ``Authorization`` header.
   The type of token depends on the authorization required.
 
-  - For Bearer token set : ``Bearer <Your_bearer_token>``
-  - For Basic token set : ``Basic <Your_base64_encoded_token>``
+  - For Bearer token set \: ``Bearer <Your_bearer_token>``
+  - For Basic token set \: ``Basic <Your_base64_encoded_token>``
 
   In the keyfile add ``httptoken_{name}`` token.
 

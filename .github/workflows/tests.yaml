@@ -34,7 +34,7 @@ jobs:
         cache-name: cache-pip
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-${{ hashFiles('setup.py') }}
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-${{ hashFiles('pyproject.toml', 'setup.cfg') }}
         restore-keys: |
           ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-
           ${{ runner.os }}-${{ env.cache-name }}-
