@@ -45,7 +45,7 @@ jobs:
         sudo apt install -y libcurl4-openssl-dev
     # werkzeug is pinned for httpbin compatibility https://github.com/postmanlabs/httpbin/issues/673
     - name: Install Python deps
-      run: pip install -U ${{ matrix.deps }} pytest pytest-asyncio pytest-httpbin flaky structlog tomli appdirs lxml 'werkzeug<2.1' awesomeversion
+      run: pip install -U ${{ matrix.deps }} pytest pytest-asyncio pytest-httpbin flaky structlog tomli platformdirs lxml 'werkzeug<2.1' awesomeversion
     - name: Decrypt keys
       env:
         KEY: ${{ secrets.KEY }}
