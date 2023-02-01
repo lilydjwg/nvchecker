@@ -22,7 +22,7 @@ import json
 
 import structlog
 import tomli
-import appdirs
+import platformdirs
 
 from .lib import nicelogger
 from . import slogconf
@@ -40,7 +40,7 @@ from . import httpclient
 logger = structlog.get_logger(logger_name=__name__)
 
 def get_default_config() -> str:
-  confdir = appdirs.user_config_dir(appname='nvchecker')
+  confdir = platformdirs.user_config_dir(appname='nvchecker')
   file = os.path.join(confdir, 'nvchecker.toml')
   return file
 
