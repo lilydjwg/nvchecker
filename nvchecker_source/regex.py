@@ -7,12 +7,6 @@ import sre_constants
 from nvchecker.api import session, GetVersionError
 
 async def get_version(name, conf, *, cache, **kwargs):
-  key = tuple(sorted(conf.items()))
-  return await cache.get(key, get_version_impl)
-
-async def get_version_impl(info):
-  conf = dict(info)
-
   try:
     regex = re.compile(conf['regex'])
   except sre_constants.error as e:
@@ -20,17 +14,27 @@ async def get_version_impl(info):
   if regex.groups > 1:
     raise GetVersionError('multi-group regex')
 
-  encoding = conf.get('encoding', 'latin1')
+  key = (
+    conf['url'],
+    conf.get('encoding', 'latin1'),
+    conf.get('post_data'),
+    conf.get('post_data_type', 'application/x-www-form-urlencoded'),
+  )
+  body = await cache.get(key, get_url)
 
-  data = conf.get('post_data')
-  if data is None:
-    res = await session.get(conf['url'])
-  else:
-    res = await session.post(conf['url'], body = data, headers = {
-        'Content-Type': conf.get('post_data_type', 'application/x-www-form-urlencoded')
-      })
-  body = res.body.decode(encoding)
   versions = regex.findall(body)
   if not versions and not conf.get('missing_ok', False):
     raise GetVersionError('version string not found.')
   return versions
+
+async def get_url(info):
+  url, encoding, post_data, post_data_type = info
+
+  if post_data is None:
+    res = await session.get(url)
+  else:
+    res = await session.post(url, body = post_data, headers = {
+      'Content-Type': post_data_type,
+    })
+  body = res.body.decode(encoding)
+  return body
