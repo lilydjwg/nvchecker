@@ -7,4 +7,4 @@ pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 async def test_vsmarketplace(get_version):
     assert await get_version("usernamehw.indent-one-space", {
         "source": "vsmarketplace",
-    }) == "0.3.0"
+    }) == "1.0.0"
