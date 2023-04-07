@@ -30,6 +30,7 @@ def setup_module(module):
       'pkgrel=4\n'
       'arch=(any)\n'
       'provides=("test-provides=5.6-7" "test-provides-unversioned")\n'
+      'options=(!debug)\n'
     )
   subprocess.check_call(['makepkg', '--nosign'], cwd=pkg_path)
   pkg_file = subprocess.check_output(['makepkg', '--packagelist'], cwd=pkg_path, text=True).strip()
