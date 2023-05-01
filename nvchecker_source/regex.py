@@ -2,14 +2,13 @@
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import re
-import sre_constants
 
 from nvchecker.api import session, GetVersionError
 
 async def get_version(name, conf, *, cache, **kwargs):
   try:
     regex = re.compile(conf['regex'])
-  except sre_constants.error as e:
+  except re.error as e:
     raise GetVersionError('bad regex', exc_info=e)
   if regex.groups > 1:
     raise GetVersionError('multi-group regex')

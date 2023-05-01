@@ -2,7 +2,6 @@
 # Copyright (c) 2021 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import re
-import sre_constants
 
 from nvchecker.api import session, GetVersionError
 
@@ -19,7 +18,7 @@ async def get_version_impl(info):
 
   try:
     regex = re.compile(conf['regex'])
-  except sre_constants.error as e:
+  except re.error as e:
     raise GetVersionError('bad regex', exc_info=e)
 
   res = await session.request(
