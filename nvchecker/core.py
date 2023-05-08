@@ -21,7 +21,12 @@ import contextvars
 import json
 
 import structlog
-import tomli
+
+try:
+  import tomllib
+except ModuleNotFoundError:
+  import tomli as tomllib
+
 import platformdirs
 
 from .lib import nicelogger
@@ -157,8 +162,8 @@ def load_file(
 ) -> Tuple[Entries, Options]:
   try:
     with open(file, 'rb') as f:
-      config = tomli.load(f)
-  except (OSError, tomli.TOMLDecodeError) as e:
+      config = tomllib.load(f)
+  except (OSError, tomllib.TOMLDecodeError) as e:
     raise FileLoadError('version configuration file', file, e)
 
   ver_files: Optional[Tuple[Path, Path]] = None

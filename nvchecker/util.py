@@ -14,7 +14,11 @@ from pathlib import Path
 import contextvars
 import abc
 
-import tomli
+try:
+  import tomllib
+except ModuleNotFoundError:
+  import tomli as tomllib
+
 import structlog
 
 from .httpclient import session
@@ -56,8 +60,8 @@ class KeyManager:
     if file is not None:
       try:
         with file.open('rb') as f:
-          keys = tomli.load(f)['keys']
-      except (OSError, tomli.TOMLDecodeError) as e:
+          keys = tomllib.load(f)['keys']
+      except (OSError, tomllib.TOMLDecodeError) as e:
         raise FileLoadError('keyfile', str(file), e)
     else:
       keys = {}

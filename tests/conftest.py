@@ -6,7 +6,11 @@ import structlog
 import os
 from pathlib import Path
 
-import tomli
+try:
+  import tomllib
+except ModuleNotFoundError:
+  import tomli as tomllib
+
 import pytest
 import pytest_asyncio
 
@@ -54,7 +58,7 @@ async def get_version():
 @pytest_asyncio.fixture(scope="module")
 async def run_str():
   async def __call__(str):
-    entries = tomli.loads(str)
+    entries = tomllib.loads(str)
     newvers = await run(entries)
     return newvers.popitem()[1]
 
@@ -63,7 +67,7 @@ async def run_str():
 @pytest_asyncio.fixture(scope="module")
 async def run_str_multi():
   async def __call__(str):
-    entries = tomli.loads(str)
+    entries = tomllib.loads(str)
     newvers = await run(entries)
     return newvers
 
