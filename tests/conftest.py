@@ -9,7 +9,7 @@ from pathlib import Path
 try:
   import tomllib
 except ModuleNotFoundError:
-  import tomli as tomllib
+  import tomli as tomllib # type: ignore
 
 import pytest
 import pytest_asyncio
