@@ -14,10 +14,13 @@ from pathlib import Path
 import contextvars
 import abc
 
-try:
-  import tomllib
-except ModuleNotFoundError:
-  import tomli as tomllib # type: ignore
+if TYPE_CHECKING:
+  import tomli as tomllib
+else:
+  try:
+    import tomllib
+  except ModuleNotFoundError:
+    import tomli as tomllib
 
 import structlog
 

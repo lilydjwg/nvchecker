@@ -12,6 +12,7 @@ import argparse
 from typing import (
   Tuple, NamedTuple, Optional, List, Union,
   cast, Dict, Awaitable, Sequence, Any,
+  TYPE_CHECKING,
 )
 import types
 from pathlib import Path
@@ -22,10 +23,13 @@ import json
 
 import structlog
 
-try:
-  import tomllib
-except ModuleNotFoundError:
-  import tomli as tomllib # type: ignore
+if TYPE_CHECKING:
+  import tomli as tomllib
+else:
+  try:
+    import tomllib
+  except ModuleNotFoundError:
+    import tomli as tomllib
 
 import platformdirs
 

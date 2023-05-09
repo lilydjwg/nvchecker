@@ -5,11 +5,15 @@ import asyncio
 import structlog
 import os
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-try:
-  import tomllib
-except ModuleNotFoundError:
-  import tomli as tomllib # type: ignore
+if TYPE_CHECKING:
+  import tomli as tomllib
+else:
+  try:
+    import tomllib
+  except ModuleNotFoundError:
+    import tomli as tomllib
 
 import pytest
 import pytest_asyncio
