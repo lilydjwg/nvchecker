@@ -874,6 +874,29 @@ strip_release
 provided
   Instead of the package version, return the version this package provides. Its value is what the package provides, and ``strip_release`` takes effect too. This is best used with libraries.
 
+Check ALPM files database
+~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "alpmfiles"
+
+Search package files in a local ALPM files database. The package does not need to be installed. This can be useful for checking shared library versions if a package does not list them in its ``provides``.
+
+pkgname
+  Name of the package.
+
+filename
+  Regular expression for the file path. If it contains one matching group, that group is returned. Otherwise return the whole file path. Paths do not have an initial slash. For example, ``usr/lib/libuv\\.so\\.([^.]+)`` matches the major shared library version of libuv.
+
+repo
+  Name of the package repository in which the package resides. If not provided, search all repositories.
+
+strip_dir
+  Strip directory from the path before matching. Defaults to ``false``.
+
+dbpath
+  Path to the ALPM database directory. Default: ``/var/lib/pacman``. You need to update the database yourself with ``pacman -Fy``.
+
 Check Open Vsx
 ~~~~~~~~~~~~~~~
 ::
