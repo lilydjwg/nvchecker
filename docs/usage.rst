@@ -327,7 +327,8 @@ post_data_type
   (*Optional*) Specifies the ``Content-Type`` of the request body (``post_data``). By default, this is ``application/x-www-form-urlencoded``.
 
 .. note::
-  An additional dependency "lxml" is required.
+   An additional dependency "lxml" is required.
+   You can use ``pip install 'nvchecker[htmlparser]'``.
 
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~
@@ -535,6 +536,10 @@ pypi
 
 use_pre_release
   Whether to accept pre release. Default is false.
+
+.. note::
+   An additional dependency "packaging" is required.
+   You can use ``pip install 'nvchecker[pypi]'``.
 
 Check RubyGems
 ~~~~~~~~~~~~~~
@@ -873,6 +878,9 @@ strip_release
 
 provided
   Instead of the package version, return the version this package provides. Its value is what the package provides, and ``strip_release`` takes effect too. This is best used with libraries.
+
+.. note::
+   An additional dependency "pyalpm" is required.
 
 Check ALPM files database
 ~~~~~~~~~~~~~~~~~~~~~~~~~
