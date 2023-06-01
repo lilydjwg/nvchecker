@@ -16,24 +16,20 @@ pytestmark = [
 ]
 
 async def test_xpath_ok(get_version):
-    assert await get_version("unifiedremote", {
+    ver = await get_version("aur", {
         "source": "htmlparser",
-        "url": "http://httpbin.org/",
-        "xpath": '//pre[@class="version"]/text()',
-    }) != None
-
-async def test_xpath_missing_ok(get_version):
-    assert await get_version("unifiedremote", {
-        "source": "htmlparser",
-        "url": "http://httpbin.org/",
-        "xpath": '//pre[@class="test-is-ok"]/text()',
-        "missing_ok": True,
-    }) is None
+        "url": "https://aur.archlinux.org/",
+        "xpath": '//div[@id="footer"]/p[1]/a/text()',
+    })
+    assert ver.startswith('v')
+    assert '.' in ver
 
 async def test_xpath_element(get_version):
-    assert await get_version("unifiedremote", {
+    ver = await get_version("aur", {
         "source": "htmlparser",
-        "url": "http://httpbin.org/",
-        "xpath": '//pre[@class="version"]',
-    }) != None
+        "url": "https://aur.archlinux.org/",
+        "xpath": '//div[@id="footer"]/p[1]/a',
+    })
+    assert ver.startswith('v')
+    assert '.' in ver
 
