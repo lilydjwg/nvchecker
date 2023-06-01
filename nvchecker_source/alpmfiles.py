@@ -4,10 +4,11 @@
 from asyncio import create_subprocess_exec
 from asyncio.subprocess import PIPE
 import re
+from typing import Tuple, List
 
 from nvchecker.api import GetVersionError
 
-async def get_files(info: tuple) -> list:
+async def get_files(info: Tuple[str, str]) -> List[str]:
   dbpath, pkg = info
   # there's no pyalpm bindings for the file databases
   cmd = ['pacman', '-Flq', '--dbpath', dbpath, pkg]
