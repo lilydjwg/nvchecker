@@ -7,4 +7,4 @@ build-backend = "setuptools.build_meta"
 asyncio_mode = "strict"
 
 # build and upload
-# rm -rf dist && python -m build --no-isolation && twine check dist/* && twine upload -s dist/*
+# rm -rf dist && python -m build --no-isolation && twine check dist/* && twine upload dist/*
