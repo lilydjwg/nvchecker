@@ -868,7 +868,7 @@ repo
   Name of the package repository in which the package resides. If not provided, nvchecker will use ``repos`` value, see below.
 
 repos
-  An array of possible repositories in which the package may reside in, nvchecker will use the first repository which contains the package. If not provided, ``core``, ``extra``, ``community`` and ``multilib`` will be used, in that order.
+  An array of possible repositories in which the package may reside in, nvchecker will use the first repository which contains the package. If not provided, ``core``, ``extra`` and ``multilib`` will be used, in that order.
 
 dbpath
   Path to the ALPM database directory. Default: ``/var/lib/pacman``. You need to update the database yourself.
