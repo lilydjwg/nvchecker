@@ -110,11 +110,11 @@ def process_common_arguments(args: argparse.Namespace) -> bool:
     return True
   return False
 
-def safe_overwrite(fname: str, data: Union[bytes, str], *,
+def safe_overwrite(file: Path, data: Union[bytes, str], *,
                    method: str = 'write', mode: str = 'w', encoding: Optional[str] = None) -> None:
   # FIXME: directory has no read perm
-  # FIXME: symlinks and hard links
-  tmpname = fname + '.tmp'
+  # FIXME: hard links
+  tmpname = str(file) + '.tmp'
   # if not using "with", write can fail without exception
   with open(tmpname, mode, encoding=encoding) as f:
     getattr(f, method)(data)
@@ -122,7 +122,7 @@ def safe_overwrite(fname: str, data: Union[bytes, str], *,
     f.flush()
     os.fsync(f.fileno())
   # if the above write failed (because disk is full etc), the old data should be kept
-  os.rename(tmpname, fname)
+  os.rename(tmpname, file.resolve())
 
 def read_verfile(file: Path) -> VersData:
   try:
@@ -149,7 +149,7 @@ def write_verfile(file: Path, versions: VersData) -> None:
     indent=2,
     ensure_ascii=False,
   ) + '\n'
-  safe_overwrite(str(file), data)
+  safe_overwrite(file, data)
 
 class Options(NamedTuple):
   ver_files: Optional[Tuple[Path, Path]]
