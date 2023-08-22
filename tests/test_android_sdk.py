@@ -26,7 +26,7 @@ async def test_android_package_channel(get_version):
         "android_sdk": "ndk;",
         "repo": "package",
         "channel": "beta,dev,canary",
-    }) == "26.0.10404224"
+    }) == "26.0.10636728"
 
 async def test_android_list(get_version):
     assert await get_version("android-sdk-cmake-older", {
