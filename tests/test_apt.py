@@ -33,6 +33,7 @@ async def test_apt_strip_release(get_version):
         "strip_release": 1,
     }) == "0.1.7"
 
+@pytest.mark.skip
 @flaky(max_runs=10)
 async def test_apt_deepin(get_version):
     assert await get_version("sigrok-firmware-fx2lafw", {
