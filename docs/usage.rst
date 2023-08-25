@@ -390,6 +390,12 @@ use_latest_release
 
   Will return the release name instead of date.
 
+include_prereleases
+  When ``use_latest_release`` is ``true``, set this to ``true`` to take prereleases into
+  account.
+
+  This requires a token because it's using the v4 GraphQL API.
+
 use_latest_tag
   Set this to ``true`` to check for the latest tag on GitHub.
 
@@ -408,8 +414,8 @@ use_max_tag
 token
   A personal authorization token used to call the API.
 
-An authorization token may be needed in order to use ``use_latest_tag`` or to
-request more frequently than anonymously.
+An authorization token may be needed in order to use ``use_latest_tag``,
+``include_prereleases`` or to request more frequently than anonymously.
 
 To set an authorization token, you can set:
 

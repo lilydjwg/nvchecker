@@ -42,6 +42,20 @@ QUERY_LATEST_TAG = '''
 }}
 '''
 
+QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
+{{
+  repository(name: "{name}", owner: "{owner}") {{
+    releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{
+      edges {{
+        node {{
+          name
+        }}
+      }}
+    }}
+  }}
+}}
+'''
+
 async def get_latest_tag(key: Tuple[str, str, str]) -> str:
   repo, query, token = key
   owner, reponame = repo.split('/')
@@ -68,6 +82,31 @@ async def get_latest_tag(key: Tuple[str, str, str]) -> str:
 
   return refs[0]['node']['name']
 
+async def get_latest_release_with_prereleases(key: Tuple[str, str]) -> str:
+  repo, token = key
+  owner, reponame = repo.split('/')
+  headers = {
+    'Authorization': f'bearer {token}',
+    'Content-Type': 'application/json',
+  }
+  q = QUERY_LATEST_RELEASE_WITH_PRERELEASES.format(
+    owner = owner,
+    name = reponame,
+  )
+
+  res = await session.post(
+    GITHUB_GRAPHQL_URL,
+    headers = headers,
+    json = {'query': q},
+  )
+  j = res.json()
+
+  refs = j['data']['repository']['releases']['edges']
+  if not refs:
+    raise GetVersionError('no release found')
+
+  return refs[0]['node']['name']
+
 async def get_version_real(
   name: str, conf: Entry, *,
   cache: AsyncCache, keymanager: KeyManager,
@@ -89,9 +128,16 @@ async def get_version_real(
     query = conf.get('query', '')
     return await cache.get((repo, query, token), get_latest_tag) # type: ignore
 
+  use_latest_release = conf.get('use_latest_release', False)
+  include_prereleases = conf.get('include_prereleases', False)
+  if use_latest_release and include_prereleases:
+    if not token:
+      raise GetVersionError('token not given but it is required')
+
+    return await cache.get((repo, token), get_latest_release_with_prereleases) # type: ignore
+
   br = conf.get('branch')
   path = conf.get('path')
-  use_latest_release = conf.get('use_latest_release', False)
   use_max_tag = conf.get('use_max_tag', False)
   if use_latest_release:
     url = GITHUB_LATEST_RELEASE % repo
