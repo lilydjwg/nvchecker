@@ -1,4 +1,3 @@
-tomli
 structlog
 platformdirs
 tornado>=6
