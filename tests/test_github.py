@@ -24,9 +24,17 @@ async def test_github_default_not_master(get_version):
 async def test_github_latest_release(get_version):
     assert await get_version("example", {
         "source": "github",
-        "github": "harry-sanabria/ReleaseTestRepo",
+        "github": "dpeukert/ReleaseTestRepo",
         "use_latest_release": True,
-    }) == "release3"
+    }) == "v0.0.0"
+
+async def test_github_latest_release_include_prereleases(get_version):
+    assert await get_version("example", {
+        "source": "github",
+        "github": "dpeukert/ReleaseTestRepo",
+        "use_latest_release": True,
+        "include_prereleases": True,
+    }) == "v0.0.1-pre"
 
 async def test_github_max_tag(get_version):
     assert await get_version("example", {
