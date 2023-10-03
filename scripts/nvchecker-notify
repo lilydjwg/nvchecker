@@ -26,6 +26,11 @@ def get_args():
   parser.add_argument('-k', '--keyfile',
                       metavar='FILE', type=str,
                       help='use specified keyfile (override the one in configuration file)')
+  parser.add_argument('-t', '--tries', default=1, type=int, metavar='N',
+                      help='try N times when network errors occur')
+  parser.add_argument('--failures', action='store_true',
+                      help='exit with code 3 if failures / errors happen during checking')
+
   return parser.parse_args()
 
 def main():
@@ -43,6 +48,10 @@ def main():
     cmd.extend(['-c', args.file])
   if args.keyfile:
     cmd.extend(['-k', args.keyfile])
+  if args.tries:
+    cmd.extend(['-t', str(args.tries)])
+  if args.failures:
+    cmd.append('--failures')
 
   process = subprocess.Popen(cmd, pass_fds=(wfd,))
   os.close(wfd)
