@@ -36,7 +36,7 @@ import platformdirs
 from .lib import nicelogger
 from . import slogconf
 from .util import (
-  Entry, Entries, KeyManager, RawResult, Result, VersData,
+  Entry, Entries, KeyManager, RawResult, RichResult, Result, VersData,
   FunctionWorker, GetVersionError,
   FileLoadError, EntryWaiter,
 )
@@ -76,6 +76,7 @@ def process_common_arguments(args: argparse.Namespace) -> bool:
   processors = [
     slogconf.exc_info,
     slogconf.filter_exc,
+    slogconf.filter_nones,
   ]
   logger_factory = None
 
@@ -329,6 +330,7 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
   conf = r.conf
   name = r.name
 
+  url = None
   if isinstance(version, GetVersionError):
     kw = version.kwargs
     kw['name'] = name
@@ -340,6 +342,9 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
     return version
   elif isinstance(version, list):
     version_str = apply_list_options(version, conf)
+  elif isinstance(version, RichResult):
+    version_str = version.version
+    url = version.url
   else:
     version_str = version
 
@@ -348,7 +353,7 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
 
     try:
       version_str = substitute_version(version_str, conf)
-      return Result(name, version_str, conf)
+      return Result(name, version_str, conf, url)
     except (ValueError, re.error) as e:
       logger.exception('error occurred in version substitutions', name=name)
       return e
@@ -357,13 +362,19 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
     return ValueError('no version returned')
 
 def check_version_update(
-  oldvers: VersData, name: str, version: str,
+  oldvers: VersData, r: Result,
 ) -> None:
-  oldver = oldvers.get(name, None)
-  if not oldver or oldver != version:
-    logger.info('updated', name=name, version=version, old_version=oldver)
+  oldver = oldvers.get(r.name, None)
+  if not oldver or oldver != r.version:
+    logger.info(
+      'updated',
+      name = r.name,
+      version = r.version,
+      old_version = oldver,
+      url = r.url,
+    )
   else:
-    logger.debug('up-to-date', name=name, version=version)
+    logger.debug('up-to-date', name=r.name, version=r.version, url=r.url)
 
 async def process_result(
   oldvers: VersData,
@@ -384,7 +395,7 @@ async def process_result(
         entry_waiter.set_exception(r.name, r1)
         has_failures = True
         continue
-      check_version_update(oldvers, r1.name, r1.version)
+      check_version_update(oldvers, r1)
       entry_waiter.set_result(r1.name, r1.version)
       ret[r1.name] = r1.version
   except asyncio.CancelledError:

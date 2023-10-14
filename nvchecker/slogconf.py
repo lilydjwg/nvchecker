@@ -39,6 +39,11 @@ def exc_info(logger, level, event):
     event['exc_info'] = True
   return event
 
+def filter_nones(logger, level, event):
+  if 'url' in event and event['url'] is None:
+    del event['url']
+  return event
+
 def filter_exc(logger, level, event):
   exc_info = event.get('exc_info')
   if not exc_info:

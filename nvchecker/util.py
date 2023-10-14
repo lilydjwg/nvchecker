@@ -13,6 +13,7 @@ from typing import (
 from pathlib import Path
 import contextvars
 import abc
+from dataclasses import dataclass
 
 if TYPE_CHECKING:
   import tomli as tomllib
@@ -37,12 +38,19 @@ Entry = Dict[str, Any]
 Entry.__doc__ = '''The configuration `dict` for an entry.'''
 Entries = Dict[str, Entry]
 VersData = Dict[str, str]
-VersionResult = Union[None, str, List[str], Exception]
+
+@dataclass(kw_only=True)
+class RichResult:
+  version: str
+  url: Optional[str] = None
+
+VersionResult = Union[None, str, List[str], RichResult, Exception]
 VersionResult.__doc__ = '''The result of a `get_version` check.
 
 * `None` - No version found.
 * `str` - A single version string is found.
 * `List[str]` - Multiple version strings are found. :ref:`list options` will be applied.
+* `RichResult` - A version string with additional information.
 * `Exception` - An error occurred.
 '''
 
@@ -110,6 +118,7 @@ class Result(NamedTuple):
   name: str
   version: str
   conf: Entry
+  url: Optional[str]
 
 class BaseWorker:
   '''The base class for defining `Worker` classes for source plugins.
