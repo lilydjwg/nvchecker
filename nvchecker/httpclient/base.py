@@ -121,4 +121,4 @@ class TemporaryError(BaseHTTPError):
   '''A temporary error (e.g. network error) happens.'''
 
 class HTTPError(BaseHTTPError):
-  ''' An HTTP 4xx error happens '''
+  '''An HTTP 4xx error happens'''
