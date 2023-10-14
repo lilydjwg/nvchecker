@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import sys
 import asyncio
 from asyncio import Queue
 from typing import (
@@ -39,10 +40,16 @@ Entry.__doc__ = '''The configuration `dict` for an entry.'''
 Entries = Dict[str, Entry]
 VersData = Dict[str, str]
 
-@dataclass(kw_only=True)
-class RichResult:
-  version: str
-  url: Optional[str] = None
+if sys.version_info[:2] >= (3, 10):
+  @dataclass(kw_only=True)
+  class RichResult:
+    version: str
+    url: Optional[str] = None
+else:
+  @dataclass
+  class RichResult:
+    version: str
+    url: Optional[str] = None
 
 VersionResult = Union[None, str, List[str], RichResult, Exception]
 VersionResult.__doc__ = '''The result of a `get_version` check.
