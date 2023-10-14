@@ -6,7 +6,7 @@ import asyncio
 from typing import Iterable, Dict, List, Tuple, Any, Optional
 
 from nvchecker.api import (
-  session, GetVersionError, VersionResult,
+  session, GetVersionError, VersionResult, RichResult,
   Entry, BaseWorker, RawResult,
 )
 
@@ -99,7 +99,10 @@ async def _run_batch_impl(
     if strip_release and '-' in version:
       version = version.rsplit('-', 1)[0]
 
-    ret[name] = version
+    ret[name] = RichResult(
+      version = version,
+      url = f'https://aur.archlinux.org/packages/{name}',
+    )
 
   return ret
 

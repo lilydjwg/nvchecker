@@ -3,6 +3,8 @@
 
 from packaging.version import Version
 
+from nvchecker.api import RichResult
+
 async def get_version(name, conf, *, cache, **kwargs):
   package = conf.get('pypi') or name
   use_pre_release = conf.get('use_pre_release', False)
@@ -18,4 +20,7 @@ async def get_version(name, conf, *, cache, **kwargs):
     )[-1]
   else:
     version = data['info']['version']
-  return version
+  return RichResult(
+    version = version,
+    url = f'https://pypi.org/project/{package}/{version}/',
+  )
