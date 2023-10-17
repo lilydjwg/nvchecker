@@ -298,30 +298,31 @@ def substitute_version(
   return version
 
 def apply_list_options(
-  versions: List[str], conf: Entry,
-) -> Optional[str]:
+  versions: List[Union[str, RichResult]], conf: Entry,
+) -> Optional[Union[str, RichResult]]:
   pattern = conf.get('include_regex')
   if pattern:
     re_pat = re.compile(pattern)
     versions = [x for x in versions
-                if re_pat.fullmatch(x)]
+                if re_pat.fullmatch(str(x))]
 
   pattern = conf.get('exclude_regex')
   if pattern:
     re_pat = re.compile(pattern)
     versions = [x for x in versions
-                if not re_pat.fullmatch(x)]
+                if not re_pat.fullmatch(str(x))]
 
   ignored = set(conf.get('ignored', '').split())
   if ignored:
-    versions = [x for x in versions if x not in ignored]
+    versions = [x for x in versions
+                if str(x) not in ignored]
 
   if not versions:
     return None
 
   sort_version_key = sort_version_keys[
     conf.get("sort_version_key", "parse_version")]
-  versions.sort(key=sort_version_key) # type: ignore
+  versions.sort(key=lambda version: sort_version_key(str(version))) # type: ignore
 
   return versions[-1]
 
@@ -342,6 +343,9 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
     return version
   elif isinstance(version, list):
     version_str = apply_list_options(version, conf)
+    if isinstance(version_str, RichResult):
+      url = version_str.url
+      version_str = version_str.version
   elif isinstance(version, RichResult):
     version_str = version.version
     url = version.url

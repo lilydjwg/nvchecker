@@ -1,10 +1,10 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from typing import Any, List
+from typing import Any, List, Union
 from urllib.parse import urlencode
 
-from nvchecker.api import VersionResult, Entry, AsyncCache
+from nvchecker.api import VersionResult, RichResult, Entry, AsyncCache
 
 # doc: https://developer.atlassian.com/cloud/bitbucket/rest/api-group-commits/#api-repositories-workspace-repo-slug-commits-get
 BITBUCKET_URL = 'https://bitbucket.org/api/2.0/repositories/%s/commits/%s'
@@ -54,8 +54,8 @@ async def _get_tags(
   url: str, *,
   max_page: int,
   cache: AsyncCache,
-) -> List[str]:
-  ret: List[str] = []
+) -> VersionResult:
+  ret: List[Union[str, RichResult]] = []
 
   for _ in range(max_page):
     data = await cache.get_json(url)
@@ -66,4 +66,3 @@ async def _get_tags(
       break
 
   return ret
-
