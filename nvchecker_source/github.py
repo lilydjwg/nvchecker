@@ -3,13 +3,13 @@
 
 import time
 from urllib.parse import urlencode
-from typing import Tuple
+from typing import List, Tuple, Union
 
 import structlog
 
 from nvchecker.api import (
   VersionResult, Entry, AsyncCache, KeyManager,
-  TemporaryError, session, GetVersionError,
+  TemporaryError, session, RichResult, GetVersionError,
 )
 
 logger = structlog.get_logger(logger_name=__name__)
@@ -49,6 +49,7 @@ QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
       edges {{
         node {{
           name
+          url
         }}
       }}
     }}
@@ -56,7 +57,7 @@ QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
 }}
 '''
 
-async def get_latest_tag(key: Tuple[str, str, str]) -> str:
+async def get_latest_tag(key: Tuple[str, str, str]) -> RichResult:
   repo, query, token = key
   owner, reponame = repo.split('/')
   headers = {
@@ -80,9 +81,13 @@ async def get_latest_tag(key: Tuple[str, str, str]) -> str:
   if not refs:
     raise GetVersionError('no tag found')
 
-  return refs[0]['node']['name']
+  version = refs[0]['node']['name']
+  return RichResult(
+    version = version,
+    url = f'https://github.com/{repo}/releases/tag/{version}',
+  )
 
-async def get_latest_release_with_prereleases(key: Tuple[str, str]) -> str:
+async def get_latest_release_with_prereleases(key: Tuple[str, str]) -> RichResult:
   repo, token = key
   owner, reponame = repo.split('/')
   headers = {
@@ -105,7 +110,10 @@ async def get_latest_release_with_prereleases(key: Tuple[str, str]) -> str:
   if not refs:
     raise GetVersionError('no release found')
 
-  return refs[0]['node']['name']
+  return RichResult(
+    version = refs[0]['node']['name'],
+    url = refs[0]['node']['url'],
+  )
 
 async def get_version_real(
   name: str, conf: Entry, *,
@@ -160,7 +168,12 @@ async def get_version_real(
   data = await cache.get_json(url, headers = headers)
 
   if use_max_tag:
-    tags = [ref['ref'].split('/', 2)[-1] for ref in data]
+    tags: List[Union[str, RichResult]] = [
+      RichResult(
+        version = ref['ref'].split('/', 2)[-1],
+        url = f'https://github.com/{repo}/releases/tag/{ref["ref"].split("/", 2)[-1]}',
+      ) for ref in data
+    ]
     if not tags:
       raise GetVersionError('No tag found in upstream repository.')
     return tags
@@ -168,14 +181,17 @@ async def get_version_real(
   if use_latest_release:
     if 'tag_name' not in data:
       raise GetVersionError('No release found in upstream repository.')
-    version = data['tag_name']
+    return RichResult(
+      version = data['tag_name'],
+      url = data['html_url'],
+    )
 
   else:
-    # YYYYMMDD.HHMMSS
-    version = data[0]['commit']['committer']['date'] \
-        .rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
-
-  return version
+    return RichResult(
+      # YYYYMMDD.HHMMSS
+      version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
+      url = data[0]['html_url'],
+    )
 
 def check_ratelimit(exc, name):
   res = exc.response

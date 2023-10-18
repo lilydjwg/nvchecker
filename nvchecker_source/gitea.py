@@ -9,7 +9,8 @@ GITEA_URL = 'https://%s/api/v1/repos/%s/commits'
 GITEA_MAX_TAG = 'https://%s/api/v1/repos/%s/tags'
 
 from nvchecker.api import (
-  VersionResult, Entry, AsyncCache, KeyManager,
+  VersionResult, RichResult, Entry,
+  AsyncCache, KeyManager,
 )
 
 async def get_version(
@@ -42,7 +43,14 @@ async def get_version(
 
   data = await cache.get_json(url, headers = headers)
   if use_max_tag:
-    version = [tag["name"] for tag in data]
+    return [
+      RichResult(
+        version = tag['name'],
+        url = f'https://{host}/{conf["gitea"]}/releases/tag/{tag["name"]}',
+      ) for tag in data
+    ]
   else:
-    version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', '')
-  return version
+    return RichResult(
+      version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', ''),
+      url = data[0]['html_url'],
+    )

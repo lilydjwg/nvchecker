@@ -6,8 +6,8 @@ import urllib.parse
 import structlog
 
 from nvchecker.api import (
-  VersionResult, Entry, AsyncCache, KeyManager,
-  TemporaryError,
+  VersionResult, RichResult, Entry,
+  AsyncCache, KeyManager, TemporaryError,
 )
 
 GITLAB_URL = 'https://%s/api/v4/projects/%s/repository/commits'
@@ -52,10 +52,17 @@ async def get_version_real(
 
   data = await cache.get_json(url, headers = headers)
   if use_max_tag:
-    version = [tag["name"] for tag in data]
+    return [
+      RichResult(
+        version = tag['name'],
+        url = f'https://{host}/{conf["gitlab"]}/-/tags/{tag["name"]}',
+      ) for tag in data
+    ]
   else:
-    version = data[0]['created_at'].split('T', 1)[0].replace('-', '')
-  return version
+    return RichResult(
+      version = data[0]['created_at'].split('T', 1)[0].replace('-', ''),
+      url = data[0]['web_url'],
+    )
 
 def check_ratelimit(exc, name):
   res = exc.response
