@@ -1,6 +1,8 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
+from nvchecker.api import RichResult
+
 PACKAGIST_URL = 'https://packagist.org/packages/%s.json'
 
 async def get_version(name, conf, *, cache, **kwargs):
@@ -14,4 +16,8 @@ async def get_version(name, conf, *, cache, **kwargs):
   }
 
   if len(versions):
-    return max(versions, key=lambda version: versions[version]["time"])
+    version = max(versions, key=lambda version: versions[version]["time"])
+    return RichResult(
+      version = version,
+      url = f'https://packagist.org/packages/{data["package"]["name"]}#{version}',
+    )

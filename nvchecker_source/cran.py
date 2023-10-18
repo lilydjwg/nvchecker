@@ -1,7 +1,7 @@
 # MIT licensed
 # Copyright (c) 2022 Pekka Ristola <pekkarr [at] protonmail [dot] com>, et al.
 
-from nvchecker.api import session, GetVersionError
+from nvchecker.api import session, RichResult, GetVersionError
 
 CRAN_URL = 'https://cran.r-project.org/package=%s/DESCRIPTION'
 VERSION_FIELD = 'Version: '
@@ -23,4 +23,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   else:
     raise GetVersionError('Invalid DESCRIPTION file')
 
-  return version
+  return RichResult(
+    version = version,
+    url = f'https://cran.r-project.org/web/packages/{package}/',
+  )

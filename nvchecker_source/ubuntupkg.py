@@ -2,7 +2,7 @@
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
-from nvchecker.api import GetVersionError
+from nvchecker.api import RichResult, GetVersionError
 
 URL = 'https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=%s&exact_match=true'
 
@@ -42,4 +42,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   else:
     version = releases[0]['source_package_version']
 
-  return version
+  return RichResult(
+    version = version,
+    url = f'https://packages.ubuntu.com/{releases[0]["distro_series_link"].rsplit("/", 1)[-1]}/{pkg}',
+  )

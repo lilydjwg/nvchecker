@@ -3,7 +3,7 @@
 
 from nvchecker.api import (
   VersionResult, Entry, AsyncCache, KeyManager,
-  TemporaryError, session, GetVersionError,
+  TemporaryError, session, RichResult, GetVersionError,
 )
 
 API_URL = 'https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery'
@@ -51,4 +51,7 @@ async def get_version(name: str, conf: Entry, *, cache: AsyncCache, **kwargs):
   j = res.json()
 
   version = j['results'][0]['extensions'][0]['versions'][0]['version']
-  return version
+  return RichResult(
+    version = version,
+    url = f'https://marketplace.visualstudio.com/items?itemName={name}',
+  )
