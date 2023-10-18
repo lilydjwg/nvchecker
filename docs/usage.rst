@@ -761,6 +761,9 @@ This enables you to track updates of macOS applications which using `Sparkle fra
 sparkle
   The url of the sparkle appcast.
 
+release_notes_language
+  The language of release notes to return when localized release notes are available (defaults to ``en`` for English, the unlocalized release notes are used as a fallback)
+
 Check Pagure
 ~~~~~~~~~~~~
 ::
