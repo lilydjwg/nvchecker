@@ -45,19 +45,25 @@ if sys.version_info[:2] >= (3, 10):
   class RichResult:
     version: str
     url: Optional[str] = None
+
+    def __str__(self):
+      return self.version
 else:
   @dataclass
   class RichResult:
     version: str
     url: Optional[str] = None
 
-VersionResult = Union[None, str, List[str], RichResult, Exception]
+    def __str__(self):
+      return self.version
+
+VersionResult = Union[None, str, RichResult, List[Union[str, RichResult]], Exception]
 VersionResult.__doc__ = '''The result of a `get_version` check.
 
 * `None` - No version found.
 * `str` - A single version string is found.
-* `List[str]` - Multiple version strings are found. :ref:`list options` will be applied.
 * `RichResult` - A version string with additional information.
+* `List[Union[str, RichResult]]` - Multiple version strings with or without additional information are found. :ref:`list options` will be applied.
 * `Exception` - An error occurred.
 '''
 

@@ -13,7 +13,7 @@ pytestmark = [pytest.mark.asyncio,
 async def test_pacman(get_version):
     assert await get_version("base", {
         "source": "pacman",
-    }) == "3-1"
+    }) == "3-2"
 
 async def test_pacman_strip_release(get_version):
     assert await get_version("base", {

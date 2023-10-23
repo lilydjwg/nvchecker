@@ -2,7 +2,7 @@
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
-from nvchecker.api import GetVersionError
+from nvchecker.api import RichResult, GetVersionError
 
 URL = 'https://sources.debian.org/api/src/%(pkgname)s/?suite=%(suite)s'
 
@@ -22,4 +22,7 @@ async def get_version(name, conf, *, cache, **kwargs):
   else:
     version = r['version']
 
-  return version
+  return RichResult(
+    version = version,
+    url = f'https://sources.debian.org/src/{data["package"]}/{r["version"]}/',
+  )

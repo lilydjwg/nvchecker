@@ -3,7 +3,7 @@
 
 import json
 import re
-from nvchecker.api import session
+from nvchecker.api import session, RichResult
 
 NPM_URL = 'https://registry.npmjs.org/%s'
 
@@ -26,4 +26,13 @@ async def get_version(name, conf, *, cache, **kwargs):
   data = await cache.get(NPM_URL % key, get_first_1k)
 
   dist_tags = json.loads(re.search(b'"dist-tags":({.*?})', data).group(1))
-  return dist_tags['latest']
+  version = dist_tags['latest']
+
+  # There is no standardised URL scheme, so we only return an URL for the default registry
+  if NPM_URL.startswith('https://registry.npmjs.org/'):
+    return RichResult(
+      version = version,
+      url = f'https://www.npmjs.com/package/{key}/v/{version}',
+    )
+  else:
+    return version

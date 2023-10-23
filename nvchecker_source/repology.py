@@ -1,7 +1,7 @@
 # MIT licensed
 # Copyright (c) 2019 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from nvchecker.api import GetVersionError
+from nvchecker.api import RichResult, GetVersionError
 
 API_URL = 'https://repology.org/api/v1/project/{}'
 
@@ -25,5 +25,9 @@ async def get_version(name, conf, *, cache, **kwargs):
         raise GetVersionError('package is not found in subrepo',
                               repo=repo, subrepo=subrepo)
 
-  versions = [pkg['version'] for pkg in pkgs]
-  return versions
+  return [
+    RichResult(
+      version = pkg['version'],
+      url = f'https://repology.org/project/{project}/packages',
+    ) for pkg in pkgs
+  ]
