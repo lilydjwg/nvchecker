@@ -28,6 +28,8 @@ jobs:
         # https://github.com/lilydjwg/nvchecker/actions/runs/4524633969/jobs/7968599431
         - python-version: "3.7"
           deps: tornado
+        - python-version: "3.12"
+          deps: aiohttp
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
