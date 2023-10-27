@@ -114,7 +114,8 @@ def safe_overwrite(file: Path, data: Union[bytes, str], *,
                    method: str = 'write', mode: str = 'w', encoding: Optional[str] = None) -> None:
   # FIXME: directory has no read perm
   # FIXME: hard links
-  tmpname = str(file) + '.tmp'
+  resolved_path = file.resolve()
+  tmpname = str(resolved_path) + '.tmp'
   # if not using "with", write can fail without exception
   with open(tmpname, mode, encoding=encoding) as f:
     getattr(f, method)(data)
@@ -122,7 +123,7 @@ def safe_overwrite(file: Path, data: Union[bytes, str], *,
     f.flush()
     os.fsync(f.fileno())
   # if the above write failed (because disk is full etc), the old data should be kept
-  os.rename(tmpname, file.resolve())
+  os.rename(tmpname, resolved_path)
 
 def read_verfile(file: Path) -> VersData:
   try:
