@@ -4,8 +4,10 @@
 
 import sys
 import argparse
+import shutil
 import structlog
 import json
+import os.path
 
 from . import core
 
@@ -60,9 +62,12 @@ def take() -> None:
           sys.exit(2)
 
   try:
-    oldverf.rename(
-      oldverf.with_name(oldverf.name + '~'),
-    )
+    if os.path.islink(oldverf):
+      shutil.copy(oldverf, oldverf.with_name(oldverf.name + '~'))
+    else:
+      oldverf.rename(
+        oldverf.with_name(oldverf.name + '~'),
+      )
   except FileNotFoundError:
     pass
   core.write_verfile(oldverf, oldvers)
