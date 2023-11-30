@@ -839,7 +839,9 @@ Check container registry
 This enables you to check tags of images on a container registry like Docker.
 
 container
-  The path for the container image. For official Docker images, use namespace ``library/`` (e.g. ``library/python``).
+  The path (and tag) for the container image. For official Docker images, use namespace ``library/`` (e.g. ``library/python``).
+
+  If no tag is given, it checks latest available tag (sort by tag name), otherwise, it checks the tag's update time.
 
 registry
   The container registry host. Default: ``docker.io``
@@ -850,17 +852,23 @@ container name while this plugin requires the full name. If the host part is
 omitted, use ``docker.io``, and if there is no slash in the path, prepend
 ``library/`` to the path. Here are some examples:
 
-+----------------------------------------------+-----------+--------------------------+
-| Pull command                                 | registry  | container                |
-+==============================================+===========+==========================+
-| docker pull quay.io/prometheus/node-exporter | quay.io   | prometheus/node-exporter |
-+----------------------------------------------+-----------+--------------------------+
-| docker pull nvidia/cuda                      | docker.io | nvidia/cuda              |
-+----------------------------------------------+-----------+--------------------------+
-| docker pull python                           | docker.io | library/python           |
-+----------------------------------------------+-----------+--------------------------+
++-----------------------------------------------------+-----------+---------------------------------+
+| Pull        command                                 | registry  | container                       |
++=====================================================+===========+=================================+
+| docker pull quay.io/prometheus/node-exporter        | quay.io   | prometheus/node-exporter        |
++-----------------------------------------------------+-----------+---------------------------------+
+| docker pull quay.io/prometheus/node-exporter:master | quay.io   | prometheus/node-exporter:master |
++-----------------------------------------------------+-----------+---------------------------------+
+| docker pull openeuler/openeuler                     | docker.io | openeuler/openeuler             |
++-----------------------------------------------------+-----------+---------------------------------+
+| docker pull openeuler/openeuler:20.03-lts           | docker.io | openeuler/openeuler:20.03-lts   |
++-----------------------------------------------------+-----------+---------------------------------+
+| docker pull python                                  | docker.io | library/python                  |
++-----------------------------------------------------+-----------+---------------------------------+
+| docker pull python:3.11                             | docker.io | library/python:3.11             |
++-----------------------------------------------------+-----------+---------------------------------+
 
-This source returns tags and supports :ref:`list options`.
+If no tag is given, this source returns tags and supports :ref:`list options`.
 
 Check ALPM database
 ~~~~~~~~~~~~~~~~~~~

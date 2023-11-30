@@ -4,6 +4,7 @@
 from typing import Dict, List, NamedTuple, Optional, Tuple
 from urllib.request import parse_http_list
 from urllib.parse import urljoin
+import json
 
 from nvchecker.api import session, HTTPError
 
@@ -57,15 +58,7 @@ async def get_registry_auth_info(registry_host: str) -> AuthInfo:
 
 async def get_container_tags(info: Tuple[str, str, AuthInfo]) -> List[str]:
   image_path, registry_host, auth_info = info
-
-  auth_params = {
-    'scope': f'repository:{image_path}:pull',
-  }
-  if auth_info.service:
-    auth_params['service'] = auth_info.service
-  res = await session.get(auth_info.realm, params=auth_params)
-  token = res.json()['token']
-
+  token = await get_auth_token(auth_info, image_path)
   tags = []
   url = f'https://{registry_host}/v2/{image_path}/tags/list'
 
@@ -83,6 +76,18 @@ async def get_container_tags(info: Tuple[str, str, AuthInfo]) -> List[str]:
 
   return tags
 
+
+async def get_auth_token(auth_info, image_path):
+  auth_params = {
+    'scope': f'repository:{image_path}:pull',
+  }
+  if auth_info.service:
+    auth_params['service'] = auth_info.service
+  res = await session.get(auth_info.realm, params=auth_params)
+  token = res.json()['token']
+  return token
+
+
 def parse_next_link(value: str) -> str:
   ending = '>; rel="next"'
   if value.endswith(ending):
@@ -90,13 +95,54 @@ def parse_next_link(value: str) -> str:
   else:
     raise ValueError(value)
 
+
+async def get_container_tag_update_time(info: Tuple[str, str, str, AuthInfo]):
+  '''
+  Find the update time of a container tag.
+
+  In fact, it's the creation time of the image ID referred by the tag. Tag itself does not have any update time.
+  '''
+  image_path, image_tag, registry_host, auth_info = info
+  token = await get_auth_token(auth_info, image_path)
+
+  # HTTP headers
+  headers = {
+    'Authorization': f'Bearer {token}',
+    # Prefer Image Manifest Version 2, Schema 2: https://distribution.github.io/distribution/spec/manifest-v2-2/
+    'Accept': 'application/vnd.docker.distribution.manifest.v2+json, application/vnd.docker.container.image.v1+json, application/json',
+  }
+
+  # Get tag manifest
+  url = f'https://{registry_host}/v2/{image_path}/manifests/{image_tag}'
+  res = await session.get(url, headers=headers)
+  data = res.json()
+  # Schema 1 returns the creation time in the response
+  if data['schemaVersion'] == 1:
+    return json.loads(data['history'][0]['v1Compatibility'])['created']
+
+  # For schema 2, we have to fetch the config's blob
+  digest = data['config']['digest']
+  url = f'https://{registry_host}/v2/{image_path}/blobs/{digest}'
+  res = await session.get(url, headers=headers)
+  data = res.json()
+  return data['created']
+
+
 async def get_version(name, conf, *, cache, **kwargs):
   image_path = conf.get('container', name)
+  image_tag = None
+  # image tag is optional
+  if ':' in image_path:
+    image_path, image_tag = image_path.split(':', 1)
   registry_host = conf.get('registry', 'docker.io')
   if registry_host == 'docker.io':
     registry_host = 'registry-1.docker.io'
 
   auth_info = await cache.get(registry_host, get_registry_auth_info)
 
+  # if a tag is given, return the tag's update time, otherwise return the image's tag list
+  if image_tag:
+    key = image_path, image_tag, registry_host, auth_info
+    return await cache.get(key, get_container_tag_update_time)
   key = image_path, registry_host, auth_info
   return await cache.get(key, get_container_tags)
