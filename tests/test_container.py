@@ -18,7 +18,7 @@ async def test_container_with_tag(get_version):
     "container": "library/hello-world:linux",
   })
   # the update time is changing occasionally, so we can not compare the exact time, otherwise the test will be failed in the future
-  assert datetime.datetime.fromisoformat(update_time).date() > datetime.date(2023, 1, 1)
+  assert datetime.date.fromisoformat(update_time.split('T')[0]) > datetime.date(2023, 1, 1)
 
 async def test_container_with_tag_and_registry(get_version):
   update_time = await get_version("hello-world-nginx:v1.0", {
@@ -27,7 +27,7 @@ async def test_container_with_tag_and_registry(get_version):
     "container": "redhattraining/hello-world-nginx:v1.0",
   })
   # the update time probably won't be changed
-  assert datetime.datetime.fromisoformat(update_time).date() == datetime.date(2019, 6, 26)
+  assert datetime.date.fromisoformat(update_time.split('T')[0]) == datetime.date(2019, 6, 26)
 
 async def test_container_paging(get_version):
   assert await get_version("prometheus-operator", {
