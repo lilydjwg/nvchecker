@@ -7,4 +7,4 @@ pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 async def test_cratesio(get_version):
     assert await get_version("example", {
         "source": "cratesio",
-    }) == "0.1.0"
+    }) == "1.1.0"
