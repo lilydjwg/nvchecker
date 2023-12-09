@@ -5,7 +5,7 @@
 import re
 
 import pytest
-pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
 
 async def test_anitya(get_version):
   version = await get_version("shutter", {

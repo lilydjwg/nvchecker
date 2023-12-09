@@ -7,7 +7,7 @@ import pytest
 import pytest_httpbin
 assert pytest_httpbin # for pyflakes
 
-pytestmark = pytest.mark.asyncio
+pytestmark = pytest.mark.asyncio(scope="session")
 
 def base64_encode(s):
     return base64.b64encode(s.encode('utf-8')).decode('ascii')

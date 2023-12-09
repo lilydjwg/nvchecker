@@ -50,7 +50,7 @@ async def run(
   vers, _has_failures = await main.run(result_coro, runner_coro)
   return vers
 
-@pytest_asyncio.fixture(scope="module")
+@pytest_asyncio.fixture(scope="session")
 async def get_version():
   async def __call__(name, config):
     entries = {name: config}
@@ -59,7 +59,7 @@ async def get_version():
 
   return __call__
 
-@pytest_asyncio.fixture(scope="module")
+@pytest_asyncio.fixture(scope="session")
 async def run_str():
   async def __call__(str):
     entries = tomllib.loads(str)
@@ -68,7 +68,7 @@ async def run_str():
 
   return __call__
 
-@pytest_asyncio.fixture(scope="module")
+@pytest_asyncio.fixture(scope="session")
 async def run_str_multi():
   async def __call__(str):
     entries = tomllib.loads(str)
@@ -76,15 +76,6 @@ async def run_str_multi():
     return newvers
 
   return __call__
-
-loop = asyncio.new_event_loop()
-@pytest.fixture(scope="session")
-def event_loop(request):
-  """Override pytest-asyncio's event_loop fixture,
-     Don't create an instance of the default event loop for each test case.
-     We need the same ioloop across tests for the aiohttp support.
-  """
-  yield loop
 
 @pytest.fixture(scope="session", autouse=True)
 def raise_on_logger_msg():

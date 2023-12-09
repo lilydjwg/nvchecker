@@ -5,7 +5,7 @@ import os
 
 from flaky import flaky
 import pytest
-pytestmark = [pytest.mark.asyncio,
+pytestmark = [pytest.mark.asyncio(scope="session"),
               pytest.mark.needs_net,
               pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
                                  reason="fail too often")]

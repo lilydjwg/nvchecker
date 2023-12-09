@@ -3,7 +3,7 @@
 
 from flaky import flaky
 import pytest
-pytestmark = [pytest.mark.asyncio,
+pytestmark = [pytest.mark.asyncio(scope="session"),
               pytest.mark.needs_net]
 
 @flaky(max_runs=10)

@@ -5,7 +5,7 @@ import pytest
 import pytest_httpbin
 assert pytest_httpbin # for pyflakes
 
-pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
 
 async def test_redirection(get_version):
     assert await get_version("unifiedremote", {

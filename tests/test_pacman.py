@@ -4,7 +4,7 @@
 import pathlib
 import shutil
 import pytest
-pytestmark = [pytest.mark.asyncio,
+pytestmark = [pytest.mark.asyncio(scope="session"),
               pytest.mark.skipif(shutil.which("pacman") is None,
                                  reason="requires pacman command"),
               pytest.mark.skipif(not pathlib.Path("/var/lib/pacman/sync/core.db").exists(),

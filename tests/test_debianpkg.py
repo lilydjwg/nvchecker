@@ -4,7 +4,7 @@
 
 from flaky import flaky
 import pytest
-pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
 
 @flaky(max_runs=10)
 async def test_debianpkg(get_version):

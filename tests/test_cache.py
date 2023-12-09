@@ -2,7 +2,7 @@
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import pytest
-pytestmark = pytest.mark.asyncio
+pytestmark = pytest.mark.asyncio(scope="session")
 
 async def test_cache(run_str_multi):
   conf = r'''
