@@ -7,7 +7,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-        - "3.7"
         - "3.8"
         - "3.9"
         - "3.10"
@@ -23,13 +22,7 @@ jobs:
         - aiohttp
         - tornado
         - httpx[http2]>=0.14.0
-        exclude:
-        # Python 3.7 has a bug with openssl 3.x: https://bugs.python.org/issue43788
-        # https://github.com/lilydjwg/nvchecker/actions/runs/4524633969/jobs/7968599431
-        - python-version: "3.7"
-          deps: tornado
-        - python-version: "3.12"
-          deps: aiohttp
+        exclude: []
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
