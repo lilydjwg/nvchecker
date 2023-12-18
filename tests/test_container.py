@@ -13,6 +13,14 @@ async def test_container(get_version):
   }) == "linux"
 
 async def test_container_with_tag(get_version):
+  update_time = await get_version("bitnami/mongodb:5.0", {
+    "source": "container",
+    "container": "bitnami/mongodb:5.0",
+  })
+  # the update time is changing occasionally, so we can not compare the exact time, otherwise the test will be failed in the future
+  assert datetime.date.fromisoformat(update_time.split('T')[0]) > datetime.date(2023, 12, 1)
+
+async def test_container_with_tag_and_multi_arch(get_version):
   update_time = await get_version("hello-world:linux", {
     "source": "container",
     "container": "library/hello-world:linux",
