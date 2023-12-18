@@ -109,7 +109,13 @@ async def get_container_tag_update_time(info: Tuple[str, str, str, AuthInfo]):
   headers = {
     'Authorization': f'Bearer {token}',
     # Prefer Image Manifest Version 2, Schema 2: https://distribution.github.io/distribution/spec/manifest-v2-2/
-    'Accept': 'application/vnd.docker.distribution.manifest.v2+json, application/vnd.docker.container.image.v1+json, application/json',
+    'Accept': ', '.join([
+      'application/vnd.oci.image.manifest.v1+json',
+      'application/vnd.oci.image.index.v1+json',
+      'application/vnd.docker.distribution.manifest.v2+json',
+      'application/vnd.docker.distribution.manifest.list.v2+json',
+      'application/json',
+    ]),
   }
 
   # Get tag manifest
@@ -121,6 +127,16 @@ async def get_container_tag_update_time(info: Tuple[str, str, str, AuthInfo]):
     return json.loads(data['history'][0]['v1Compatibility'])['created']
 
   # For schema 2, we have to fetch the config's blob
+  # For multi-arch images, multiple manifests are bounded with the same tag. We should choose one and then request
+  # the manifest's detail
+  if data.get('manifests'):
+    # It's quite hard to find the manifest matching with current CPU architecture and system.
+    # For now we just choose the first and it should probably work for most cases
+    image_digest = data['manifests'][0]['digest']
+    url = f'https://{registry_host}/v2/{image_path}/manifests/{image_digest}'
+    res = await session.get(url, headers=headers)
+    data = res.json()
+
   digest = data['config']['digest']
   url = f'https://{registry_host}/v2/{image_path}/blobs/{digest}'
   res = await session.get(url, headers=headers)
