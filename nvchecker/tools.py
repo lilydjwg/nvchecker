@@ -41,9 +41,6 @@ def take() -> None:
   oldvers = core.read_verfile(oldverf)
   newvers = core.read_verfile(newverf)
 
-  for removed in set(oldvers) - set(newvers):
-    del oldvers[removed]
-
   if args.all:
     oldvers.update(newvers)
   else:
