@@ -45,8 +45,8 @@ async def test_substitute_regex_empty_to_pattern(get_version):
 async def test_substitute_prefix_has_higher_priority(get_version):
     assert await get_version("example", {
         "source": "manual",
-        "manual": "r15",
-        "prefix": "r",
-        "from_pattern": r"r(\d+)",
-        "to_pattern": r"R\1",
-    }) == "15"
+        "manual": "Version 1.2 Beta 3",
+        "prefix": "Version ",
+        "from_pattern": r" Beta ",
+        "to_pattern": r"b",
+    }) == "1.2b3"

@@ -170,6 +170,9 @@ prefix
   Strip the prefix string if the version string starts with it. Otherwise the
   version string is returned as-is.
 
+  If both ``prefix`` and ``from_pattern``/``to_pattern`` are used, ``prefix``
+  is applied first.
+
 from_pattern, to_pattern
   Both are Python-compatible regular expressions. If ``from_pattern`` is found
   in the version string, it will be replaced with ``to_pattern``.
@@ -211,13 +214,6 @@ httptoken
 
 verify_cert
   Whether to verify the HTTPS certificate or not. Default is ``true``.
-
-If both ``prefix`` and ``from_pattern``/``to_pattern`` are used,
-``from_pattern``/``to_pattern`` are ignored. If you want to strip the prefix
-and then do something special, just use ``from_pattern``/``to_pattern``. For
-example, the transformation of ``v1_1_0`` => ``1.1.0`` can be achieved with
-``from_pattern = 'v(\d+)_(\d+)_(\d+)'`` and ``to_pattern = '\1.\2.\3'``.
-(Note that in TOML it's easiler to write regexes in single quotes so you don't need to escape ``\``.)
 
 .. _list options:
 

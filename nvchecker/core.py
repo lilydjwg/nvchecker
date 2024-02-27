@@ -279,13 +279,12 @@ def substitute_version(
 ) -> str:
   '''
   Substitute the version string via defined rules in the configuration file.
-  See README.rst#global-options for details.
+  See usage.rst#global-options for details.
   '''
   prefix = conf.get('prefix')
   if prefix:
     if version.startswith(prefix):
       version = version[len(prefix):]
-    return version
 
   from_pattern = conf.get('from_pattern')
   if from_pattern:
@@ -293,9 +292,8 @@ def substitute_version(
     if to_pattern is None:
       raise ValueError("from_pattern exists but to_pattern doesn't")
 
-    return re.sub(from_pattern, to_pattern, version)
+    version = re.sub(from_pattern, to_pattern, version)
 
-  # No substitution rules found. Just return the original version string.
   return version
 
 def apply_list_options(
