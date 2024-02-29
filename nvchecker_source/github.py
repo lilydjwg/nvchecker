@@ -1,18 +1,21 @@
 # MIT licensed
-# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020, 2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import time
 from urllib.parse import urlencode
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Optional
+import asyncio
 
 import structlog
 
 from nvchecker.api import (
   VersionResult, Entry, AsyncCache, KeyManager,
-  TemporaryError, session, RichResult, GetVersionError,
+  HTTPError, session, RichResult, GetVersionError,
 )
 
 logger = structlog.get_logger(logger_name=__name__)
+ALLOW_REQUEST = None
+RATE_LIMITED_ERROR = False
 
 GITHUB_URL = 'https://api.github.com/repos/%s/commits'
 GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
@@ -21,10 +24,28 @@ GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/git/refs/tags'
 GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
 
 async def get_version(name, conf, **kwargs):
-  try:
-    return await get_version_real(name, conf, **kwargs)
-  except TemporaryError as e:
-    check_ratelimit(e, name)
+  global RATE_LIMITED_ERROR, ALLOW_REQUEST
+
+  if RATE_LIMITED_ERROR:
+    raise RuntimeError('rate limited')
+
+  if ALLOW_REQUEST is None:
+    ALLOW_REQUEST = asyncio.Event()
+    ALLOW_REQUEST.set()
+
+  for _ in range(2): # retry once
+    try:
+      await ALLOW_REQUEST.wait()
+      return await get_version_real(name, conf, **kwargs)
+    except HTTPError as e:
+      if e.code in [403, 429]:
+        if n := check_ratelimit(e, name):
+          ALLOW_REQUEST.clear()
+          await asyncio.sleep(n+1)
+          ALLOW_REQUEST.set()
+          continue
+        RATE_LIMITED_ERROR = True
+      raise
 
 QUERY_LATEST_TAG = '''
 {{
@@ -193,10 +214,15 @@ async def get_version_real(
       url = data[0]['html_url'],
     )
 
-def check_ratelimit(exc, name):
+def check_ratelimit(exc: HTTPError, name: str) -> Optional[int]:
   res = exc.response
   if not res:
-    raise
+    raise exc
+
+  if v := res.headers.get('retry-after'):
+    n = int(v)
+    logger.warning('retry-after', n=n)
+    return n
 
   # default -1 is used to re-raise the exception
   n = int(res.headers.get('X-RateLimit-Remaining', -1))
@@ -206,5 +232,6 @@ def check_ratelimit(exc, name):
                   'Or get an API token to increase the allowance if not yet',
                  name = name,
                  reset = reset)
-  else:
-    raise
+    return None
+
+  raise exc
