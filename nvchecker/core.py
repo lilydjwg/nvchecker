@@ -8,6 +8,7 @@ import sys
 import asyncio
 from asyncio import Queue
 import logging
+import subprocess
 import argparse
 from typing import (
   Tuple, NamedTuple, Optional, List, Union,
@@ -21,6 +22,8 @@ import re
 import contextvars
 import json
 import dataclasses
+import string
+import urllib
 
 import structlog
 
@@ -172,6 +175,95 @@ def json_encode(obj):
     return d
   raise TypeError(obj)
 
+def lock_source_nix(type: str, ref: str, target: str) -> str:
+  if type in ["github", "gitlab"]:
+    owner, _, repo = target.rpartition("/")
+    owner = urllib.parse.quote_plus(owner)
+    ref = urllib.parse.quote_plus(ref)
+    fetchtree = f'type = "{type}"; owner = "{owner}"; repo = "{repo}"; ref = "{ref}";'
+    nix = (
+      f'owner = "{owner}";'
+      f' repo = "{repo}";'
+    )
+  if type in ["git"]:
+    url = target
+    fetchtree = f'type = "{type}"; url = "{url}"; ref = "{ref}"; shallow = true;'
+    nix = (
+      f'url = "{url}";'
+    )
+
+  command = [
+    'nix',
+    'eval',
+    '--impure',
+    '--json',
+    '--expr',
+    # removing outPath ensures the stringer renders the entire attrset
+    'builtins.removeAttrs (builtins.fetchTree {' + fetchtree + '}) ["outPath"]'
+  ]
+  tmpl = string.Template("""
+    type = "$type";
+    $nix
+    narHash = "$narHash";
+    rev = "$rev";""")
+  try:
+    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    output = json.loads(result.stdout)
+    return tmpl.substitute(type=type, nix=nix, **output)
+  except subprocess.CalledProcessError as e:
+    error_message = "Locking the source in nix failed; stderr from the nix command: \n"
+    error_message += e.stderr
+    logger.error(error_message, type=type, ref=ref)
+    raise e
+
+def write_nix_expr_files(opt: Options, entries: Entries, results: ResultData) -> None:
+  oldvers = {}
+  if opt.ver_files is not None:
+    oldverf = opt.ver_files[0]
+    newverf = opt.ver_files[1]
+    oldvers = read_verfile(oldverf)
+    newvers = read_verfile(newverf)
+
+  names = []
+  tmpl = string.Template("""
+  pname = "$name";
+  version = "$version";
+  meta = {
+    url = "$url";
+    description = "Sources for $name ($version)";
+  };
+  src = builtins.fetchTree {$fetchTreeArgs
+  };
+  passthru = builtins.fromJSON ''$passthru'';""")
+  for name, r in results.items():
+    oldver = oldvers.get(name, None)
+    if not oldver or oldver != r:
+      conf = entries.get(name)
+      file = opt.nix_expr_folder / (name + ".nix")
+      logger.info("update nix", name=name, file=file)
+      type = conf.get("source")
+      target = conf.get(type)
+      ref = r.gitref or r.revision or r.version
+      try:
+        fetchTreeArgs=lock_source_nix(type, ref, target)
+      except:
+        continue
+      data = '{'
+      data += tmpl.substitute(
+        name=name,
+        version=r.version,
+        url=r.url,
+        fetchTreeArgs=fetchTreeArgs,
+        passthru=json.dumps(conf.get("passthru", {})),
+      )
+      data += '\n}'
+      safe_overwrite(file, data)
+      names.append(name)
+      if opt.ver_files is not None:
+        oldvers[name] = r
+    if opt.ver_files is not None:
+      write_verfile(oldverf, oldvers)
+
 class Options(NamedTuple):
   ver_files: Optional[Tuple[Path, Path]]
   max_concurrency: int
@@ -180,6 +272,7 @@ class Options(NamedTuple):
   source_configs: Dict[str, Dict[str, Any]]
   httplib: Optional[str]
   http_timeout: int
+  nix_expr_folder: Optional[Path]
 
 def load_file(
   file: str, *,
@@ -194,6 +287,7 @@ def load_file(
   ver_files: Optional[Tuple[Path, Path]] = None
   keymanager = KeyManager(None)
   source_configs = {}
+  nix_expr_folder: Optional[Path] = None
 
   if '__config__' in config:
     c = config.pop('__config__')
@@ -207,6 +301,11 @@ def load_file(
         os.path.expanduser(c.get('newver')))
       newver = d / newver_s
       ver_files = oldver, newver
+
+    if 'nix-expr-folder' in c:
+      nix_expr_s = os.path.expandvars(
+        os.path.expanduser(c.get('nix-expr-folder')))
+      nix_expr_folder = d / nix_expr_s
 
     if use_keymanager:
       keyfile = c.get('keyfile')
@@ -231,7 +330,7 @@ def load_file(
 
   return cast(Entries, config), Options(
     ver_files, max_concurrency, proxy, keymanager,
-    source_configs, httplib, http_timeout,
+    source_configs, httplib, http_timeout, nix_expr_folder,
   )
 
 def setup_httpclient(
