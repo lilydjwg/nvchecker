@@ -17,11 +17,11 @@ logger = structlog.get_logger(logger_name=__name__)
 ALLOW_REQUEST = None
 RATE_LIMITED_ERROR = False
 
-GITHUB_URL = 'https://api.github.com/repos/%s/commits'
-GITHUB_LATEST_RELEASE = 'https://api.github.com/repos/%s/releases/latest'
+GITHUB_URL = 'https://api.%s/repos/%s/commits'
+GITHUB_LATEST_RELEASE = 'https://api.%s/repos/%s/releases/latest'
 # https://developer.github.com/v3/git/refs/#get-all-references
-GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/git/refs/tags'
-GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
+GITHUB_MAX_TAG = 'https://api.%s/repos/%s/git/refs/tags'
+GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
 async def get_version(name, conf, **kwargs):
   global RATE_LIMITED_ERROR, ALLOW_REQUEST
@@ -78,8 +78,8 @@ QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
 }}
 '''
 
-async def get_latest_tag(key: Tuple[str, str, str]) -> RichResult:
-  repo, query, token = key
+async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
+  host, repo, query, token = key
   owner, reponame = repo.split('/')
   headers = {
     'Authorization': f'bearer {token}',
@@ -92,7 +92,7 @@ async def get_latest_tag(key: Tuple[str, str, str]) -> RichResult:
   )
 
   res = await session.post(
-    GITHUB_GRAPHQL_URL,
+    GITHUB_GRAPHQL_URL % host,
     headers = headers,
     json = {'query': q},
   )
@@ -108,8 +108,8 @@ async def get_latest_tag(key: Tuple[str, str, str]) -> RichResult:
     url = f'https://github.com/{repo}/releases/tag/{version}',
   )
 
-async def get_latest_release_with_prereleases(key: Tuple[str, str]) -> RichResult:
-  repo, token = key
+async def get_latest_release_with_prereleases(key: Tuple[str, str, str]) -> RichResult:
+  host, repo, token = key
   owner, reponame = repo.split('/')
   headers = {
     'Authorization': f'bearer {token}',
@@ -121,7 +121,7 @@ async def get_latest_release_with_prereleases(key: Tuple[str, str]) -> RichResul
   )
 
   res = await session.post(
-    GITHUB_GRAPHQL_URL,
+    GITHUB_GRAPHQL_URL % host,
     headers = headers,
     json = {'query': q},
   )
@@ -142,12 +142,13 @@ async def get_version_real(
   **kwargs,
 ) -> VersionResult:
   repo = conf['github']
+  host = conf.get('host', "github.com")
 
   # Load token from config
   token = conf.get('token')
   # Load token from keyman
   if token is None:
-    token = keymanager.get_key('github')
+    token = keymanager.get_key(host.lower(), 'github')
 
   use_latest_tag = conf.get('use_latest_tag', False)
   if use_latest_tag:
@@ -155,7 +156,7 @@ async def get_version_real(
       raise GetVersionError('token not given but it is required')
 
     query = conf.get('query', '')
-    return await cache.get((repo, query, token), get_latest_tag) # type: ignore
+    return await cache.get((host, repo, query, token), get_latest_tag) # type: ignore
 
   use_latest_release = conf.get('use_latest_release', False)
   include_prereleases = conf.get('include_prereleases', False)
@@ -163,17 +164,17 @@ async def get_version_real(
     if not token:
       raise GetVersionError('token not given but it is required')
 
-    return await cache.get((repo, token), get_latest_release_with_prereleases) # type: ignore
+    return await cache.get((host, repo, token), get_latest_release_with_prereleases) # type: ignore
 
   br = conf.get('branch')
   path = conf.get('path')
   use_max_tag = conf.get('use_max_tag', False)
   if use_latest_release:
-    url = GITHUB_LATEST_RELEASE % repo
+    url = GITHUB_LATEST_RELEASE % (host, repo)
   elif use_max_tag:
-    url = GITHUB_MAX_TAG % repo
+    url = GITHUB_MAX_TAG % (host, repo)
   else:
-    url = GITHUB_URL % repo
+    url = GITHUB_URL % (host, repo)
     parameters = {}
     if br:
       parameters['sha'] = br
