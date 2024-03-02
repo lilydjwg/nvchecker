@@ -3,6 +3,8 @@
 
 from .cmd import run_cmd
 
+from nvchecker.api import RichResult
+
 async def get_version(
   name, conf, *, cache, keymanager=None
 ):
@@ -13,13 +15,27 @@ async def get_version(
     ref = conf.get('branch')
     if ref is None:
       ref = 'HEAD'
+      gitref = None
     else:
       ref = 'refs/heads/' + ref
+      gitref = ref
     cmd = f"git ls-remote {git} {ref}"
     data = await cache.get(cmd, run_cmd)
-    return data.split(None, 1)[0]
+    version = data.split(None, 1)[0]
+    return RichResult(
+      version = version,
+      revision = revision,
+      gitref = gitref
+    )
   else:
     cmd = f"git ls-remote --tags --refs {git}"
     data = await cache.get(cmd, run_cmd)
-    versions = [line.split("refs/tags/")[1] for line in data.splitlines()]
+    versions = []
+    for line in line in data.splitlines():
+      revision, version = line.split("\trefs/tags/", 1)
+      versions.append(RichResult(
+        version = version,
+        revision = revision,
+        gitref = f"refs/tags/{version}"
+      ))
     return versions
