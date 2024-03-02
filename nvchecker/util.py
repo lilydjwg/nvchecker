@@ -45,6 +45,8 @@ if sys.version_info[:2] >= (3, 10):
   @dataclass(kw_only=True)
   class RichResult:
     version: str
+    gitref: Optional[str] = None
+    revision: Optional[str] = None
     url: Optional[str] = None
 
     def __str__(self):
@@ -53,6 +55,8 @@ else:
   @dataclass
   class RichResult:
     version: str
+    gitref: Optional[str] = None
+    revision: Optional[str] = None
     url: Optional[str] = None
 
     def __str__(self):
@@ -142,6 +146,8 @@ class Result(NamedTuple):
   version: str
   conf: Entry
   url: Optional[str]
+  gitref: Optional[str]
+  revision: Optional[str]
 
 class BaseWorker:
   '''The base class for defining `Worker` classes for source plugins.
