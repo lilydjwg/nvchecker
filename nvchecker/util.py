@@ -14,6 +14,7 @@ from typing import (
 from pathlib import Path
 import contextvars
 import abc
+import netrc
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
@@ -90,10 +91,19 @@ class KeyManager:
     else:
       keys = {}
     self.keys = keys
+    try:
+      netrc_file = netrc.netrc()
+      netrc_hosts = netrc_file.hosts 
+    except (FileNotFoundError, netrc.NetrcParseError) as e:
+      netrc_hosts = {}
+    self.netrc = netrc_hosts
 
-  def get_key(self, name: str) -> Optional[str]:
+  def get_key(self, name: str, legacy_name: Optional[str] = None) -> Optional[str]:
     '''Get the named key (token) in the keyfile.'''
-    return self.keys.get(name)
+    keyfile_token = self.keys.get(name) or self.keys.get(legacy_name)
+    netrc_entry: Optional[Tuple[str, str, str]]
+    netrc_entry = self.netrc.get(name)
+    return keyfile_token or (netrc_entry and netrc_entry[2])
 
 class EntryWaiter:
   def __init__(self) -> None:

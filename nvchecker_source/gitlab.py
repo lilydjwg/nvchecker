@@ -42,8 +42,7 @@ async def get_version_real(
   token = conf.get('token')
   # Load token from keyman
   if token is None:
-    key_name = 'gitlab_' + host.lower()
-    token = keymanager.get_key(key_name)
+    token = keymanager.get_key(host.lower(), 'gitlab_' + host.lower())
 
   # Set private token if token exists.
   headers = {}

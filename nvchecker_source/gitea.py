@@ -33,8 +33,7 @@ async def get_version(
   token = conf.get('token')
   # Load token from keyman
   if token is None:
-    key_name = 'gitea_' + host.lower()
-    token = keymanager.get_key(key_name)
+    token = keymanager.get_key(host.lower(), 'gitea_' + host.lower())
 
   # Set private token if token exists.
   headers = {}
