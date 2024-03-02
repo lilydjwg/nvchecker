@@ -375,6 +375,9 @@ branch
 path
   Only commits containing this file path will be returned.
 
+host
+  Hostname for self-hosted GitHub instance.
+
 use_latest_release
   Set this to ``true`` to check for the latest release on GitHub.
 
@@ -415,8 +418,9 @@ An authorization token may be needed in order to use ``use_latest_tag``,
 
 To set an authorization token, you can set:
 
-- a key named ``github`` in the keyfile
 - the token option
+- an entry in the keyfile for the host (e.g. ``github.com``)
+- an entry in your ``netrc`` file for the host
 
 This source supports :ref:`list options` when ``use_max_tag`` is set.
 
@@ -447,8 +451,9 @@ token
 
 To set an authorization token, you can set:
 
-- a key named ``gitea_{host}`` in the keyfile, where ``host`` is all-lowercased host name
 - the token option
+- an entry in the keyfile for the host (e.g. ``gitea.com``)
+- an entry in your ``netrc`` file for the host
 
 This source supports :ref:`list options` when ``use_max_tag`` is set.
 
@@ -520,8 +525,9 @@ token
 
 To set an authorization token, you can set:
 
-- a key named ``gitlab_{host}`` in the keyfile, where ``host`` is all-lowercased host name
 - the token option
+- an entry in the keyfile for the host (e.g. ``gitlab.com``)
+- an entry in your ``netrc`` file for the host
 
 This source supports :ref:`list options` when ``use_max_tag`` is set.
 
