@@ -86,7 +86,10 @@ def main() -> None:
     newvers, has_failures = asyncio.get_event_loop().run_until_complete(run(result_coro, runner_coro))
 
   if options.ver_files is not None:
-    core.write_verfile(options.ver_files[1], newvers)
+    newverf = options.ver_files[1]
+    vers = core.read_verfile(newverf)
+    vers.update(newvers)
+    core.write_verfile(newverf, vers)
 
   if args.failures and has_failures:
     sys.exit(3)
