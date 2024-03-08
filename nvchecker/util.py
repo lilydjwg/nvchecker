@@ -93,17 +93,16 @@ class KeyManager:
     self.keys = keys
     try:
       netrc_file = netrc.netrc()
-      netrc_hosts = netrc_file.hosts 
-    except (FileNotFoundError, netrc.NetrcParseError) as e:
+      netrc_hosts = netrc_file.hosts
+    except (FileNotFoundError, netrc.NetrcParseError):
       netrc_hosts = {}
     self.netrc = netrc_hosts
 
   def get_key(self, name: str, legacy_name: Optional[str] = None) -> Optional[str]:
     '''Get the named key (token) in the keyfile.'''
     keyfile_token = self.keys.get(name) or self.keys.get(legacy_name)
-    netrc_entry: Optional[Tuple[str, str, str]]
-    netrc_entry = self.netrc.get(name)
-    return keyfile_token or (netrc_entry and netrc_entry[2])
+    netrc_passwd = (e := self.netrc.get(name)) and e[2]
+    return keyfile_token or netrc_passwd
 
 class EntryWaiter:
   def __init__(self) -> None:
