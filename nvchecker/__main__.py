@@ -75,7 +75,7 @@ def main() -> None:
     oldvers = core.read_verfile(options.ver_files[0])
   else:
     oldvers = {}
-  result_coro = core.process_result(oldvers, result_q, entry_waiter)
+  result_coro = core.process_result(oldvers, result_q, entry_waiter, verbose=bool(args.entry))
   runner_coro = core.run_tasks(futures)
 
   if sys.version_info >= (3, 10):

@@ -371,7 +371,9 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
     return ValueError('no version returned')
 
 def check_version_update(
-  oldvers: VersData, r: Result,
+  oldvers: VersData,
+  r: Result,
+  verbose: bool,
 ) -> None:
   oldver = oldvers.get(r.name, None)
   if not oldver or oldver != r.version:
@@ -383,12 +385,15 @@ def check_version_update(
       url = r.url,
     )
   else:
-    logger.debug('up-to-date', name=r.name, version=r.version, url=r.url)
+    # provide visible user feedback if it was the only entry
+    level = logging.INFO if verbose else logging.DEBUG
+    logger.log(level, 'up-to-date', name=r.name, version=r.version, url=r.url)
 
 async def process_result(
   oldvers: VersData,
   result_q: Queue[RawResult],
   entry_waiter: EntryWaiter,
+  verbose: bool = False,
 ) -> Tuple[VersData, bool]:
   ret = {}
   has_failures = False
@@ -404,7 +409,7 @@ async def process_result(
         entry_waiter.set_exception(r.name, r1)
         has_failures = True
         continue
-      check_version_update(oldvers, r1)
+      check_version_update(oldvers, r1, verbose)
       entry_waiter.set_result(r1.name, r1.version)
       ret[r1.name] = r1.version
   except asyncio.CancelledError:
