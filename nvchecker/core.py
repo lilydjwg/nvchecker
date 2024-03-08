@@ -394,7 +394,7 @@ async def process_result(
   result_q: Queue[RawResult],
   entry_waiter: EntryWaiter,
   verbose: bool = False,
-) -> Tuple[VersData, bool]:
+) -> Tuple[ResultData, bool]:
   ret = {}
   has_failures = False
   try:
@@ -411,7 +411,7 @@ async def process_result(
         continue
       check_version_update(oldvers, r1, verbose)
       entry_waiter.set_result(r1.name, r1.version)
-      ret[r1.name] = r1.version
+      ret[r1.name] = r1
   except asyncio.CancelledError:
     return ret, has_failures
 

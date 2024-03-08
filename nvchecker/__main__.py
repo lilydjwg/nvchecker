@@ -13,7 +13,7 @@ from pathlib import Path
 import structlog
 
 from . import core
-from .util import VersData, RawResult, KeyManager, EntryWaiter
+from .util import ResultData, RawResult, KeyManager, EntryWaiter
 from .ctxvars import proxy as ctx_proxy
 
 logger = structlog.get_logger(logger_name=__name__)
@@ -80,24 +80,24 @@ def main() -> None:
 
   if sys.version_info >= (3, 10):
     # Python 3.10 has deprecated asyncio.get_event_loop
-    newvers, has_failures = asyncio.run(run(result_coro, runner_coro))
+    results, has_failures = asyncio.run(run(result_coro, runner_coro))
   else:
     # Python < 3.10 will create an eventloop when asyncio.Queue is initialized
-    newvers, has_failures = asyncio.get_event_loop().run_until_complete(run(result_coro, runner_coro))
+    results, has_failures = asyncio.get_event_loop().run_until_complete(run(result_coro, runner_coro))
 
   if options.ver_files is not None:
     newverf = options.ver_files[1]
     vers = core.read_verfile(newverf)
-    vers.update(newvers)
+    vers.update({k: r.version for k, r in results.items()})
     core.write_verfile(newverf, vers)
 
   if args.failures and has_failures:
     sys.exit(3)
 
 async def run(
-  result_coro: Coroutine[None, None, Tuple[VersData, bool]],
+  result_coro: Coroutine[None, None, Tuple[ResultData, bool]],
   runner_coro: Coroutine[None, None, None],
-) -> Tuple[VersData, bool]:
+) -> Tuple[ResultData, bool]:
   result_fu = asyncio.create_task(result_coro)
   runner_fu = asyncio.create_task(runner_coro)
   await runner_fu

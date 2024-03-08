@@ -153,6 +153,8 @@ class Result(NamedTuple):
   gitref: Optional[str]
   revision: Optional[str]
 
+ResultData = Dict[str, Result]
+
 class BaseWorker:
   '''The base class for defining `Worker` classes for source plugins.
 

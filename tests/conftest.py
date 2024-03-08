@@ -47,8 +47,8 @@ async def run(
   result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 
-  vers, _has_failures = await main.run(result_coro, runner_coro)
-  return vers
+  results, _has_failures = await main.run(result_coro, runner_coro)
+  return {k: r.version for k, r in results.items()}
 
 @pytest_asyncio.fixture(scope="session")
 async def get_version():
