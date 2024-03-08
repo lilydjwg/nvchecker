@@ -115,7 +115,7 @@ async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
   revision = refs[0]['node']['target']['oid']
   return RichResult(
     version = version,
-    gitref = f"refs/tags/{name}",
+    gitref = f"refs/tags/{version}",
     revision = revision,
     url = f'https://github.com/{repo}/releases/tag/{version}',
   )
@@ -221,7 +221,7 @@ async def get_version_real(
       raise GetVersionError('No release found in upstream repository.')
     return RichResult(
       version = data['tag_name'],
-      ref = f"refs/tags/{data['tag_name']}",
+      gitref = f"refs/tags/{data['tag_name']}",
       url = data['html_url'],
     )
 

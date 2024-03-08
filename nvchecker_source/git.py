@@ -24,18 +24,18 @@ async def get_version(
     version = data.split(None, 1)[0]
     return RichResult(
       version = version,
-      revision = revision,
-      gitref = gitref
+      revision = version,
+      gitref = gitref,
     )
   else:
     cmd = f"git ls-remote --tags --refs {git}"
     data = await cache.get(cmd, run_cmd)
     versions = []
-    for line in line in data.splitlines():
+    for line in data.splitlines():
       revision, version = line.split("\trefs/tags/", 1)
       versions.append(RichResult(
         version = version,
         revision = revision,
-        gitref = f"refs/tags/{version}"
+        gitref = f"refs/tags/{version}",
       ))
     return versions
