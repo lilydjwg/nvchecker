@@ -45,11 +45,13 @@ async def get_version(
     return [
       RichResult(
         version = tag['name'],
+        revision = tag['id'],
         url = f'https://{host}/{conf["gitea"]}/releases/tag/{tag["name"]}',
       ) for tag in data
     ]
   else:
     return RichResult(
       version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', ''),
+      revision = data[0]['id'],
       url = data[0]['html_url'],
     )

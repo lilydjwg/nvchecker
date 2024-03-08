@@ -54,12 +54,14 @@ async def get_version_real(
     return [
       RichResult(
         version = tag['name'],
+        revision = tag['commit']['id'],
         url = f'https://{host}/{conf["gitlab"]}/-/tags/{tag["name"]}',
       ) for tag in data
     ]
   else:
     return RichResult(
       version = data[0]['created_at'].split('T', 1)[0].replace('-', ''),
+      revision = data[0]['id'],
       url = data[0]['web_url'],
     )
 

@@ -56,6 +56,9 @@ QUERY_LATEST_TAG = '''
       edges {{
         node {{
           name
+          target {{
+            oid
+          }}
         }}
       }}
     }}
@@ -71,6 +74,12 @@ QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
         node {{
           name
           url
+          tag {{
+            name
+          }}
+          tagCommit {{
+            oid
+          }}
         }}
       }}
     }}
@@ -103,8 +112,11 @@ async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
     raise GetVersionError('no tag found')
 
   version = refs[0]['node']['name']
+  revision = refs[0]['node']['target']['oid']
   return RichResult(
     version = version,
+    gitref = f"refs/tags/{name}",
+    revision = revision,
     url = f'https://github.com/{repo}/releases/tag/{version}',
   )
 
@@ -133,6 +145,8 @@ async def get_latest_release_with_prereleases(key: Tuple[str, str, str]) -> Rich
 
   return RichResult(
     version = refs[0]['node']['name'],
+    gitref = refs[0]['node']['tag']['name'],
+    revision = refs[0]['node']['tagCommit']['oid'],
     url = refs[0]['node']['url'],
   )
 
@@ -193,6 +207,8 @@ async def get_version_real(
     tags: List[Union[str, RichResult]] = [
       RichResult(
         version = ref['ref'].split('/', 2)[-1],
+        gitref = ref['ref'],
+        revision = ref['object']['sha'],
         url = f'https://github.com/{repo}/releases/tag/{ref["ref"].split("/", 2)[-1]}',
       ) for ref in data
     ]
@@ -205,6 +221,7 @@ async def get_version_real(
       raise GetVersionError('No release found in upstream repository.')
     return RichResult(
       version = data['tag_name'],
+      ref = f"refs/tags/{data['tag_name']}",
       url = data['html_url'],
     )
 
@@ -212,6 +229,7 @@ async def get_version_real(
     return RichResult(
       # YYYYMMDD.HHMMSS
       version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
+      revision = data[0]['sha'],
       url = data[0]['html_url'],
     )
 
