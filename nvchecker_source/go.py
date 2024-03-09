@@ -33,4 +33,4 @@ async def get_version_impl(info) -> VersionResult:
         version = elements[0]
         return version
     except IndexError:
-        raise GetVersionError(pkg_name, "parse error.")
+        raise GetVersionError("parse error", pkg_name=pkg_name)
