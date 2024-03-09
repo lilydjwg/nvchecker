@@ -41,6 +41,11 @@ Entry.__doc__ = '''The configuration `dict` for an entry.'''
 Entries = Dict[str, Entry]
 VersData = Dict[str, str]
 
+if sys.version_info[:2] >= (3, 11):
+  from typing import LiteralString
+else:
+  LiteralString = str
+
 if sys.version_info[:2] >= (3, 10):
   @dataclass(kw_only=True)
   class RichResult:
@@ -327,6 +332,6 @@ class GetVersionError(Exception):
   :param msg: The error message.
   :param kwargs: Arbitrary additional context for the error.
   '''
-  def __init__(self, msg: str, **kwargs: Any) -> None:
+  def __init__(self, msg: LiteralString, **kwargs: Any) -> None:
     self.msg = msg
     self.kwargs = kwargs
