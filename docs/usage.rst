@@ -838,7 +838,7 @@ Check Mercurial repository
 
   source = "mercurial"
 
-This enables you to check tags of an arbitrary mercurial repository.
+This enables you to check tags of an arbitrary mercurial (hg) repository.
 
 mercurial
   URL of the Mercurial repository.
