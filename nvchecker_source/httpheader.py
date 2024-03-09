@@ -29,7 +29,11 @@ async def get_version_impl(info):
 
   header_value = res.headers.get(header)
   if not header_value:
-    raise GetVersionError('header %s not found or is empty' % header)
+    raise GetVersionError(
+      'header not found or is empty',
+      header = header,
+      value = header_value,
+    )
 
   try:
     version = regex.findall(header_value)
