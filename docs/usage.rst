@@ -946,6 +946,17 @@ Check `Visual Studio Code Marketplace <https://marketplace.visualstudio.com/vsco
 vsmarketplace
   The extension's Unique Identifier on marketplace.visualstudio.com/vscode, e.g. ``ritwickdey.LiveServer``.
 
+Check Go packages and modules
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "go"
+
+Check `Go packages and modules <https://pkg.go.dev/>`_ for updates.
+
+go
+  The name of Go package or module, e.g. ``github.com/caddyserver/caddy/v2/cmd``.
+
 Combine others' results
 ~~~~~~~~~~~~~~~~~~~~~~~
 ::
