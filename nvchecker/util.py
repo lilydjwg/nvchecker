@@ -39,7 +39,6 @@ logger = structlog.get_logger(logger_name=__name__)
 Entry = Dict[str, Any]
 Entry.__doc__ = '''The configuration `dict` for an entry.'''
 Entries = Dict[str, Entry]
-VersData = Dict[str, str]
 
 if sys.version_info[:2] >= (3, 11):
   from typing import LiteralString
@@ -145,15 +144,7 @@ RawResult.name.__doc__ = 'The name (table name) of the entry.'
 RawResult.version.__doc__ = 'The result from the check.'
 RawResult.conf.__doc__ = 'The entry configuration (table content) of the entry.'
 
-class Result(NamedTuple):
-  name: str
-  version: str
-  conf: Entry
-  url: Optional[str]
-  gitref: Optional[str]
-  revision: Optional[str]
-
-ResultData = Dict[str, Result]
+ResultData = Dict[str, RichResult]
 
 class BaseWorker:
   '''The base class for defining `Worker` classes for source plugins.

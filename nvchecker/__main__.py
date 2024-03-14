@@ -88,7 +88,7 @@ def main() -> None:
   if options.ver_files is not None:
     newverf = options.ver_files[1]
     vers = core.read_verfile(newverf)
-    vers.update({k: r.version for k, r in results.items()})
+    vers.update(results)
     core.write_verfile(newverf, vers)
 
   if args.failures and has_failures:

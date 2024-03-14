@@ -106,8 +106,8 @@ def cmp() -> None:
     oldverf = opt.ver_files[0]
     newverf = opt.ver_files[1]
 
-  oldvers = core.read_verfile(oldverf)
-  newvers = core.read_verfile(newverf)
+  oldvers = {k: v.version for k, v in core.read_verfile(oldverf).items()}
+  newvers = {k: v.version for k, v in core.read_verfile(newverf).items()}
 
   differences = []
 

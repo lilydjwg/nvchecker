@@ -1,11 +1,11 @@
 # MIT licensed
-# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2020, 2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import asyncio
 import structlog
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 if TYPE_CHECKING:
   import tomli as tomllib
@@ -20,13 +20,13 @@ import pytest_asyncio
 
 from nvchecker import core
 from nvchecker import __main__ as main
-from nvchecker.util import Entries, VersData, RawResult
+from nvchecker.util import Entries, ResultData, RawResult
 
 use_keyfile = False
 
 async def run(
   entries: Entries, max_concurrency: int = 20,
-) -> VersData:
+) -> Dict[str, str]:
   task_sem = asyncio.Semaphore(max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
   keyfile = os.environ.get('KEYFILE')
@@ -43,7 +43,7 @@ async def run(
     keymanager, entry_waiter, 1, {},
   )
 
-  oldvers: VersData = {}
+  oldvers: ResultData = {}
   result_coro = core.process_result(oldvers, result_q, entry_waiter)
   runner_coro = core.run_tasks(futures)
 

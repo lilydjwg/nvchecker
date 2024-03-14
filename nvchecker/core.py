@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2020, 2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ from importlib import import_module
 import re
 import contextvars
 import json
+import dataclasses
 
 import structlog
 
@@ -36,7 +37,7 @@ import platformdirs
 from .lib import nicelogger
 from . import slogconf
 from .util import (
-  Entry, Entries, KeyManager, RawResult, RichResult, Result, VersData,
+  Entry, Entries, KeyManager, RawResult, RichResult, ResultData,
   FunctionWorker, GetVersionError,
   FileLoadError, EntryWaiter,
 )
@@ -126,7 +127,7 @@ def safe_overwrite(file: Path, data: Union[bytes, str], *,
   # if the above write failed (because disk is full etc), the old data should be kept
   os.rename(tmpname, resolved_path)
 
-def read_verfile(file: Path) -> VersData:
+def read_verfile(file: Path) -> ResultData:
   try:
     with open(file) as f:
       data = f.read()
@@ -142,16 +143,34 @@ def read_verfile(file: Path) -> VersData:
       name, ver = l.rstrip().split(None, 1)
       v[name] = ver
 
+  if v.get('version') is None:
+    v = {k: RichResult(version=a) for k, a in v.items()}
+  elif v['version'] == 2:
+    v = {k: RichResult(**a) for k, a in v['data'].items()}
+  else:
+    raise Exception('unknown verfile version', v['version'])
+
   return v
 
-def write_verfile(file: Path, versions: VersData) -> None:
-  # sort and indent to make it friendly to human and git
+def write_verfile(file: Path, versions: ResultData) -> None:
+  d = {
+    'version': 2,
+    # sort and indent to make it friendly to human and git
+    'data': dict(sorted(versions.items())),
+  }
   data = json.dumps(
-    dict(sorted(versions.items())),
-    indent=2,
-    ensure_ascii=False,
+    d,
+    indent = 2,
+    ensure_ascii = False,
+    default = json_encode,
   ) + '\n'
   safe_overwrite(file, data)
+
+def json_encode(obj):
+  if isinstance(obj, RichResult):
+    d = {k: v for k, v in dataclasses.asdict(obj).items() if v is not None}
+    return d
+  raise TypeError(obj)
 
 class Options(NamedTuple):
   ver_files: Optional[Tuple[Path, Path]]
@@ -325,7 +344,7 @@ def apply_list_options(
 
   return versions[-1]
 
-def _process_result(r: RawResult) -> Union[Result, Exception]:
+def _process_result(r: RawResult) -> Union[RichResult, Exception]:
   version = r.version
   conf = r.conf
   name = r.name
@@ -362,7 +381,12 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
 
     try:
       version_str = substitute_version(version_str, conf)
-      return Result(name, version_str, conf, url, gitref, revision)
+      return RichResult(
+        version = version_str,
+        url = url,
+        gitref = gitref,
+        revision = revision,
+      )
     except (ValueError, re.error) as e:
       logger.exception('error occurred in version substitutions', name=name)
       return e
@@ -371,15 +395,19 @@ def _process_result(r: RawResult) -> Union[Result, Exception]:
     return ValueError('no version returned')
 
 def check_version_update(
-  oldvers: VersData,
-  r: Result,
+  oldvers: ResultData,
+  name: str,
+  r: RichResult,
   verbose: bool,
 ) -> None:
-  oldver = oldvers.get(r.name, None)
+  if old_result := oldvers.get(name):
+    oldver = old_result.version
+  else:
+    oldver = None
   if not oldver or oldver != r.version:
     logger.info(
       'updated',
-      name = r.name,
+      name = name,
       version = r.version,
       old_version = oldver,
       url = r.url,
@@ -387,10 +415,10 @@ def check_version_update(
   else:
     # provide visible user feedback if it was the only entry
     level = logging.INFO if verbose else logging.DEBUG
-    logger.log(level, 'up-to-date', name=r.name, version=r.version, url=r.url)
+    logger.log(level, 'up-to-date', name=name, version=r.version, url=r.url)
 
 async def process_result(
-  oldvers: VersData,
+  oldvers: ResultData,
   result_q: Queue[RawResult],
   entry_waiter: EntryWaiter,
   verbose: bool = False,
@@ -409,9 +437,9 @@ async def process_result(
         entry_waiter.set_exception(r.name, r1)
         has_failures = True
         continue
-      check_version_update(oldvers, r1, verbose)
-      entry_waiter.set_result(r1.name, r1.version)
-      ret[r1.name] = r1
+      check_version_update(oldvers, r.name, r1, verbose)
+      entry_waiter.set_result(r.name, r1.version)
+      ret[r.name] = r1
   except asyncio.CancelledError:
     return ret, has_failures
 
