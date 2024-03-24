@@ -11,7 +11,7 @@ async def test_apt(get_version):
         "source": "apt",
         "mirror": "http://deb.debian.org/debian/",
         "suite": "sid",
-    }) == "0.1.7-1"
+    }) == "0.1.7-2"
 
 @pytest.mark.flaky(reruns=10)
 async def test_apt_srcpkg(get_version):
