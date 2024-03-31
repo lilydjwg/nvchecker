@@ -18,7 +18,6 @@ async def get_version_impl(info):
   except ValueError as e:
     raise GetVersionError('bad jq filter', exc_info=e)
 
-  encoding = conf.get('encoding')
   data = conf.get('post_data')
   if data is None:
     res = await session.get(conf['url'])

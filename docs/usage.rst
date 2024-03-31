@@ -349,7 +349,7 @@ post_data_type
 This source supports :ref:`list options`.
 
 .. note::
-   An additional dependency "jq.py" is required.
+   An additional dependency "jq" is required.
 
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~
