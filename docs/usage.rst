@@ -326,6 +326,31 @@ post_data_type
    An additional dependency "lxml" is required.
    You can use ``pip install 'nvchecker[htmlparser]'``.
 
+Search with an JSON Parser (jq)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "jq"
+
+Send an HTTP request and search through the body with a specific ``jq`` filter.
+
+url
+  The URL of the HTTP request.
+
+filter
+  An ``jq`` filter used to find the version string.
+
+post_data
+  (*Optional*) When present, a ``POST`` request (instead of a ``GET``) will be used. The value should be a string containing the full body of the request. The encoding of the string can be specified using the ``post_data_type`` option.
+
+post_data_type
+  (*Optional*) Specifies the ``Content-Type`` of the request body (``post_data``). By default, this is ``application/json``.
+
+This source supports :ref:`list options`.
+
+.. note::
+   An additional dependency "jq" is required.
+
 Find with a Command
 ~~~~~~~~~~~~~~~~~~~
 ::
