@@ -37,7 +37,7 @@ async def test_android_list(get_version):
     }) == "3.10.2"
 
 async def test_android_package_os(get_version):
-    await get_version("android-usb-driver", {
+    assert await get_version("android-usb-driver", {
         "source": "android_sdk",
         "android_sdk": "extras;google;usb_driver",
         "repo": "addon",
@@ -45,7 +45,7 @@ async def test_android_package_os(get_version):
     }) == "13"
 
 async def test_android_package_os_missing(get_version):
-    await get_version("android-usb-driver", {
+    assert await get_version("android-usb-driver", {
         "source": "android_sdk",
         "android_sdk": "extras;google;usb_driver",
         "repo": "addon",
