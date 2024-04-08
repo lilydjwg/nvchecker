@@ -9,7 +9,7 @@ pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
 async def test_debianpkg(get_version):
     assert await get_version("sigrok-firmware-fx2lafw", {
         "source": "debianpkg",
-    }) == "0.1.7-2"
+    }) == "0.1.7-3"
 
 @pytest.mark.flaky(reruns=10)
 async def test_debianpkg_strip_release(get_version):
