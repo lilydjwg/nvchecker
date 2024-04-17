@@ -1,4 +1,4 @@
 # MIT licensed
-# Copyright (c) 2013-2023 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
-__version__ = '2.14dev'
+__version__ = '2.14'
