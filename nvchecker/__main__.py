@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # MIT licensed
-# Copyright (c) 2013-2022 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
 from __future__ import annotations
 
@@ -87,7 +87,11 @@ def main() -> None:
 
   if options.ver_files is not None:
     newverf = options.ver_files[1]
-    vers = core.read_verfile(newverf)
+    if args.entry:
+      # don't remove other entries when only one entry is specified on cmdline
+      vers = core.read_verfile(newverf)
+    else:
+      vers = {}
     vers.update(results)
     core.write_verfile(newverf, vers)
 
