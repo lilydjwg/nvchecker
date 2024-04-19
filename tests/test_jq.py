@@ -6,7 +6,7 @@ import pytest
 jq_available = True
 try:
   import jq
-except jq:
+except ImportError:
   jq_available = False
 
 pytestmark = [
