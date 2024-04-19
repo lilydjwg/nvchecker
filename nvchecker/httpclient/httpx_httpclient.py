@@ -1,5 +1,5 @@
 # MIT licensed
-# Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2020-2022,2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
 from typing import Dict, Optional, Tuple
 
@@ -34,7 +34,7 @@ class HttpxSession(BaseSession):
       client = httpx.AsyncClient(
         timeout = httpx.Timeout(self.timeout, pool=None),
         http2 = True,
-        proxies = {'all://': proxy},
+        proxy = proxy,
         verify = verify_cert,
       )
       self.clients[(proxy, verify_cert)] = client
