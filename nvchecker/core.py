@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import sys
 import asyncio
 from asyncio import Queue
@@ -125,7 +126,7 @@ def safe_overwrite(file: Path, data: Union[bytes, str], *,
     f.flush()
     os.fsync(f.fileno())
   # if the above write failed (because disk is full etc), the old data should be kept
-  os.rename(tmpname, resolved_path)
+  shutil.move(tmpname, resolved_path)
 
 def read_verfile(file: Path) -> ResultData:
   try:
