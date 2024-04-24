@@ -1,6 +1,6 @@
 # vim: se sw=2:
 # MIT licensed
-# Copyright (c) 2018 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2018-2020,2023-2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import logging
 import os
@@ -42,6 +42,12 @@ def exc_info(logger, level, event):
 def filter_nones(logger, level, event):
   if 'url' in event and event['url'] is None:
     del event['url']
+  return event
+
+def filter_taskname(logger, level, event):
+  # added in Python 3.12, not useful to us, but appears as a normal KV.
+  if 'taskName' in event:
+    del event['taskName']
   return event
 
 def filter_exc(logger, level, event):

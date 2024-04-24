@@ -78,6 +78,7 @@ def process_common_arguments(args: argparse.Namespace) -> bool:
     slogconf.exc_info,
     slogconf.filter_exc,
     slogconf.filter_nones,
+    slogconf.filter_taskname,
   ]
   logger_factory = None
 
