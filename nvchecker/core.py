@@ -317,13 +317,19 @@ def substitute_version(
   return version
 
 def apply_list_options(
-  versions: List[Union[str, RichResult]], conf: Entry,
+  versions: List[Union[str, RichResult]],
+  conf: Entry,
+  name: str,
 ) -> Optional[Union[str, RichResult]]:
   pattern = conf.get('include_regex')
-  if pattern:
+  if versions and pattern:
     re_pat = re.compile(pattern)
-    versions = [x for x in versions
+    versions2 = [x for x in versions
                 if re_pat.fullmatch(str(x))]
+    if not versions2:
+      logger.warning('include_regex matched no versions',
+                     name=name, versions=versions, regex=pattern)
+    versions = versions2
 
   pattern = conf.get('exclude_regex')
   if pattern:
@@ -363,7 +369,7 @@ def _process_result(r: RawResult) -> Union[RichResult, Exception]:
                   name=r.name, exc_info=r.version)
     return version
   elif isinstance(version, list):
-    version_str = apply_list_options(version, conf)
+    version_str = apply_list_options(version, conf, name)
     if isinstance(version_str, RichResult):
       url = version_str.url
       gitref = version_str.gitref
