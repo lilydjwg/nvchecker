@@ -444,7 +444,7 @@ async def process_result(
       if isinstance(r1, Exception):
         entry_waiter.set_exception(r.name, r1)
         # no versions are returned from "apply_list_options"?
-        logger.error('an error occurred', name=r.name, error=str(r1))
+        logger.error('no-result', name=r.name, error=str(r1))
         has_failures = True
         continue
       check_version_update(oldvers, r.name, r1, verbose)

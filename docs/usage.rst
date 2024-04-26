@@ -182,7 +182,7 @@ from_pattern, to_pattern
 
 missing_ok
   Suppress warnings and errors if a version checking module finds nothing.
-  Currently only ``regex`` supports it.
+  Not all sources support it.
 
 proxy
   The HTTP proxy to use. The format is ``proto://host:port``, e.g.
