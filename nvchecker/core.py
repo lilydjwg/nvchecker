@@ -329,6 +329,7 @@ def apply_list_options(
     if not versions2:
       logger.warning('include_regex matched no versions',
                      name=name, versions=versions, regex=pattern)
+      return None
     versions = versions2
 
   pattern = conf.get('exclude_regex')
@@ -442,6 +443,8 @@ async def process_result(
         r1 = e
       if isinstance(r1, Exception):
         entry_waiter.set_exception(r.name, r1)
+        # no versions are returned from "apply_list_options"?
+        logger.error('an error occurred', name=r.name, error=str(r1))
         has_failures = True
         continue
       check_version_update(oldvers, r.name, r1, verbose)
