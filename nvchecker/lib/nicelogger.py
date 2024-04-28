@@ -7,14 +7,16 @@ A Tornado-inspired logging formatter, with displayed time with millisecond accur
 FYI: pyftpdlib also has a Tornado-style logger.
 '''
 
+from __future__ import annotations
+
 import sys
 import time
 import logging
 
-class Colors:
-  def __init__(self, color=None):
-    if color is None:
-      color = support_color()
+class TornadoLogFormatter(logging.Formatter):
+  def __init__(self, color, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self._color = color
     if color:
       import curses
       curses.setupterm()
@@ -23,32 +25,19 @@ class Colors:
                    curses.tigetstr("setf") or "", "ascii")
       else:
         fg_color = curses.tigetstr("setaf") or curses.tigetstr("setf") or b""
-
-      self.blue = str(curses.tparm(fg_color, 4), "ascii")
-      self.yellow = str(curses.tparm(fg_color, 3), "ascii")
-      self.green = str(curses.tparm(fg_color, 2), "ascii")
-      self.red = str(curses.tparm(fg_color, 1), "ascii")
-      self.bright_red = str(curses.tparm(fg_color, 9), "ascii")
-      self.normal = str(curses.tigetstr("sgr0"), "ascii")
-
-    else:
-      self.blue = self.yellow = self.green = self.red = self.bright_red = self.normal = ""
-
-
-class TornadoLogFormatter(logging.Formatter):
-  def __init__(self, color, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    self._color = color
-    if color:
-      colors = Colors(color=color)
       self._colors = {
-        logging.DEBUG: colors.blue,
-        logging.INFO: colors.green,
-        logging.WARNING: colors.yellow,
-        logging.ERROR: colors.red,
-        logging.CRITICAL: colors.bright_red,
+        logging.DEBUG: str(curses.tparm(fg_color, 4), # Blue
+                     "ascii"),
+        logging.INFO: str(curses.tparm(fg_color, 2), # Green
+                    "ascii"),
+        logging.WARNING: str(curses.tparm(fg_color, 3), # Yellow
+                     "ascii"),
+        logging.ERROR: str(curses.tparm(fg_color, 1), # Red
+                     "ascii"),
+        logging.CRITICAL: str(curses.tparm(fg_color, 9), # Bright Red
+                     "ascii"),
       }
-      self._normal = colors.normal
+      self._normal = str(curses.tigetstr("sgr0"), "ascii")
 
   def format(self, record):
     try:
@@ -71,6 +60,7 @@ class TornadoLogFormatter(logging.Formatter):
         'filename', 'exc_info', 'exc_text', 'created', 'funcName',
         'processName', 'process', 'msecs', 'relativeCreated', 'thread',
         'threadName', 'name', 'levelno', 'msg', 'pathname', 'stack_info',
+        'taskName',
       })
 
     if record.exc_info:
@@ -79,18 +69,6 @@ class TornadoLogFormatter(logging.Formatter):
     if record.exc_text:
       formatted = formatted.rstrip() + "\n" + record.exc_text
     return formatted.replace("\n", "\n    ")
-
-def support_color(stream=sys.stderr):
-  if stream.isatty():
-    try:
-      import curses
-      curses.setupterm()
-      if curses.tigetnum("colors") > 0:
-        return True
-    except:
-      import traceback
-      traceback.print_exc()
-  return False
 
 def enable_pretty_logging(level=logging.DEBUG, handler=None, color=None):
   '''
@@ -103,8 +81,17 @@ def enable_pretty_logging(level=logging.DEBUG, handler=None, color=None):
     h = logging.StreamHandler()
   else:
     h = handler
-  if color is None and handler is None:
-    color = support_color()
+  if color is None:
+    color = False
+    if handler is None and sys.stderr.isatty():
+      try:
+        import curses
+        curses.setupterm()
+        if curses.tigetnum("colors") > 0:
+          color = True
+      except:
+        import traceback
+        traceback.print_exc()
   formatter = TornadoLogFormatter(color=color)
   h.setLevel(level)
   h.setFormatter(formatter)
