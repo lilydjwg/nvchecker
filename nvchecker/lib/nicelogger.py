@@ -71,6 +71,7 @@ class TornadoLogFormatter(logging.Formatter):
         'filename', 'exc_info', 'exc_text', 'created', 'funcName',
         'processName', 'process', 'msecs', 'relativeCreated', 'thread',
         'threadName', 'name', 'levelno', 'msg', 'pathname', 'stack_info',
+        'taskName',
       })
 
     if record.exc_info:
