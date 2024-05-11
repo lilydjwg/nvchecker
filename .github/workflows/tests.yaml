@@ -12,6 +12,7 @@ jobs:
         - "3.10"
         - "3.11"
         - "3.12"
+        - "3.13-dev"
         # pypy fails in some cases but we don't care much about that
         # with github actions we can't mark some jobs to not affect the overall
         # conclusion so we have to omit "allow-failure" tests.
@@ -45,6 +46,12 @@ jobs:
       run: |
         sudo mkdir -p /etc/pki/tls/certs
         sudo ln -s /etc/ssl/certs/ca-certificates.crt /etc/pki/tls/certs/ca-bundle.crt
+
+    - name: Install pycurl deps
+      if: ${{ contains(matrix.deps, 'pycurl') }}
+      run: |
+        sudo apt update
+        sudo apt install -y libcurl4-openssl-dev
     # werkzeug is pinned for httpbin compatibility https://github.com/postmanlabs/httpbin/issues/673
     - name: Install Python deps
       run: pip install -U ${{ matrix.deps }} pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq 'werkzeug<2.1' awesomeversion
