@@ -570,6 +570,8 @@ pypi
 use_pre_release
   Whether to accept pre release. Default is false.
 
+This source supports :ref:`list options`.
+
 .. note::
    An additional dependency "packaging" is required.
    You can use ``pip install 'nvchecker[pypi]'``.
