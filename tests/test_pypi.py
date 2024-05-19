@@ -20,3 +20,9 @@ async def test_pypi_pre_release(get_version):
         "source": "pypi",
         "use_pre_release": 1,
     }) == "1.0.1a1"
+
+async def test_pypi_list(get_version):
+    assert await get_version("urllib3", {
+        "source": "pypi",
+        "include_regex": "^1\\..*",
+    }) == "1.26.18"
