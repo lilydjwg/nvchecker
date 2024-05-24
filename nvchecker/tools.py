@@ -1,6 +1,6 @@
 # vim: se sw=2:
 # MIT licensed
-# Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2013-2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import sys
 import argparse
@@ -10,6 +10,7 @@ import json
 import os.path
 
 from . import core
+from .util import RichResult
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -44,10 +45,11 @@ def take() -> None:
   if args.all:
     oldvers.update(newvers)
   else:
+    name: str
     for name in args.names:
       if "=" in name:
         name, newver = name.split("=")
-        oldvers[name] = newver
+        oldvers[name] = RichResult(version=newver)
       else:
         try:
           oldvers[name] = newvers[name]
