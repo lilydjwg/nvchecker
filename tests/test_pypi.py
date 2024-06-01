@@ -26,3 +26,9 @@ async def test_pypi_list(get_version):
         "source": "pypi",
         "include_regex": "^1\\..*",
     }) == "1.26.18"
+
+async def test_pypi_invalid_version(get_version):
+    await get_version("sympy", {
+        "source": "pypi",
+    })
+
