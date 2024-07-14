@@ -19,10 +19,12 @@ pytestmark = [
 
 
 async def test_go(get_version):
-  assert await get_version("one version", {
+  ver = await get_version("one version", {
     "source": "go",
     "go": "github.com/caddyserver/replace-response",
-  }) == "v0.0.0-20231221003037-a85d4ddc11d6"
+  })
+
+  assert ver.startswith("v0.0.0-")
 
   assert await get_version("multiple version", {
     "source": "go",

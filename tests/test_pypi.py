@@ -25,7 +25,7 @@ async def test_pypi_list(get_version):
     assert await get_version("urllib3", {
         "source": "pypi",
         "include_regex": "^1\\..*",
-    }) == "1.26.18"
+    }) == "1.26.19"
 
 async def test_pypi_invalid_version(get_version):
     await get_version("sympy", {
