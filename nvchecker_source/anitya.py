@@ -6,7 +6,9 @@ from nvchecker.api import RichResult
 URL = 'https://release-monitoring.org/api/project/{pkg}'
 
 async def get_version(name, conf, *, cache, **kwargs):
-  pkg = conf.get('anitya')
+  pkg = conf.get('anitya_id')
+  if pkg is None:
+    pkg = conf.get('anitya')
   url = URL.format(pkg = pkg)
   data = await cache.get_json(url)
   return RichResult(

@@ -757,6 +757,11 @@ This enables you to track updates from `Anitya <https://release-monitoring.org/>
 anitya
   ``distro/package``, where ``distro`` can be a lot of things like "fedora", "arch linux", "gentoo", etc. ``package`` is the package name of the chosen distribution.
 
+anitya_id
+  The identifier of the project/package in anitya.
+
+Note that either anitya or anitya_id needs to be specified, anitya_id is preferred when both specified.
+
 Check Android SDK
 ~~~~~~~~~~~~~~~~~
 ::
