@@ -12,7 +12,6 @@ from .base import BaseSession, TemporaryError, Response, HTTPError
 __all__ = ['session']
 
 logger = structlog.get_logger(logger_name=__name__)
-connector = aiohttp.TCPConnector(limit=20)
 
 class AiohttpSession(BaseSession):
   session = None
