@@ -13,3 +13,10 @@ async def test_anitya(get_version):
     "anitya": "fedora/shutter",
   })
   assert re.match(r"[0-9.]+", version)
+
+async def test_anitya_by_id(get_version):
+  version = await get_version("shutter", {
+    "source": "anitya",
+    "anitya_id": "4813",
+  })
+  assert re.match(r"[0-9.]+", version)
