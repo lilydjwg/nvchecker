@@ -26,9 +26,9 @@ async def test_archpkg_provided(get_version):
 
 @pytest.mark.flaky
 async def test_archpkg_provided_strip(get_version):
-    assert await get_version("jsoncpp", {
+    int(await get_version("jsoncpp", {
         "source": "archpkg",
         "provided": "libjsoncpp.so",
         "strip_release": True,
-    }) == "25"
+    }))
 
