@@ -661,6 +661,11 @@ Check `crates.io <https://crates.io/>`_ for updates.
 cratesio
   The crate name on crates.io, e.g. ``tokio``.
 
+use_pre_release
+  Whether to accept pre release. Default is false.
+
+This source supports :ref:`list options`.
+
 Check Local Pacman Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::

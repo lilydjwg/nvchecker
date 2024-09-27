@@ -12,4 +12,4 @@ async def test_launchpad(get_version):
     }
   )
 
-  assert version == '3.8.7'
+  assert version == '3.8.8'
