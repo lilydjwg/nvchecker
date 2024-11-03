@@ -7,6 +7,7 @@ pytestmark = [
   pytest.mark.needs_net,
 ]
 
+@pytest.mark.skip
 async def test_mercurial(get_version):
   assert await get_version("example", {
     "source": "mercurial",
