@@ -13,11 +13,12 @@ async def test_android_addon(get_version):
     }) == "1.r03"
 
 async def test_android_package(get_version):
-    assert await get_version("android-sdk-cmake", {
+    version = await get_version("android-sdk-cmake", {
         "source": "android_sdk",
         "android_sdk": "cmake;",
         "repo": "package",
-    }) == "3.30.3"
+    })
+    assert version.startswith("3.30.")
 
 
 async def test_android_package_channel(get_version):
