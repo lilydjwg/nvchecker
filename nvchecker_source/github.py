@@ -120,8 +120,8 @@ async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
     url = f'https://github.com/{repo}/releases/tag/{version}',
   )
 
-async def get_latest_release_with_prereleases(key: Tuple[str, str, str]) -> RichResult:
-  host, repo, token = key
+async def get_latest_release_with_prereleases(key: Tuple[str, str, str, str]) -> RichResult:
+  host, repo, token, use_release_name = key
   owner, reponame = repo.split('/')
   headers = {
     'Authorization': f'bearer {token}',
@@ -143,9 +143,15 @@ async def get_latest_release_with_prereleases(key: Tuple[str, str, str]) -> Rich
   if not refs:
     raise GetVersionError('no release found')
 
+  tag_name = refs[0]['node']['tag']['name']
+  if use_release_name:
+    version = refs[0]['node']['name']
+  else:
+    version = tag_name
+
   return RichResult(
-    version = refs[0]['node']['name'],
-    gitref = refs[0]['node']['tag']['name'],
+    version = version,
+    gitref = f"refs/tags/{tag_name}",
     revision = refs[0]['node']['tagCommit']['oid'],
     url = refs[0]['node']['url'],
   )
@@ -174,11 +180,14 @@ async def get_version_real(
 
   use_latest_release = conf.get('use_latest_release', False)
   include_prereleases = conf.get('include_prereleases', False)
+  use_release_name = conf.get('use_release_name', False)
   if use_latest_release and include_prereleases:
     if not token:
       raise GetVersionError('token not given but it is required')
 
-    return await cache.get((host, repo, token), get_latest_release_with_prereleases) # type: ignore
+    return await cache.get(
+      (host, repo, token, use_release_name),
+      get_latest_release_with_prereleases) # type: ignore
 
   br = conf.get('branch')
   path = conf.get('path')
@@ -220,7 +229,6 @@ async def get_version_real(
     if 'tag_name' not in data:
       raise GetVersionError('No release found in upstream repository.')
 
-    use_release_name = conf.get('use_release_name', False)
     if use_release_name:
       version = data['name']
     else:
