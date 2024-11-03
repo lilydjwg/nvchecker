@@ -2,7 +2,7 @@
 # Copyright (c) 2021 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import pytest
-pytestmark = pytest.mark.asyncio(scope="session")
+pytestmark = pytest.mark.asyncio
 
 async def test_combiner(run_str_multi):
   conf = r'''

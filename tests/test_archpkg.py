@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import pytest
-pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 @pytest.mark.flaky
 async def test_archpkg(get_version):

@@ -9,7 +9,7 @@ import tempfile
 import pytest
 
 pytestmark = [
-  pytest.mark.asyncio(scope="session"),
+  pytest.mark.asyncio,
   pytest.mark.skipif(shutil.which('pacman') is None, reason='requires pacman command'),
   pytest.mark.skipif(shutil.which('fakeroot') is None, reason='requires fakeroot command'),
 ]

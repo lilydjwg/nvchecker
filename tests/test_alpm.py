@@ -9,7 +9,7 @@ import tempfile
 import pytest
 
 pytestmark = [
-  pytest.mark.asyncio(scope="session"),
+  pytest.mark.asyncio,
   pytest.mark.skipif(shutil.which('makepkg') is None, reason='requires makepkg command'),
   pytest.mark.skipif(shutil.which('repo-add') is None, reason='requires repo-add command')
 ]

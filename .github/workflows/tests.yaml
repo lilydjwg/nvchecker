@@ -47,7 +47,7 @@ jobs:
         sudo ln -s /etc/ssl/certs/ca-certificates.crt /etc/pki/tls/certs/ca-bundle.crt
     # werkzeug is pinned for httpbin compatibility https://github.com/postmanlabs/httpbin/issues/673
     - name: Install Python deps
-      run: pip install -U ${{ matrix.deps }} pytest 'pytest-asyncio>=0.23' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq 'werkzeug<2.1' awesomeversion
+      run: pip install -U ${{ matrix.deps }} pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq 'werkzeug<2.1' awesomeversion
     - name: Decrypt keys
       env:
         KEY: ${{ secrets.KEY }}

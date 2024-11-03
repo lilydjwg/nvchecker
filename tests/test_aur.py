@@ -4,7 +4,7 @@
 import os
 
 import pytest
-pytestmark = [pytest.mark.asyncio(scope="session"),
+pytestmark = [pytest.mark.asyncio,
               pytest.mark.needs_net,
               pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
                                  reason="fail too often")]

@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 # addopts = -n auto
 asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "session"
 
 # build and upload
 # rm -rf dist && python -m build --no-isolation && twine check dist/* && twine upload dist/*

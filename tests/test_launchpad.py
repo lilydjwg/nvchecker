@@ -1,7 +1,7 @@
 # MIT Licensed
 # Copyright (c) 2024 Bert Peters <bertptrs@archlinux.org>, et al.
 import pytest
-pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_launchpad(get_version):
   version = await get_version(

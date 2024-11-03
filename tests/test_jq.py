@@ -10,7 +10,7 @@ except ImportError:
   jq_available = False
 
 pytestmark = [
-  pytest.mark.asyncio(scope="session"),
+  pytest.mark.asyncio,
   pytest.mark.needs_net,
   pytest.mark.skipif(not jq_available, reason="needs jq"),
 ]

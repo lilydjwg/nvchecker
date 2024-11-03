@@ -3,7 +3,7 @@
 # Copyright (c) 2017 Chih-Hsuan Yen <yan12125 at gmail dot com>
 
 import pytest
-pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_android_addon(get_version):
     assert await get_version("android-google-play-apk-expansion", {

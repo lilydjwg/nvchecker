@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
 import pytest
-pytestmark = [pytest.mark.asyncio(scope="session"),
+pytestmark = [pytest.mark.asyncio,
               pytest.mark.needs_net]
 
 @pytest.mark.flaky(reruns=10)

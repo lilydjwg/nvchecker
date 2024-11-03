@@ -3,7 +3,7 @@
 # Copyright (c) 2017 Felix Yan <felixonmars@archlinux.org>, et al.
 
 import pytest
-pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 @pytest.mark.flaky
 async def test_ubuntupkg(get_version):

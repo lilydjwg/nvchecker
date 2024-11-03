@@ -10,7 +10,7 @@ except ImportError:
   lxml_available = False
 
 pytestmark = [
-  pytest.mark.asyncio(scope="session"),
+  pytest.mark.asyncio,
   pytest.mark.needs_net,
   pytest.mark.skipif(not lxml_available, reason="needs lxml"),
 ]

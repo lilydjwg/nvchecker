@@ -10,7 +10,7 @@ try:
 except ImportError:
   httpbin_available = False
 
-pytestmark = pytest.mark.asyncio(scope="session")
+pytestmark = pytest.mark.asyncio
 
 @pytest.mark.needs_net
 async def test_redirection(get_version):

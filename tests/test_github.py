@@ -5,7 +5,7 @@ import re
 
 import pytest
 
-pytestmark = [pytest.mark.asyncio(scope="session"),
+pytestmark = [pytest.mark.asyncio,
               pytest.mark.needs_net,
               pytest.mark.usefixtures('keyfile')]
 

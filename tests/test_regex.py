@@ -13,7 +13,7 @@ except ImportError:
   httpbin_available = False
 
 pytestmark = [
-  pytest.mark.asyncio(scope="session"),
+  pytest.mark.asyncio,
   pytest.mark.skipif(not httpbin_available, reason="needs pytest_httpbin"),
 ]
 

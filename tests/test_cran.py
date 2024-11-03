@@ -2,7 +2,7 @@
 # Copyright (c) 2022 Pekka Ristola <pekkarr [at] protonmail [dot] com>, et al.
 
 import pytest
-pytestmark = [pytest.mark.asyncio(scope="session"), pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_cran(get_version):
     assert await get_version("xml2", {

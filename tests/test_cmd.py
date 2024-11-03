@@ -3,7 +3,7 @@
 
 import time
 import pytest
-pytestmark = pytest.mark.asyncio(scope="session")
+pytestmark = pytest.mark.asyncio
 
 async def test_cmd(get_version):
     assert await get_version("example", {
