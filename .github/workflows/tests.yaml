@@ -12,7 +12,7 @@ jobs:
         - "3.10"
         - "3.11"
         - "3.12"
-        - "3.13-dev"
+        - "3.13"
         # pypy fails in some cases but we don't care much about that
         # with github actions we can't mark some jobs to not affect the overall
         # conclusion so we have to omit "allow-failure" tests.
@@ -20,7 +20,8 @@ jobs:
         # - pypy-3.7
         deps:
         - tornado pycurl
-        - aiohttp
+        # timer runs when loop is closed, see https://github.com/lilydjwg/nvchecker/actions/runs/11650699759/job/32439742210
+        # - aiohttp
         - tornado
         - httpx[http2]>=0.14.0
         exclude: []
