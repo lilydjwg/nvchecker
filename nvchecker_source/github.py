@@ -219,8 +219,15 @@ async def get_version_real(
   if use_latest_release:
     if 'tag_name' not in data:
       raise GetVersionError('No release found in upstream repository.')
+
+    use_release_name = conf.get('use_release_name', False)
+    if use_release_name:
+      version = data['name']
+    else:
+      version = data['tag_name']
+
     return RichResult(
-      version = data['tag_name'],
+      version = version,
       gitref = f"refs/tags/{data['tag_name']}",
       url = data['html_url'],
     )

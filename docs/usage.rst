@@ -412,11 +412,18 @@ use_latest_release
   small ones like `nvchecker's <https://github.com/lilydjwg/nvchecker/releases>`_
   are only git tags that should use ``use_max_tag`` below.
 
-  Will return the release name instead of date.
+  Will return the release's tag name instead of date. (For historical reasons
+  it doesn't return the release name. See below to change.)
+
+use_release_name
+  When ``use_latest_release`` is ``true``, setting this to ``true`` will cause
+  nvchecker to return the release name instead of the tag name.
 
 include_prereleases
   When ``use_latest_release`` is ``true``, set this to ``true`` to take prereleases into
   account.
+
+  This returns the release names (not the tag names).
 
   This requires a token because it's using the v4 GraphQL API.
 

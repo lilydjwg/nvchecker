@@ -36,6 +36,22 @@ async def test_github_latest_release_include_prereleases(get_version):
         "include_prereleases": True,
     }) == "v0.0.1-pre"
 
+async def test_github_latest_release_with_release_name(get_version):
+    version = await get_version("example", {
+        "source": "github",
+        "github": "mamba-org/mamba",
+        "use_latest_release": True,
+    })
+    assert version.startswith('20') # tag name
+
+    version = await get_version("example", {
+        "source": "github",
+        "github": "mamba-org/mamba",
+        "use_latest_release": True,
+        "use_release_name": True,
+    })
+    assert not version.startswith('20') # release name
+
 async def test_github_max_tag(get_version):
     assert await get_version("example", {
         "source": "github",
