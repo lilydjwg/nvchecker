@@ -93,75 +93,6 @@ async def enhance_version_with_commit_info(
         url=result.url
     )
 
-async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
-    host, repo, query, token = key
-    owner, reponame = repo.split('/')
-    headers = {
-        'Authorization': f'bearer {token}',
-        'Content-Type': 'application/json',
-    }
-    q = QUERY_LATEST_TAG.format(
-        owner=owner,
-        name=reponame,
-        query=query,
-    )
-
-    res = await session.post(
-        GITHUB_GRAPHQL_URL % host,
-        headers=headers,
-        json={'query': q},
-    )
-    j = res.json()
-
-    refs = j['data']['repository']['refs']['edges']
-    if not refs:
-        raise GetVersionError('no tag found')
-
-    version = refs[0]['node']['name']
-    revision = refs[0]['node']['target']['oid']
-    return RichResult(
-        version=version,
-        gitref=f"refs/tags/{version}",
-        revision=revision,
-        url=f'https://github.com/{repo}/releases/tag/{version}',
-    )
-
-async def get_latest_release_with_prereleases(key: Tuple[str, str, str, str]) -> RichResult:
-    host, repo, token, use_release_name = key
-    owner, reponame = repo.split('/')
-    headers = {
-        'Authorization': f'bearer {token}',
-        'Content-Type': 'application/json',
-    }
-    q = QUERY_LATEST_RELEASE_WITH_PRERELEASES.format(
-        owner=owner,
-        name=reponame,
-    )
-
-    res = await session.post(
-        GITHUB_GRAPHQL_URL % host,
-        headers=headers,
-        json={'query': q},
-    )
-    j = res.json()
-
-    refs = j['data']['repository']['releases']['edges']
-    if not refs:
-        raise GetVersionError('no release found')
-
-    tag_name = refs[0]['node']['tag']['name']
-    if use_release_name:
-        version = refs[0]['node']['name']
-    else:
-        version = tag_name
-
-    return RichResult(
-        version=version,
-        gitref=f"refs/tags/{tag_name}",
-        revision=refs[0]['node']['tagCommit']['oid'],
-        url=refs[0]['node']['url'],
-    )
-
 async def get_version_real(
     name: str, conf: Entry, *,
     cache: AsyncCache, keymanager: KeyManager,
@@ -171,17 +102,22 @@ async def get_version_real(
     host = conf.get('host', "github.com")
     use_commit_info = conf.get('use_commit_info', False)
 
-    # Load token from config
+    # Load token from config or keymanager
     token = conf.get('token')
-    # Load token from keyman
     if token is None:
         token = keymanager.get_key(host.lower(), 'github')
 
+    # Set up headers with proper authentication
     headers = {
         'Accept': 'application/vnd.github.quicksilver-preview+json',
     }
+    
+    # Now ensure we always add Authorization header if we have a token
     if token:
-        headers['Authorization'] = f'token {token}'
+        if token.startswith('github_pat_'):  # Personal Access Token (Fine-grained)
+            headers['Authorization'] = f'Bearer {token}'
+        else:
+            headers['Authorization'] = f'token {token}'
 
     use_latest_tag = conf.get('use_latest_tag', False)
     if use_latest_tag:
@@ -207,6 +143,11 @@ async def get_version_real(
     br = conf.get('branch')
     path = conf.get('path')
     use_max_tag = conf.get('use_max_tag', False)
+    
+    # Check for token requirement early for max_tag
+    if use_max_tag and not token:
+        raise GetVersionError('token not given but it is required for max_tag')
+
     if use_latest_release:
         url = GITHUB_LATEST_RELEASE % (host, repo)
     elif use_max_tag:
