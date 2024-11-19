@@ -264,16 +264,16 @@ async def get_version_real(
 
   else:
 
+    version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
+
     # Only add commit info if configured
     if conf.get('use_commit_info', False):
         commit_count = await get_commit_count(url, headers)
-        version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
-        print(f"{version}")
+        version = f"{version}.r{commit_count}.g{data[0]['sha'][:9]}"
 
     return RichResult(
       # YYYYMMDD.HHMMSS
-      version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
-      version = f"{version}.r{commit_count}.g{data[0]['sha'][:9]}",
+      version = version,
       revision = data[0]['sha'],
       url = data[0]['html_url'],
     )
