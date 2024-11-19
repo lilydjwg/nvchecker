@@ -22,6 +22,29 @@ GITHUB_LATEST_RELEASE = 'https://api.%s/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.%s/repos/%s/git/refs/tags'
 GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
+async def get_commit_count(url: str, headers: dict) -> int:
+    """Get the total commit count using pagination."""
+    params = {'per_page': '1'}
+    
+    response = await session.get(
+        url,
+        params=params,
+        headers=headers
+    )
+    
+    commit_count = 1
+    if 'Link' in response.headers:
+        link_header = response.headers['Link']
+        for link in link_header.split(', '):
+            if 'rel="last"' in link:
+                url = link[link.find("<") + 1:link.find(">")]
+                query_params = parse_qs(urlparse(url).query)
+                if 'page' in query_params:
+                    commit_count = int(query_params['page'][0])
+                break
+    
+    return commit_count
+
 async def get_version(name, conf, **kwargs):
   global RATE_LIMITED_ERROR, ALLOW_REQUEST
 
