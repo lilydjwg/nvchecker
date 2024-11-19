@@ -107,105 +107,89 @@ async def get_version_real(
     if token is None:
         token = keymanager.get_key(host.lower(), 'github')
 
-    # Set up headers with proper authentication
     headers = {
         'Accept': 'application/vnd.github.quicksilver-preview+json',
     }
     
-    # Now ensure we always add Authorization header if we have a token
     if token:
-        if token.startswith('github_pat_'):  # Personal Access Token (Fine-grained)
+        if token.startswith('github_pat_'):
             headers['Authorization'] = f'Bearer {token}'
         else:
             headers['Authorization'] = f'token {token}'
 
     use_latest_tag = conf.get('use_latest_tag', False)
-    if use_latest_tag:
-        if not token:
-            raise GetVersionError('token not given but it is required')
-
-        query = conf.get('query', '')
-        result = await cache.get((host, repo, query, token), get_latest_tag)
-        return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
-
     use_latest_release = conf.get('use_latest_release', False)
     include_prereleases = conf.get('include_prereleases', False)
-    use_release_name = conf.get('use_release_name', False)
-    if use_latest_release and include_prereleases:
-        if not token:
-            raise GetVersionError('token not given but it is required')
-
-        result = await cache.get(
-            (host, repo, token, use_release_name),
-            get_latest_release_with_prereleases)
-        return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
-
-    br = conf.get('branch')
-    path = conf.get('path')
     use_max_tag = conf.get('use_max_tag', False)
-    
-    # Check for token requirement early for max_tag
-    if use_max_tag and not token:
-        raise GetVersionError('token not given but it is required for max_tag')
+    use_release_name = conf.get('use_release_name', False)
 
-    if use_latest_release:
-        url = GITHUB_LATEST_RELEASE % (host, repo)
-    elif use_max_tag:
-        url = GITHUB_MAX_TAG % (host, repo)
-    else:
+    # Token requirement checks
+    if any([use_latest_tag, (use_latest_release and include_prereleases), use_max_tag]) and not token:
+        raise GetVersionError('token not given but it is required for this operation')
+
+    try:
+        if use_latest_tag:
+            query = conf.get('query', '')
+            result = await cache.get((host, repo, query, token), get_latest_tag)
+            return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
+
+        if use_latest_release:
+            url = GITHUB_LATEST_RELEASE % (host, repo)
+            try:
+                data = await cache.get_json(url, headers=headers)
+                if 'tag_name' not in data:
+                    raise GetVersionError('No release found in upstream repository.')
+
+                version = data['name'] if use_release_name else data['tag_name']
+                result = RichResult(
+                    version=version,
+                    gitref=f"refs/tags/{data['tag_name']}",
+                    url=data['html_url'],
+                )
+                return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
+            except HTTPError as e:
+                if e.code == 404:
+                    raise GetVersionError(f'No releases found for repository {repo}. The repository might not have any releases yet.')
+                raise
+
+        if use_max_tag:
+            url = GITHUB_MAX_TAG % (host, repo)
+            try:
+                data = await cache.get_json(url, headers=headers)
+                tags: List[Union[str, RichResult]] = [
+                    RichResult(
+                        version=ref['ref'].split('/', 2)[-1],
+                        gitref=ref['ref'],
+                        revision=ref['object']['sha'],
+                        url=f'https://github.com/{repo}/releases/tag/{ref["ref"].split("/", 2)[-1]}',
+                    ) for ref in data
+                ]
+                if not tags:
+                    raise GetVersionError('No tags found in upstream repository.')
+                
+                if use_commit_info:
+                    return [await enhance_version_with_commit_info(
+                        tag, host, repo, headers, use_commit_info
+                    ) for tag in tags if isinstance(tag, RichResult)]
+                return tags
+            except HTTPError as e:
+                if e.code == 404:
+                    raise GetVersionError(f'No tags found for repository {repo}. The repository might not have any tags yet.')
+                raise
+
+        # Default: use commits
+        br = conf.get('branch')
+        path = conf.get('path')
         url = GITHUB_URL % (host, repo)
         parameters = {}
         if br:
             parameters['sha'] = br
         if path:
             parameters['path'] = path
-        url += '?' + urlencode(parameters)
+        if parameters:
+            url += '?' + urlencode(parameters)
 
-    data = await cache.get_json(url, headers=headers)
-
-    if use_max_tag:
-        tags: List[Union[str, RichResult]] = [
-            RichResult(
-                version=ref['ref'].split('/', 2)[-1],
-                gitref=ref['ref'],
-                revision=ref['object']['sha'],
-                url=f'https://github.com/{repo}/releases/tag/{ref["ref"].split("/", 2)[-1]}',
-            ) for ref in data
-        ]
-        if not tags:
-            raise GetVersionError('No tag found in upstream repository.')
-            
-        # Enhance all tags with commit info if enabled
-        if use_commit_info:
-            enhanced_tags = []
-            for tag in tags:
-                if isinstance(tag, RichResult):
-                    enhanced_tag = await enhance_version_with_commit_info(
-                        tag, host, repo, headers, use_commit_info
-                    )
-                    enhanced_tags.append(enhanced_tag)
-                else:
-                    enhanced_tags.append(tag)
-            return enhanced_tags
-        return tags
-
-    if use_latest_release:
-        if 'tag_name' not in data:
-            raise GetVersionError('No release found in upstream repository.')
-
-        if use_release_name:
-            version = data['name']
-        else:
-            version = data['tag_name']
-
-        result = RichResult(
-            version=version,
-            gitref=f"refs/tags/{data['tag_name']}",
-            url=data['html_url'],
-        )
-        return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
-
-    else:
+        data = await cache.get_json(url, headers=headers)
         version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
         
         result = RichResult(
@@ -214,6 +198,15 @@ async def get_version_real(
             url=data[0]['html_url'],
         )
         return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
+
+    except HTTPError as e:
+        if e.code == 404:
+            raise GetVersionError(f'Repository {repo} not found or access denied.')
+        elif e.code in [403, 429]:
+            if n := check_ratelimit(e, name):
+                raise GetVersionError(f'Rate limited. Try again in {n} seconds or use an API token.')
+            raise GetVersionError('Rate limit exceeded. Please use an API token to increase the allowance.')
+        raise
 
 def check_ratelimit(exc: HTTPError, name: str) -> Optional[int]:
     res = exc.response
