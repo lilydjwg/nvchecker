@@ -222,10 +222,9 @@ async def get_version_real(
             url += '?' + urlencode(parameters)
 
         data = await cache.get_json(url, headers=headers)
-        version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
         
         result = RichResult(
-            version=version,
+            version=data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
             revision=data[0]['sha'],
             url=data[0]['html_url'],
         )
