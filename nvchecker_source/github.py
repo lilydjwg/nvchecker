@@ -96,9 +96,6 @@ async def get_commit_count(url: str, headers: dict) -> int:
         headers=headers
     )
     
-    if response.status_code != 200:
-        raise HTTPError(response.status_code, response)
-    
     commit_count = 1
     if 'Link' in response.headers:
         link_header = response.headers['Link']
