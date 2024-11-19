@@ -2,6 +2,7 @@
 # Copyright (c) 2013-2020, 2024 lilydjwg <lilydjwg@gmail.com>, et al.
 #
 import time
+import os
 from urllib.parse import urlencode, parse_qs, urlparse
 from typing import List, Tuple, Union, Optional
 import asyncio
