@@ -22,7 +22,7 @@ GITHUB_LATEST_RELEASE = 'https://api.%s/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.%s/repos/%s/git/refs/tags'
 GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
-async def enhance_version_with_commit_info(
+async def get_version(
     result: RichResult,
     host: str,
     repo: str,
@@ -143,7 +143,7 @@ async def get_version_real(
 
         query = conf.get('query', '')
         result = await cache.get((host, repo, query, token), get_latest_tag)
-        return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
+        return await get_version(result, host, repo, headers, use_commit_info)
 
     use_latest_release = conf.get('use_latest_release', False)
     include_prereleases = conf.get('include_prereleases', False)
@@ -155,7 +155,7 @@ async def get_version_real(
         result = await cache.get(
             (host, repo, token, use_release_name),
             get_latest_release_with_prereleases)
-        return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
+        return await get_version(result, host, repo, headers, use_commit_info)
 
     br = conf.get('branch')
     path = conf.get('path')
@@ -192,7 +192,7 @@ async def get_version_real(
             enhanced_tags = []
             for tag in tags:
                 if isinstance(tag, RichResult):
-                    enhanced_tag = await enhance_version_with_commit_info(
+                    enhanced_tag = await get_version(
                         tag, host, repo, headers, use_commit_info
                     )
                     enhanced_tags.append(enhanced_tag)
@@ -215,7 +215,7 @@ async def get_version_real(
             gitref=f"refs/tags/{data['tag_name']}",
             url=data['html_url'],
         )
-        return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
+        return await get_version(result, host, repo, headers, use_commit_info)
 
     else:
         version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.')
@@ -225,7 +225,7 @@ async def get_version_real(
             revision=data[0]['sha'],
             url=data[0]['html_url'],
         )
-        return await enhance_version_with_commit_info(result, host, repo, headers, use_commit_info)
+        return await get_version(result, host, repo, headers, use_commit_info)
 
 def check_ratelimit(exc: HTTPError, name: str) -> Optional[int]:
     res = exc.response
