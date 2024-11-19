@@ -22,6 +22,30 @@ GITHUB_LATEST_RELEASE = 'https://api.%s/repos/%s/releases/latest'
 GITHUB_MAX_TAG = 'https://api.%s/repos/%s/git/refs/tags'
 GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
+async def get_version(name, conf, **kwargs):
+  global RATE_LIMITED_ERROR, ALLOW_REQUEST
+
+  if RATE_LIMITED_ERROR:
+    raise RuntimeError('rate limited')
+
+  if ALLOW_REQUEST is None:
+    ALLOW_REQUEST = asyncio.Event()
+    ALLOW_REQUEST.set()
+
+  for _ in range(2): # retry once
+    try:
+      await ALLOW_REQUEST.wait()
+      return await get_version_real(name, conf, **kwargs)
+    except HTTPError as e:
+      if e.code in [403, 429]:
+        if n := check_ratelimit(e, name):
+          ALLOW_REQUEST.clear()
+          await asyncio.sleep(n+1)
+          ALLOW_REQUEST.set()
+          continue
+        RATE_LIMITED_ERROR = True
+      raise
+
 async def enhance_version_with_commit_info(
     result: RichResult,
     host: str,
