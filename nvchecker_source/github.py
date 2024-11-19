@@ -8,6 +8,38 @@ import asyncio
 
 import structlog
 
+
+def get_github_token(conf: dict, host: str, keymanager: KeyManager) -> Optional[str]:
+    """
+    Get GitHub token with the following priority:
+    1. Token from config
+    2. Token from keymanager
+    3. Token from GITHUB_TOKEN environment variable
+    
+    Args:
+        conf: Configuration dictionary
+        host: GitHub host (e.g., "github.com")
+        keymanager: KeyManager instance for managing tokens
+    
+    Returns:
+        str or None: GitHub token if found, None otherwise
+    """
+    # Check config first
+    token = conf.get('token')
+    if token is not None:
+        return token
+    
+    # Then check keymanager
+    try:
+        token = keymanager.get_key(host.lower(), 'github')
+        if token:
+            return token
+    except Exception:
+        pass
+    
+    # Finally check environment variable
+    return os.environ.get('GITHUB_TOKEN')
+
 from nvchecker.api import (
   VersionResult, Entry, AsyncCache, KeyManager,
   HTTPError, session, RichResult, GetVersionError,
@@ -102,10 +134,8 @@ async def get_version_real(
     host = conf.get('host', "github.com")
     use_commit_info = conf.get('use_commit_info', False)
 
-    # Load token from config or keymanager
-    token = conf.get('token')
-    if token is None:
-        token = keymanager.get_key(host.lower(), 'github')
+    # Load token from config, keymanager or env GITHUB_TOKEN
+    token = get_github_token(conf, host, keymanager)
 
     headers = {
         'Accept': 'application/vnd.github.quicksilver-preview+json',
