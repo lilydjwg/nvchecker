@@ -86,6 +86,31 @@ QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
   }}
 }}
 '''
+async def get_commit_count(url: str, headers: dict) -> int:
+    """Get the total commit count using pagination."""
+    params = {'per_page': '1'}
+    
+    response = await session.get(
+        url,
+        params=params,
+        headers=headers
+    )
+    
+    if response.status_code != 200:
+        raise HTTPError(response.status_code, response)
+    
+    commit_count = 1
+    if 'Link' in response.headers:
+        link_header = response.headers['Link']
+        for link in link_header.split(', '):
+            if 'rel="last"' in link:
+                url = link[link.find("<") + 1:link.find(">")]
+                query_params = parse_qs(urlparse(url).query)
+                if 'page' in query_params:
+                    commit_count = int(query_params['page'][0])
+                break
+    
+    return commit_count
 
 async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
   host, repo, query, token = key
@@ -241,6 +266,12 @@ async def get_version_real(
     )
 
   else:
+
+    # Only add commit info if configured
+    if conf.get('use_commit_info', False):
+        commit_count = await get_commit_count(url, headers)
+        version = f"{version}.r{commit_count}.g{data[0]['sha'][:9]}"
+
     return RichResult(
       # YYYYMMDD.HHMMSS
       version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
