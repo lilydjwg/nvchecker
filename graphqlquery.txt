@@ -1,0 +1,49 @@
+query() {
+  repository(owner: "GNOME", name: "gnome-shell") {
+    # Default branch commits
+    defaultBranchRef {
+      target {
+        ... on Commit {
+          history(first: 1) {
+            totalCount
+            edges {
+              node {
+                oid
+                committedDate
+              }
+            }
+          }
+        }
+      }
+    }
+    # All tags
+    refs(refPrefix: "refs/tags/", first: 1, orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {
+      edges {
+        node {
+          name
+          target {
+            ... on Commit {
+              oid
+            }
+          }
+        }
+      }
+    }
+    # All releases (filter pre-releases in your application logic)
+    releases(first: 100) {
+      totalCount
+      edges {
+        node {
+          name
+          tagName
+          isPrerelease
+          createdAt
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}
