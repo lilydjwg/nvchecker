@@ -6,7 +6,7 @@ import asyncio
 import json  # Added for JSON handling
 
 import structlog
-
+http_client = None
 from nvchecker.api import (
     VersionResult, Entry, AsyncCache, KeyManager,
     HTTPError, session, RichResult, GetVersionError,
@@ -20,6 +20,14 @@ GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
 async def get_version(name, conf, **kwargs):
   global RATE_LIMITED_ERROR, ALLOW_REQUEST
+
+  global http_client
+ 
+   # Initialize the HTTP client if not already done
+  if http_client is None:
+    if asyncio.iscoroutine(session):
+      http_client = await session
+    http_client = session
 
   if RATE_LIMITED_ERROR:
     raise RuntimeError('rate limited')
@@ -115,7 +123,7 @@ async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
 
     # Make GraphQL query
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
-    async with session.post(
+    async with http_client.post(
         GITHUB_GRAPHQL_URL % host,
         headers=headers,
         json={'query': query_vars}
@@ -148,7 +156,7 @@ async def get_latest_release_with_prereleases(key: Tuple[str, str, str, str]) ->
 
     # Make GraphQL query
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
-    async with session.post(
+    async with http_client.post(
         GITHUB_GRAPHQL_URL % host,
         headers=headers,
         json={'query': query_vars}
@@ -205,7 +213,7 @@ async def get_version_real(
 
     # Make GraphQL query
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
-    async with session.post(
+    async with http_client.post(
         GITHUB_GRAPHQL_URL % host,
         headers=headers,
         json={'query': query_vars}
