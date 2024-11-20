@@ -21,13 +21,19 @@ GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
 async def get_http_client():
     """Initialize and return the HTTP client."""
-    global http_client
-    if http_client is None:
+    global _http_client
+    if _http_client is None:
         if asyncio.iscoroutine(session):
-            http_client = await session
+            # Properly await the session coroutine
+            client = await session
+            # Ensure the client supports async context management
+            if hasattr(client, '__aenter__'):
+                _http_client = client
+            else:
+                raise RuntimeError("HTTP client must support async context management")
         else:
-            http_client = session
-    return http_client
+            _http_client = session
+    return _http_client
 
 async def execute_github_query(host: str, owner: str, reponame: str, token: str) -> dict:
     """
@@ -35,7 +41,7 @@ async def execute_github_query(host: str, owner: str, reponame: str, token: str)
     Centralizes error handling and query execution.
     """
     client = await get_http_client()
-
+    
     headers = {
         'Authorization': f'bearer {token}',
         'Content-Type': 'application/json',
@@ -43,15 +49,27 @@ async def execute_github_query(host: str, owner: str, reponame: str, token: str)
 
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
     
-    async with client.post(
-        GITHUB_GRAPHQL_URL % host,
-        headers=headers,
-        json={'query': query_vars}
-    ) as res:
-        j = await res.json()
-        if 'errors' in j:
-            raise GetVersionError(f"GitHub API error: {j['errors']}")
-        return j['data']['repository']
+    try:
+        # Create the request without using async with
+        response = await client.post(
+            GITHUB_GRAPHQL_URL % host,
+            headers=headers,
+            json={'query': query_vars}
+        )
+        
+        # Handle the response manually
+        try:
+            data = await response.json()
+            if 'errors' in data:
+                raise GetVersionError(f"GitHub API error: {data['errors']}")
+            return data['data']['repository']
+        finally:
+            # Ensure we clean up the response
+            if hasattr(response, 'close'):
+                await response.close()
+    except Exception as e:
+        logger.error("GitHub API request failed", error=str(e))
+        raise
 
 def get_github_token(conf: Entry, host: str, keymanager: KeyManager) -> Optional[str]:
     """Get GitHub token from config, keymanager, or environment."""
