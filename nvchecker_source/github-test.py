@@ -119,7 +119,7 @@ query {
     remaining
     resetAt    
   }
-  repository(owner: "$name", name: "$owner") {
+  repository(owner: "$owner", name: "$name") {
     # Default branch commits
     defaultBranchRef {
       target {
