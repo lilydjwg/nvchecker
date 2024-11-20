@@ -1,5 +1,10 @@
-query() {
-  repository(owner: "GNOME", name: "gnome-shell") {
+query {
+  rateLimit {
+    limit
+    remaining
+    resetAt    
+  }
+  repository(owner: "drwetter", name: "testssl.sh") {
     # Default branch commits
     defaultBranchRef {
       target {
@@ -24,19 +29,22 @@ query() {
           target {
             ... on Commit {
               oid
+              url         
             }
           }
         }
       }
     }
     # All releases (filter pre-releases in your application logic)
-    releases(first: 100) {
+releases(first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
       totalCount
       edges {
         node {
           name
+          url
           tagName
           isPrerelease
+          isLatest
           createdAt
         }
       }
