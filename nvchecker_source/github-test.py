@@ -6,7 +6,6 @@ import asyncio
 import json  # Added for JSON handling
 
 import structlog
-http_client = None
 from nvchecker.api import (
     VersionResult, Entry, AsyncCache, KeyManager,
     HTTPError, session, RichResult, GetVersionError,
@@ -15,7 +14,7 @@ from nvchecker.api import (
 logger = structlog.get_logger(logger_name=__name__)
 ALLOW_REQUEST = None
 RATE_LIMITED_ERROR = False
-http_client = None
+_http_client = None
 
 GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
