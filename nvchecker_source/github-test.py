@@ -46,6 +46,7 @@ async def execute_github_query(host: str, owner: str, reponame: str, token: str)
     }
     logger.warning(f"{owner} {reponame}")
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
+    logger.warning(f"{query_vars}")
     client = await get_http_client()
     
     try:
