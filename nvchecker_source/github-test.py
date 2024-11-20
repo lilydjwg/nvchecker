@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 from typing import List, Tuple, Union, Optional
 import asyncio
 import aiohttp
+import prettyprint
 
 import structlog
 from nvchecker.api import (
@@ -236,6 +237,7 @@ async def get_version_real(
     use_max_tag = conf.get('use_max_tag', False)
     if use_max_tag:
         refs = repo_data['refs']['edges']
+        logger.warning(f"{refs}")
         tags: List[Union[str, RichResult]] = [
             RichResult(
                 version=ref['node']['name'],
