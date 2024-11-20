@@ -49,23 +49,22 @@ async def execute_github_query(host: str, owner: str, reponame: str, token: str)
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
     
     try:
-        # Create the request without using async with
-        response = await client.post(
-            GITHUB_GRAPHQL_URL % host,
-            headers=headers,
-            json={'query': query_vars}
-        )
-        
-        # Handle the response manually
-        try:
-            data = await response.json()
+        async with client.post(
+                GITHUB_GRAPHQL_URL % host,
+                headers=headers,
+                json={'query': query_vars}
+        ) as response:
+            # Check response status
+            response.raise_for_status()
+            
+            # Parse JSON response
+            data = await response.json() 
+            
+            # Check for GraphQL errors            
             if 'errors' in data:
                 raise GetVersionError(f"GitHub API error: {data['errors']}")
             return data['data']['repository']
-        finally:
-            # Ensure we clean up the response
-            if hasattr(response, 'close'):
-                await response.close()
+
     except Exception as e:
         logger.error("GitHub API request failed", error=str(e))
         raise
