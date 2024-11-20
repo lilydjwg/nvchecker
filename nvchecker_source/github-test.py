@@ -137,16 +137,13 @@ query {
       }
     }
     # All tags
-    refs(refPrefix: "refs/tags/", first: 1, orderBy: {
-      field: TAG_COMMIT_DATE, 
-      direction: DESC}) 
-      {
+    refs(refPrefix: "refs/tags/", first: 1, orderBy: {field: TAG_COMMIT_DATE, direction: DESC}) {
       edges {
         node {
-          name
+          name          
           target {
-            ... on Commit {
-              oid
+            oid
+            ... on Commit {              
               url         
             }
           }
@@ -159,7 +156,7 @@ releases(first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
       edges {
         node {
           name
-          url
+          url          
           tagName
           isPrerelease
           isLatest
