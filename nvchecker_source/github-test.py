@@ -3,14 +3,14 @@ import time
 from urllib.parse import urlencode
 from typing import List, Tuple, Union, Optional
 import asyncio
-import json  # Added for JSON handling
+import aiohttp
 
 import structlog
 from nvchecker.api import (
     VersionResult, Entry, AsyncCache, KeyManager,
     HTTPError, session, RichResult, GetVersionError,
 )
-
+DEFAULT_TIMEOUT = aiohttp.ClientTimeout(total=60)
 logger = structlog.get_logger(logger_name=__name__)
 ALLOW_REQUEST = None
 RATE_LIMITED_ERROR = False
@@ -18,18 +18,18 @@ _http_client = None
 
 GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
+async def create_http_client():
+    """Create a new aiohttp client session with proper configuration."""
+    return aiohttp.ClientSession(timeout=DEFAULT_TIMEOUT)
+
 async def get_http_client():
     """Initialize and return the HTTP client."""
     global _http_client
     if _http_client is not None:
         return _http_client
-        
-    # Get the client instance, awaiting if necessary
-    client = await session if asyncio.iscoroutine(session) else session
-    
-    if not hasattr(client, '__aenter__'):
-        raise RuntimeError("HTTP client must support async context management")
-        
+
+    # Create a new client session if none exists
+    client = await create_http_client()        
     _http_client = client
     return _http_client
 
@@ -46,21 +46,29 @@ async def execute_github_query(host: str, owner: str, reponame: str, token: str)
     }
 
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
+    client = await get_http_client()
     
     try:
-        # Ensure we have a properly initialized client
-        http_client = await get_http_client()
-        async with http_client.post(        
-                GITHUB_GRAPHQL_URL % host,
-                headers=headers,
-                json={'query': query_vars}
+        async with client.post(
+            GITHUB_GRAPHQL_URL % host,
+            headers=headers,
+            json={'query': query_vars}
         ) as response:
             # Check response status
             response.raise_for_status()
             
             # Parse JSON response
             data = await response.json() 
-            
+
+            # Handle rate limiting headers
+            remaining = response.headers.get('X-RateLimit-Remaining')
+            if remaining and int(remaining) == 0:
+                reset_time = int(response.headers.get('X-RateLimit-Reset', 0))
+                logger.warning(
+                    "GitHub API rate limit reached",
+                    reset_time=time.ctime(reset_time)
+                )
+
             # Check for GraphQL errors            
             if 'errors' in data:
                 raise GetVersionError(f"GitHub API error: {data['errors']}")
