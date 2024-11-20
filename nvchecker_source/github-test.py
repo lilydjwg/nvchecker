@@ -21,17 +21,16 @@ GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 async def get_http_client():
     """Initialize and return the HTTP client."""
     global _http_client
-    if _http_client is None:
-        if asyncio.iscoroutine(session):
-            # Properly await the session coroutine
-            client = await session
-            # Ensure the client supports async context management
-            if hasattr(client, '__aenter__'):
-                _http_client = client
-            else:
-                raise RuntimeError("HTTP client must support async context management")
-        else:
-            _http_client = session
+    if _http_client is not None:
+        return _http_client
+        
+    # Get the client instance, awaiting if necessary
+    client = await session if asyncio.iscoroutine(session) else session
+    
+    if not hasattr(client, '__aenter__'):
+        raise RuntimeError("HTTP client must support async context management")
+        
+    _http_client = client
     return _http_client
 
 async def execute_github_query(host: str, owner: str, reponame: str, token: str) -> dict:
@@ -49,7 +48,9 @@ async def execute_github_query(host: str, owner: str, reponame: str, token: str)
     query_vars = QUERY_GITHUB.replace("$owner", owner).replace("$name", reponame)
     
     try:
-        async with client.post(
+        # Ensure we have a properly initialized client
+        http_client = await get_http_client()
+        async with http_client.post(        
                 GITHUB_GRAPHQL_URL % host,
                 headers=headers,
                 json={'query': query_vars}
