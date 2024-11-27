@@ -857,6 +857,29 @@ strip_release
 
 Note that either pkg or srcpkg needs to be specified (but not both) or the item name will be used as pkg.
 
+Check RPM repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "rpmrepo"
+
+This enables you to check latest package versions in an arbitrary RPM repository in `repomd` format used by package managers such as ``dnf`` (Fedora, RHEL, AlmaLinux etc.) or ``zypper`` (openSUSE) without the need for native RPM tools.
+
+pkg
+  Name of the RPM package (you can also use ``rpmrepo`` as with other sources, but ``pkg`` is preferred for clarity)
+
+repo
+  URL of the repository (required, ``repodata/repomd.xml`` should be there)
+
+arch
+  Architecture of the RPM package (``binary``, ``src``, ``any``, ``x86_64``, ``aarch64``, etc, defaults to ``binary``)
+
+This source supports :ref:`list options`.
+
+.. note::
+   An additional dependency "lxml" is required.
+   You can use ``pip install 'nvchecker[rpmrepo]'``.
+
 Check Git repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
