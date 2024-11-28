@@ -1,3 +1,6 @@
+# MIT licensed
+# Copyright (c) 2013-2020, 2024 lilydjwg <lilydjwg@gmail.com>, et al.
+
 import os
 import time
 import aiohttp
@@ -8,8 +11,8 @@ async def get_github_token(conf: Entry, host: str, keymanager: KeyManager) -> Op
     token = conf.get('token')
     if token is None:
         token = keymanager.get_key(host.lower(), 'github')
-    if token is None:
-        token = os.environ.get('GITHUB_TOKEN')
+    #if token is None:
+    #    token = os.environ.get('GITHUB_TOKEN')
     return token
 
 def create_rich_result(conf, commits, sha, **kwargs) -> RichResult:
