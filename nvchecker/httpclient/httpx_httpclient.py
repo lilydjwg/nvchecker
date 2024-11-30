@@ -49,7 +49,8 @@ class HttpxSession(BaseSession):
         method, url, json = json, content = body,
         headers = headers,
         follow_redirects = follow_redirects,
-        params = params,
+        # httpx checks for None but not ()
+        params = params or None,
       )
       err_cls: Optional[type] = None
       if r.status_code >= 500:

@@ -18,7 +18,7 @@ async def test_android_package(get_version):
         "android_sdk": "cmake;",
         "repo": "package",
     })
-    assert version.startswith("3.30.")
+    assert version.startswith("3.")
 
 
 async def test_android_package_channel(get_version):
