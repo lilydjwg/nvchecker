@@ -31,9 +31,9 @@ async def get_version_impl(info) -> RichResult:
 
   elements = doc.xpath("//div[@class='Version-tag']/a/text()")
   try:
-    version = elements[0]
+    version = elements[0] # type: ignore
     return RichResult(
-      version = version,
+      version = version, # type: ignore
       url = GO_PKG_VERSION_URL.format(pkg=pkg_name, version=version),
     )
   except IndexError:

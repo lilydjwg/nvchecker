@@ -5,6 +5,7 @@ import asyncio
 import gzip
 import pathlib
 import urllib
+from typing import Set
 
 import lxml.etree
 from nvchecker.api import session, AsyncCache, Entry, KeyManager, VersionResult
@@ -36,21 +37,21 @@ async def get_version(
   repomd_path = repo_path / 'repodata' / 'repomd.xml'
   repomd_url = repo_url._replace(path=str(repomd_path)).geturl()
   # download repomd.xml (use cache)
-  repomd_body = await cache.get(repomd_url, get_file)
+  repomd_body = await cache.get(repomd_url, get_file) # type: ignore
   # parse repomd.xml
   repomd_xml = lxml.etree.fromstring(repomd_body)
 
   # get the url of *primary.xml.gz
   primary_element = repomd_xml.find('repo:data[@type="primary"]/repo:location', namespaces=NS)
-  primary_path = repo_path / primary_element.get('href')
+  primary_path = repo_path / primary_element.get('href') # type: ignore
   primary_url = repo_url._replace(path=str(primary_path)).geturl()
   # download and decompress *primary.xml.gz (use cache)
-  primary_body = await cache.get(primary_url, get_file_gz)
+  primary_body = await cache.get(primary_url, get_file_gz) # type: ignore
   # parse *primary.xml metadata
   metadata = lxml.etree.fromstring(primary_body)
 
   # use set to eliminate duplication
-  versions_set = set()
+  versions_set: Set[str] = set()
   # iterate package metadata
   for el in metadata.findall(f'common:package[common:name="{pkg}"]', namespaces=NS):
     pkg_arch = el.findtext('common:arch', namespaces=NS)
@@ -64,19 +65,19 @@ async def get_version(
         continue
 
     version_info = el.find('common:version', namespaces=NS)
-    version = version_info.get('ver')
-    versions_set.add(version)
+    version = version_info.get('ver') # type: ignore
+    versions_set.add(version) # type: ignore
 
   versions = list(versions_set)
-  return versions
+  return versions # type: ignore
 
 
-async def get_file(url: str) -> str:
+async def get_file(url: str) -> bytes:
   res = await session.get(url)
   return res.body
 
 
-async def get_file_gz(url: str) -> str:
+async def get_file_gz(url: str) -> bytes:
   res = await session.get(url)
   loop = asyncio.get_running_loop()
   return await loop.run_in_executor(
