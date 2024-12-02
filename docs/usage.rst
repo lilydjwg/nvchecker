@@ -327,7 +327,7 @@ post_data_type
    You can use ``pip install 'nvchecker[htmlparser]'``.
 
 Search with an JSON Parser (jq)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
   source = "jq"
