@@ -1037,6 +1037,22 @@ Check `Go packages and modules <https://pkg.go.dev/>`_ for updates.
 go
   The name of Go package or module, e.g. ``github.com/caddyserver/caddy/v2/cmd``.
 
+Check opam repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "opam"
+
+This enables you to check latest package versions in an arbitrary `opam repository <https://opam.ocaml.org/doc/Manual.html#Repositories>` without the need for the opam command line tool.
+
+pkg
+  Name of the opam package
+
+repo
+  URL of the repository (optional, the default ``https://opam.ocaml.org`` repository is used if not specified)
+
+This source supports :ref:`list options`.
+
 Combine others' results
 ~~~~~~~~~~~~~~~~~~~~~~~
 ::
