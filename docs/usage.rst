@@ -71,8 +71,8 @@ The JSON log is one JSON string per line. The following documented events and
 fields are stable, undocumented ones may change without notice.
 
 event=updated
-  An update is detected. Fields ``name``, ``old_version`` and ``version`` are
-  available. ``old_version`` maybe ``null``.
+  An update is detected. Fields ``name``, ``revision``, ``old_version`` and ``version`` are
+  available. ``old_version`` and ``revision`` maybe ``null``.
 
 event=up-to-date
   There is no update. Fields ``name`` and ``version`` are available.
