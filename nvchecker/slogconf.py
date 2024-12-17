@@ -26,6 +26,9 @@ def _console_msg(event):
   else:
     msg = evt
 
+  if 'revision' in event and not event['revision']:
+      del event['revision']
+
   if 'name' in event:
     msg = f"{event['name']}: {msg}"
     del event['name']
