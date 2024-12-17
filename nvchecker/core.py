@@ -417,6 +417,7 @@ def check_version_update(
       'updated',
       name = name,
       version = r.version,
+      revision = r.revision,
       old_version = oldver,
       url = r.url,
     )
