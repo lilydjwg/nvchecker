@@ -72,7 +72,7 @@ fields are stable, undocumented ones may change without notice.
 
 event=updated
   An update is detected. Fields ``name``, ``revision``, ``old_version`` and ``version`` are
-  available. ``old_version`` and ``revision`` maybe ``null``.
+  available. ``old_version`` may be ``null`` and ``revision`` may be absent.
 
 event=up-to-date
   There is no update. Fields ``name`` and ``version`` are available.
