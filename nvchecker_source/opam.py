@@ -60,7 +60,7 @@ async def get_version(
   # Parse the version strings from the file names
   raw_versions = await get_package_versions(files, pkg)
 
-  # Convert the version strings into RichResults ()
+  # Convert the version strings into RichResults
   versions = []
   for version in raw_versions:
     versions.append(RichResult(
