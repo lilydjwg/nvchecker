@@ -51,7 +51,7 @@ async def get_version(
     ]
   else:
     return RichResult(
-      version = data[0]['commit']['committer']['date'].split('T', 1)[0].replace('-', ''),
+      version = data[0]['commit']['committer']['date'],
       revision = data[0]['sha'],
       url = data[0]['html_url'],
     )

@@ -10,8 +10,8 @@ async def test_gitea(get_version):
     ver = await get_version("example", {
         "source": "gitea",
         "gitea": "gitea/tea"})
-    assert len(ver) == 8
-    assert ver.isdigit()
+    assert ver.startswith('20')
+    assert 'T' in ver
 
 @pytest.mark.flaky(reruns=10)
 async def test_gitea_max_tag_with_include(get_version):
