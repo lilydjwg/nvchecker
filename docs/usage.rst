@@ -489,6 +489,15 @@ To set an authorization token, you can set:
 
 This source supports :ref:`list options` when ``use_max_tag`` is set.
 
+Check Gogs / Forgejo / Codeberg
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Please use the above "gitea" source. Gitea is a fork of `Gogs <https://gogs.io/>`_.
+`Forgejo <https://forgejo.org/>`_ is a fork of Gitea. Codeberg is a code
+hosting provider that uses Forgejo. They share the same API endpoints nvchecker uses.
+
+Alternatively, you can try the generic "git" source.
+
 Check BitBucket
 ~~~~~~~~~~~~~~~
 ::
