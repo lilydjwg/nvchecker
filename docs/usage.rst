@@ -329,7 +329,6 @@ This source can also work with XML to some extent, e.g. it can parse an RSS feed
    [ProxmoxVE]
    source = "htmlparser"
    url = "https://my.proxmox.com/en/announcements/tag/proxmox-ve/rss"
-   is_xml = true
    xpath = "//item/title"
    from_pattern = 'Proxmox VE ([\d.]+) released!'
    to_pattern = '\1'
