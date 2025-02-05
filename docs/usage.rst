@@ -322,6 +322,18 @@ post_data
 post_data_type
   (*Optional*) Specifies the ``Content-Type`` of the request body (``post_data``). By default, this is ``application/x-www-form-urlencoded``.
 
+This source can also work with XML to some extent, e.g. it can parse an RSS feed like this:
+
+.. code-block:: toml
+
+   [ProxmoxVE]
+   source = "htmlparser"
+   url = "https://my.proxmox.com/en/announcements/tag/proxmox-ve/rss"
+   is_xml = true
+   xpath = "//item/title"
+   from_pattern = 'Proxmox VE ([\d.]+) released!'
+   to_pattern = '\1'
+
 .. note::
    An additional dependency "lxml" is required.
    You can use ``pip install 'nvchecker[htmlparser]'``.
