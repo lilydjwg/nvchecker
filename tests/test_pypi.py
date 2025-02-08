@@ -32,3 +32,8 @@ async def test_pypi_invalid_version(get_version):
         "source": "pypi",
     })
 
+async def test_pypi_yanked_version(get_version):
+    assert await get_version("urllib3", {
+        "source": "pypi",
+        "include_regex": "^(1\\..*)|(2\\.0\\.[0,1])",
+    }) == "1.26.20"

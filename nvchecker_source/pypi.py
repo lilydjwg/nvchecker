@@ -19,6 +19,10 @@ async def get_version(name, conf, *, cache, **kwargs):
   data = await cache.get_json(url)
 
   for version in data['releases'].keys():
+    # Skip versions that are marked as yanked.
+    if len(data['releases'][version]) != 0 and data['releases'][version][0]['yanked']:
+      continue
+
     try:
       parsed_version = Version(version)
     except InvalidVersion:
