@@ -20,7 +20,7 @@ async def get_version(name, conf, *, cache, **kwargs):
 
   for version in data['releases'].keys():
     # Skip versions that are marked as yanked.
-    if len(data['releases'][version]) != 0 and data['releases'][version][0]['yanked']:
+    if (vers := data['releases'][version]) and vers[0]['yanked']:
       continue
 
     try:
