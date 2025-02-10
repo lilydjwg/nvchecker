@@ -1,9 +1,12 @@
 # MIT licensed
 # Copyright (c) 2020 Chih-Hsuan Yen <yan12125 at gmail dot com>
 
-import pytest
+import os
 import datetime
-pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
+
+import pytest
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net,
+             pytest.mark.skipif(os.environ.get('GITHUB_RUN_ID'), reason="400 very often")]
 
 async def test_container(get_version):
   assert await get_version("hello-world", {
