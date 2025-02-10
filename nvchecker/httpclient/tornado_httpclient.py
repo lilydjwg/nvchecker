@@ -33,7 +33,6 @@ def setup_curl(curl):
 
   if SSL_CERT_FILE:
     curl.setopt_string(pycurl.CAINFO, SSL_CERT_FILE)
-  # some servers insist sending us compressed content
   curl.setopt_string(pycurl.ACCEPT_ENCODING, "")
 
 class TornadoSession(BaseSession):

@@ -42,11 +42,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-
           ${{ runner.os }}-${{ env.cache-name }}-
-    - name: workaround pycurl wheel
-      if: ${{ contains(matrix.deps, 'pycurl') }}
-      run: |
-        sudo mkdir -p /etc/pki/tls/certs
-        sudo ln -s /etc/ssl/certs/ca-certificates.crt /etc/pki/tls/certs/ca-bundle.crt
 
     - name: Install pycurl deps
       if: ${{ contains(matrix.deps, 'pycurl') }}
@@ -56,6 +51,14 @@ jobs:
     # werkzeug is pinned for httpbin compatibility https://github.com/postmanlabs/httpbin/issues/673
     - name: Install Python deps
       run: pip install -U ${{ matrix.deps }} pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq 'werkzeug<2.1' awesomeversion
+    # don't use binary distribution because:
+    #   hardcoded cacert path doesn't work on Ubuntu (should have been resolved?)
+    #   limited compression support (only deflate & gzip)
+    - name: Install pycurl
+      if: ${{ contains(matrix.deps, 'pycurl') }}
+      run: |
+        pip uninstall -y pycurl
+        pip install -U pycurl --no-binary :all:
     - name: Decrypt keys
       env:
         KEY: ${{ secrets.KEY }}
