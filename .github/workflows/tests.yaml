@@ -60,5 +60,34 @@ jobs:
       env:
         KEY: ${{ secrets.KEY }}
       run: if [[ -n $KEY ]]; then openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml; fi
+
+    - name: Setup mitmproxy cache
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-mitm
+      with:
+        path: ~/.mitmproxy
+        key: ${{ env.cache-name }}
+        restore-keys: |
+          ${{ env.cache-name }}
+    - name: Install mitmproxy
+      run: |
+        sudo apt update
+        /usr/bin/pip install -U mitmproxy
+        # https://github.com/DevToys-app/DevToys/issues/1373#issuecomment-2599820594
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+    # - name: Setup upterm session
+    #   uses: lhotari/action-upterm@v1
     - name: Run pytest
-      run: if [[ -f keyfile.toml ]]; then KEYFILE=keyfile.toml pytest; else pytest; fi
+      run: scripts/run_cached_tests
+
+    - name: save mitmproxy cache
+      if: always()
+      uses: actions/cache/save@v4
+      env:
+        cache-name: cache-mitm
+      with:
+        path: ~/.mitmproxy
+        key: ${{ env.cache-name }}
