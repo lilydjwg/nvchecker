@@ -6,7 +6,7 @@ import datetime
 
 import pytest
 pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net,
-             pytest.mark.skipif(os.environ.get('GITHUB_RUN_ID'), reason="400 very often")]
+             pytest.mark.skipif(bool(os.environ.get('GITHUB_RUN_ID')), reason="400 very often")]
 
 async def test_container(get_version):
   assert await get_version("hello-world", {
