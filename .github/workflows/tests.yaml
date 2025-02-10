@@ -69,7 +69,7 @@ jobs:
         path: ~/.mitmproxy
         key: ${{ env.cache-name }}
         restore-keys: |
-          ${{ env.cache-name }}
+          ${{ env.cache-name }}-
     - name: Install mitmproxy
       run: |
         sudo apt update
@@ -82,12 +82,3 @@ jobs:
     #   uses: lhotari/action-upterm@v1
     - name: Run pytest
       run: scripts/run_cached_tests
-
-    - name: save mitmproxy cache
-      if: always()
-      uses: actions/cache/save@v4
-      env:
-        cache-name: cache-mitm
-      with:
-        path: ~/.mitmproxy
-        key: ${{ env.cache-name }}
