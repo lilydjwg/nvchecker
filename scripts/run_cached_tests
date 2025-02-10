@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+mitmdump=${mitmdump:-mitmdump}
+
+if [[ -f ~/.mitmproxy/nvdump ]]; then
+  $mitmdump -S ~/.mitmproxy/nvdump -p 7890 --ignore-hosts '127\.0\.0\.1' --server-replay-reuse --server-replay-extra=forward -w newdump >mitmdump_output &
+else
+  $mitmdump -w ~/.mitmproxy/nvdump -p 7890 --ignore-hosts '127\.0\.0\.1' >mitmdump_output &
+fi
+
+mitm_pid=$!
+
+on_exit () {
+  kill -INT $mitm_pid
+
+  if [[ -s newdump ]]; then
+    cat newdump >> ~/.mitmproxy/nvdump
+  fi
+
+  cat mitmdump_output
+}
+
+trap on_exit EXIT
+
+if [[ -f keyfile.toml ]]; then 
+  export KEYFILE=keyfile.toml
+fi
+
+for _ in {1..10}; do
+  if [[ -s ~/.mitmproxy/mitmproxy-ca-cert.pem ]]; then
+    break
+  fi
+  sleep 1
+done
+
+export SSL_CERT_FILE=$HOME/.mitmproxy/mitmproxy-ca-cert.pem
+export GIT_SSL_CAINFO=$SSL_CERT_FILE
+export http_proxy=http://localhost:7890 https_proxy=http://localhost:7890
+
+pytest

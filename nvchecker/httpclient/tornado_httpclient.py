@@ -4,6 +4,7 @@
 import json as _json
 from urllib.parse import urlencode
 from typing import Optional, Dict, Any
+import os
 
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 
@@ -17,8 +18,9 @@ from .base import BaseSession, TemporaryError, Response, HTTPError
 __all__ = ['session']
 
 HTTP2_AVAILABLE = None if pycurl else False
+SSL_CERT_FILE = os.environ.get('SSL_CERT_FILE')
 
-def try_use_http2(curl):
+def setup_curl(curl):
   global HTTP2_AVAILABLE
   if HTTP2_AVAILABLE is None:
     try:
@@ -28,6 +30,10 @@ def try_use_http2(curl):
       HTTP2_AVAILABLE = False
   elif HTTP2_AVAILABLE:
     curl.setopt(pycurl.HTTP_VERSION, 4)
+
+  if SSL_CERT_FILE:
+    curl.setopt_string(pycurl.CAINFO, SSL_CERT_FILE)
+  curl.setopt_string(pycurl.ACCEPT_ENCODING, "")
 
 class TornadoSession(BaseSession):
   def setup(
@@ -68,7 +74,7 @@ class TornadoSession(BaseSession):
       kwargs['body'] = body
     elif json:
       kwargs['body'] = _json.dumps(json)
-    kwargs['prepare_curl_callback'] = try_use_http2
+    kwargs['prepare_curl_callback'] = setup_curl
 
     if proxy:
       host, port = proxy.rsplit(':', 1)

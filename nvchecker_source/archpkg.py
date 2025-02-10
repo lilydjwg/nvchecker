@@ -3,7 +3,7 @@
 
 from nvchecker.api import session, RichResult, GetVersionError
 
-URL = 'https://www.archlinux.org/packages/search/json/'
+URL = 'https://archlinux.org/packages/search/json/'
 
 async def request(pkg):
   res = await session.get(URL, params={"name": pkg})

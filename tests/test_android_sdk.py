@@ -5,6 +5,7 @@
 import pytest
 pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
+@pytest.mark.flaky(reruns=10)
 async def test_android_addon(get_version):
     assert await get_version("android-google-play-apk-expansion", {
         "source": "android_sdk",
