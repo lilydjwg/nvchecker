@@ -589,7 +589,7 @@ Check PyPI
 
   source = "pypi"
 
-Check `PyPI <https://pypi.python.org/>`_ for updates.
+Check `PyPI <https://pypi.python.org/>`_ for updates. Yanked releases are ignored.
 
 pypi
   The name used on PyPI, e.g. ``PySide``.
@@ -683,7 +683,7 @@ Check crates.io
 
   source = "cratesio"
 
-Check `crates.io <https://crates.io/>`_ for updates.
+Check `crates.io <https://crates.io/>`_ for updates. Yanked releases are ignored.
 
 cratesio
   The crate name on crates.io, e.g. ``tokio``.
