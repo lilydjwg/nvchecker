@@ -26,7 +26,7 @@ async def test_ubuntupkg_suite(get_version):
         "suite": "xenial",
     }) == "0.1.2-1"
 
-@pytest.mark.flaky
+@pytest.mark.flaky(reruns=10)
 async def test_ubuntupkg_suite_with_paging(get_version):
     assert await get_version("ffmpeg", {
         "source": "ubuntupkg",
