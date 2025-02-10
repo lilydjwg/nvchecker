@@ -1,13 +1,9 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-import os
-
 import pytest
 pytestmark = [pytest.mark.asyncio,
-              pytest.mark.needs_net,
-              pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
-                                 reason="fail too often")]
+              pytest.mark.needs_net]
 
 @pytest.mark.flaky(reruns=10)
 async def test_aur(get_version):
