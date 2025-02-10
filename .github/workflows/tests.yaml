@@ -75,8 +75,9 @@ jobs:
           ${{ env.cache-name }}-
     - name: Install mitmproxy
       run: |
-        sudo apt update
-        /usr/bin/pip install -U mitmproxy
+        /usr/bin/python -m venv --system-site-packages ~/.mitmproxy/venv
+        . ~/.mitmproxy/venv/bin/activate
+        pip install -U mitmproxy
         # https://github.com/DevToys-app/DevToys/issues/1373#issuecomment-2599820594
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
@@ -84,4 +85,6 @@ jobs:
     # - name: Setup upterm session
     #   uses: lhotari/action-upterm@v1
     - name: Run pytest
+      env:
+        mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
       run: scripts/run_cached_tests

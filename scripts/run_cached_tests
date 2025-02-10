@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
+mitmdump=${mitmdump:-mitmdump}
+
 if [[ -f ~/.mitmproxy/nvdump ]]; then
-  mitmdump -S ~/.mitmproxy/nvdump -p 7890 --ignore-hosts '127\.0\.0\.1' --server-replay-reuse --server-replay-extra=forward -w newdump >/dev/null &
+  $mitmdump -S ~/.mitmproxy/nvdump -p 7890 --ignore-hosts '127\.0\.0\.1' --server-replay-reuse --server-replay-extra=forward -w newdump >/dev/null &
 else
-  mitmdump -w ~/.mitmproxy/nvdump -p 7890 --ignore-hosts '127\.0\.0\.1' >/dev/null &
+  $mitmdump -w ~/.mitmproxy/nvdump -p 7890 --ignore-hosts '127\.0\.0\.1' >/dev/null &
 fi
 
 mitm_pid=$!
