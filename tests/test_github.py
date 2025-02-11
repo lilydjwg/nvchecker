@@ -59,6 +59,20 @@ async def test_github_max_tag(get_version):
         "use_max_tag": True,
     }) == "second_release"
 
+async def test_github_max_release(get_version):
+    assert await get_version("example", {
+        "source": "github",
+        "github": "harry-sanabria/ReleaseTestRepo",
+        "use_max_release": True,
+    }) == "second_release"
+
+    assert await get_version("example", {
+        "source": "github",
+        "github": "harry-sanabria/ReleaseTestRepo",
+        "use_max_release": True,
+        "use_release_name": True,
+    }) == "second_release"
+
 async def test_github_max_tag_with_ignored(get_version):
     assert await get_version("example", {
         "source": "github",
@@ -66,6 +80,21 @@ async def test_github_max_tag_with_ignored(get_version):
         "use_max_tag": True,
         "ignored": "second_release release3",
     }) == "first_release"
+
+async def test_github_max_release_with_ignored(get_version):
+    assert await get_version("example", {
+        "source": "github",
+        "github": "harry-sanabria/ReleaseTestRepo",
+        "use_max_release": True,
+        "ignored": "second_release release3",
+    }) == "first_release"
+    assert await get_version("example", {
+        "source": "github",
+        "github": "harry-sanabria/ReleaseTestRepo",
+        "use_max_release": True,
+        "ignored": "second_release",
+        "use_release_name": True,
+    }) == "release #3"
 
 async def test_github_with_path(get_version):
     assert await get_version("example", {
@@ -90,6 +119,16 @@ async def test_github_max_tag_with_include(get_version):
         "include_regex": r"chrome-\d.*",
     })
     assert re.match(r'chrome-[\d.]+', version)
+
+async def test_github_max_release_with_include(get_version):
+    version = await get_version("example", {
+        "source": "github",
+        "github": "EFForg/https-everywhere",
+        "use_max_release": True,
+        "use_release_name": True,
+        "include_regex": r"Release \d.*",
+    })
+    assert re.match(r'Release [\d.]+', version)
 
 async def test_github_latest_tag(get_version):
     assert await get_version("example", {

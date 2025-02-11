@@ -399,8 +399,8 @@ Check GitHub
   source = "github"
 
 Check `GitHub <https://github.com/>`_ for updates. The version returned is in
-date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``
-or ``use_max_tag`` is used. See below.
+date format ``%Y%m%d.%H%M%S``, e.g. ``20130701.012212``, unless ``use_latest_release``,
+``use_max_tag`` or ``use_max_release`` is used. See below.
 
 github
   The github repository, with author, e.g. ``lilydjwg/nvchecker``.
@@ -426,13 +426,19 @@ use_latest_release
   Will return the release's tag name instead of date. (For historical reasons
   it doesn't return the release name. See below to change.)
 
+use_max_release
+  Set this to ``true`` to check for the max release on GitHub.
+  This option returns the largest one sorted by the
+  ``sort_version_key`` option. Will return the tag name instead of date.
+
 use_release_name
-  When ``use_latest_release`` is ``true``, setting this to ``true`` will cause
-  nvchecker to return the release name instead of the tag name.
+  When ``use_latest_release`` or ``use_max_release`` is ``true``,
+  setting this to ``true`` will cause nvchecker to return the release name
+  instead of the tag name.
 
 include_prereleases
-  When ``use_latest_release`` is ``true``, set this to ``true`` to take prereleases into
-  account.
+  When ``use_latest_release`` or ``use_max_release`` is ``true``,
+  set this to ``true`` to take prereleases into account.
 
   This returns the release names (not the tag names).
 
@@ -449,7 +455,7 @@ query
 
 use_max_tag
   Set this to ``true`` to check for the max tag on GitHub. Unlike
-  ``use_latest_release``, this option includes both annotated tags and
+  ``use_max_release``, this option includes both annotated tags and
   lightweight ones, and return the largest one sorted by the
   ``sort_version_key`` option. Will return the tag name instead of date.
 
@@ -465,7 +471,8 @@ To set an authorization token, you can set:
 - an entry in the keyfile for the host (e.g. ``github.com``)
 - an entry in your ``netrc`` file for the host
 
-This source supports :ref:`list options` when ``use_max_tag`` is set.
+This source supports :ref:`list options` when ``use_max_tag`` or
+``use_max_release`` is set.
 
 Check Gitea
 ~~~~~~~~~~~

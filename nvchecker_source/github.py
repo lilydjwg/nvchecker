@@ -21,6 +21,7 @@ GITHUB_URL = 'https://api.%s/repos/%s/commits'
 GITHUB_LATEST_RELEASE = 'https://api.%s/repos/%s/releases/latest'
 # https://developer.github.com/v3/git/refs/#get-all-references
 GITHUB_MAX_TAG = 'https://api.%s/repos/%s/git/refs/tags'
+GITHUB_MAX_RELEASE = 'https://api.%s/repos/%s/releases'
 GITHUB_GRAPHQL_URL = 'https://api.%s/graphql'
 
 async def get_version(name, conf, **kwargs):
@@ -192,10 +193,13 @@ async def get_version_real(
   br = conf.get('branch')
   path = conf.get('path')
   use_max_tag = conf.get('use_max_tag', False)
+  use_max_release = conf.get('use_max_release', False)
   if use_latest_release:
     url = GITHUB_LATEST_RELEASE % (host, repo)
   elif use_max_tag:
     url = GITHUB_MAX_TAG % (host, repo)
+  elif use_max_release:
+    url = GITHUB_MAX_RELEASE % (host, repo)
   else:
     url = GITHUB_URL % (host, repo)
     parameters = {}
@@ -224,6 +228,18 @@ async def get_version_real(
     if not tags:
       raise GetVersionError('No tag found in upstream repository.')
     return tags
+
+  if use_max_release:
+    releases: List[Union[str, RichResult]] = [
+      RichResult(
+        version = ref['name'] if use_release_name else ref['tag_name'],
+        gitref = f"refs/tags/{ref['tag_name']}",
+        url = ref['html_url'],
+      ) for ref in data if include_prereleases or not ref['prerelease']
+    ]
+    if not releases:
+      raise GetVersionError('No release found in upstream repository.')
+    return releases
 
   if use_latest_release:
     if 'tag_name' not in data:
