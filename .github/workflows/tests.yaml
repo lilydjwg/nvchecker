@@ -50,7 +50,10 @@ jobs:
         sudo apt install -y libcurl4-openssl-dev
     # werkzeug is pinned for httpbin compatibility https://github.com/postmanlabs/httpbin/issues/673
     - name: Install Python deps
-      run: pip install -U ${{ matrix.deps }} pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq 'werkzeug<2.1' awesomeversion
+      env:
+        # use env to avoid `>` being redirection
+        deps: ${{ matrix.deps }}
+      run: pip install -U $deps pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq 'werkzeug<2.1' awesomeversion
     # don't use binary distribution because:
     #   hardcoded cacert path doesn't work on Ubuntu (should have been resolved?)
     #   limited compression support (only deflate & gzip)
