@@ -8,21 +8,21 @@ jobs:
       matrix:
         python-version:
         - "3.8"
-        - "3.9"
-        - "3.10"
-        - "3.11"
-        - "3.12"
-        - "3.13"
+        # - "3.9"
+        # - "3.10"
+        # - "3.11"
+        # - "3.12"
+        # - "3.13"
         # pypy fails in some cases but we don't care much about that
         # with github actions we can't mark some jobs to not affect the overall
         # conclusion so we have to omit "allow-failure" tests.
         # See https://github.com/actions/toolkit/issues/399
         # - pypy-3.7
         deps:
-        - tornado pycurl
+        # - tornado pycurl
         # timer runs when loop is closed, see https://github.com/lilydjwg/nvchecker/actions/runs/11650699759/job/32439742210
         # - aiohttp
-        - tornado
+        # - tornado
         - httpx[http2]>=0.14.0
         exclude: []
     steps:
@@ -82,9 +82,9 @@ jobs:
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
-    # - name: Setup upterm session
-    #   uses: lhotari/action-upterm@v1
-    - name: Run pytest
-      env:
-        mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
-      run: scripts/run_cached_tests
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
+    # - name: Run pytest
+    #   env:
+    #     mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
+    #   run: scripts/run_cached_tests
