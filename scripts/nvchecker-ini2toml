@@ -18,7 +18,7 @@ _handler_precedence = (
 BOOL_KEYS = [
   'strip_release', 'use_last_modified',
   'use_latest_release', 'use_latest_tag',
-  'use_max_tag', 'use_pre_release',
+  'use_max_release', 'use_max_tag', 'use_pre_release',
 ]
 
 INT_KEYS = [
