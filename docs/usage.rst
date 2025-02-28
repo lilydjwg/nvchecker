@@ -1080,6 +1080,20 @@ repo
 
 This source supports :ref:`list options`.
 
+Check Snapcraft
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "snapcraft"
+
+This source allows you to check the latest package versions in the `Snapcraft <https://snapcraft.io>`_.
+
+snap
+  Name of the snap package.
+
+channel
+  Name of the channel.
+
 Combine others' results
 ~~~~~~~~~~~~~~~~~~~~~~~
 ::
