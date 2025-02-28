@@ -4,6 +4,7 @@
 from nvchecker.api import (
   GetVersionError
 )
+from nvchecker.httpclient.base import HTTPError
 
 URL="https://api.snapcraft.io/v2/snaps/info/%(snap)s"
 
@@ -22,7 +23,7 @@ async def get_version(
         "Snap-Device-Series": "16",
       },
     )
-  except:
+  except HTTPError:
     raise GetVersionError(f"Failed to request snap info for {snap}")
   
   for c in result['channel-map']:
