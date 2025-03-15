@@ -17,15 +17,21 @@ async def run_cmd(cmd: str, timeout: int = 60) -> str:
     stderr=asyncio.subprocess.PIPE,
   )
 
-  try:
-    async with asyncio.timeout(timeout):
-      output, error = await p.communicate()
-      output_s = output.strip().decode('latin1')
-      error_s = error.strip().decode(errors='replace')
-  except TimeoutError:
-    logger.warning('cmd timed out', cmd=cmd, timeout=timeout)
-    p.terminate()
-    await p.wait()
+  if hasattr(asyncio, 'timeout'):
+    # Python 3.11+
+    try:
+      async with asyncio.timeout(timeout):
+        output, error = await p.communicate()
+        output_s = output.strip().decode('latin1')
+        error_s = error.strip().decode(errors='replace')
+    except TimeoutError:
+      logger.warning('cmd timed out', cmd=cmd, timeout=timeout)
+      p.terminate()
+      await p.wait()
+  else:
+    output, error = await p.communicate()
+    output_s = output.strip().decode('latin1')
+    error_s = error.strip().decode(errors='replace')
 
   if p.returncode != 0:
     raise GetVersionError(
