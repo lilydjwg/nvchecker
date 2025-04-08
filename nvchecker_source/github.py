@@ -13,7 +13,6 @@ from nvchecker.api import (
   HTTPError, session, RichResult, GetVersionError,
 )
 
-logger = structlog.get_logger(logger_name=__name__)
 ALLOW_REQUEST = None
 RATE_LIMITED_ERROR = False
 
@@ -269,6 +268,7 @@ def check_ratelimit(exc: HTTPError, name: str) -> Optional[int]:
   if not res:
     raise exc
 
+  logger = structlog.get_logger(logger_name=__name__, name=name)
   if v := res.headers.get('retry-after'):
     n = int(v)
     logger.warning('retry-after', n=n)
@@ -280,7 +280,6 @@ def check_ratelimit(exc: HTTPError, name: str) -> Optional[int]:
     reset = int(res.headers.get('X-RateLimit-Reset'))
     logger.error(f'rate limited, resetting at {time.ctime(reset)}. '
                   'Or get an API token to increase the allowance if not yet',
-                 name = name,
                  reset = reset)
     return None
 

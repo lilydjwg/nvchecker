@@ -7,15 +7,13 @@ import structlog
 
 from nvchecker.api import RichResult
 
-logger = structlog.get_logger(logger_name=__name__)
-
-
 API_URL = 'https://crates.io/api/v1/crates/%s'
 # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
 VERSION_PATTERN = r'^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
 
 
 async def get_version(name, conf, *, cache, **kwargs):
+  logger = structlog.get_logger(logger_name=__name__, name=name)
   name = conf.get('cratesio') or name
   use_pre_release = conf.get('use_pre_release', False)
   data = await cache.get_json(API_URL % name)

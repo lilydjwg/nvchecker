@@ -1,6 +1,8 @@
 # MIT licensed
 # Copyright (c) 2020 Felix Yan <felixonmars@archlinux.org>, et al.
 
+from functools import partial
+
 from .cmd import run_cmd
 
 from nvchecker.api import RichResult
@@ -20,7 +22,7 @@ async def get_version(
       ref = 'refs/heads/' + ref
       gitref = ref
     cmd = f"git ls-remote {git} {ref}"
-    data = await cache.get(cmd, run_cmd)
+    data = await cache.get(cmd, partial(run_cmd, name))
     version = data.split(None, 1)[0]
     return RichResult(
       version = version,

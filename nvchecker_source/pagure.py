@@ -1,17 +1,11 @@
 # MIT licensed
 # Copyright (c) 2020 Felix Yan <felixonmars@archlinux.org>, et al.
 
-import urllib.parse
-
-import structlog
-
 from nvchecker.api import (
   VersionResult, RichResult, Entry, AsyncCache, KeyManager,
 )
 
 PAGURE_URL = 'https://%s/api/0/%s/git/tags?with_commits=true'
-
-logger = structlog.get_logger(logger_name=__name__)
 
 async def get_version(
   name: str, conf: Entry, *,

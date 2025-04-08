@@ -6,9 +6,8 @@ from packaging.version import Version, InvalidVersion
 
 from nvchecker.api import RichResult
 
-logger = structlog.get_logger(logger_name=__name__)
-
 async def get_version(name, conf, *, cache, **kwargs):
+  logger = structlog.get_logger(logger_name=__name__, name=name)
   ret = []
 
   package = conf.get('pypi') or name
