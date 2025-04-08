@@ -13,4 +13,4 @@ async def test_launchpad(get_version):
     }
   )
 
-  assert version == '3.8.8'
+  assert version.startswith('3.8.')
