@@ -31,7 +31,7 @@ async def get_version(
     )
   else:
     cmd = f"git ls-remote --tags --refs {git}"
-    data = await cache.get(cmd, run_cmd)
+    data = await cache.get(cmd, partial(run_cmd, name))
     versions = []
     for line in data.splitlines():
       revision, version = line.split("\trefs/tags/", 1)
