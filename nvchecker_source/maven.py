@@ -10,6 +10,7 @@ from nvchecker.api import (
     HTTPError,
     session,
 )
+import urllib
 import pathlib
 from xml.etree import ElementTree
 
@@ -36,11 +37,14 @@ async def get_version(
     # build the URL according to the transformation rules
     # -> https://maven.apache.org/repositories/layout.html
     repo = conf.get("repo", MAVEN_CENTRAL)
-    repo_root = pathlib.PurePosixPath(repo)
+
+    repo_url = urllib.parse.urlparse(repo)
+    repo_root = pathlib.PurePosixPath(repo_url.path)
     artifact_path = repo_root / group_id / artifact_id / "maven-metadata.xml"
+    artifact_url = repo_url._replace(path=str(artifact_path)).geturl()
 
     try:
-        version = await cache.get(str(artifact_path), extract_metadata)
+        version = await cache.get(artifact_url, extract_metadata)
         if version is None:
             raise GetVersionError(f"Failed to get version for {group_id}:{artifact_id}")
         return version
