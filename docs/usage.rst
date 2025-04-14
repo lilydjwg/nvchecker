@@ -651,6 +651,21 @@ Check `Hackage <https://hackage.haskell.org/>`_ for updates.
 hackage
   The name used on Hackage, e.g. ``pandoc``.
 
+Check Maven
+~~~~~~~~~~~
+::
+
+  source = "maven"
+
+Check a `Maven repository <https://maven.apache.org/>`_ for updates.
+
+repo
+  URL of the repository to check (defaults to ``https://repo1.maven.org/maven2``).
+group
+  Group identifier for the coordinates.
+artifact
+  Artifact identifier for the coordinates.
+
 Check CPAN
 ~~~~~~~~~~
 ::
