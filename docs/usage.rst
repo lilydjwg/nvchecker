@@ -417,7 +417,7 @@ host
 use_latest_release
   Set this to ``true`` to check for the latest release on GitHub.
 
-  GitHub releases are not the same with git tags. You'll see big version names
+  GitHub releases are not the same as git tags. You'll see big version names
   and descriptions in the release page for such releases, e.g.
   `zfsonlinux/zfs's <https://github.com/zfsonlinux/zfs/releases>`_, and those
   small ones like `nvchecker's <https://github.com/lilydjwg/nvchecker/releases>`_
@@ -492,6 +492,13 @@ branch
 use_max_tag
   Set this to ``true`` to check for the max tag on Gitea. Will return the biggest one
   sorted by old ``pkg_resources.parse_version``. Will return the tag name instead of date.
+
+use_latest_release
+  Set this to ``true`` to check for the latest release on gitea.
+
+  Gitea releases are not the same as git tags. You'll see big version names
+  and descriptions in the release page for such releases, e.g.
+  `ciberandy/qiv's <https://codeberg.org/ciberandy/qiv/releases>`_
 
 host
   Hostname for self-hosted Gitea instance.
