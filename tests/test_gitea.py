@@ -21,3 +21,13 @@ async def test_gitea_max_tag_with_include(get_version):
         "use_max_tag": True,
         "include_regex": r'v0\.3.*',
     }) == "v0.3.1"
+
+async def test_gitea_latest_release(get_version):
+    ver = await get_version("example", {
+        "source": "gitea",
+        "host": "codeberg.org",
+        "gitea": "ciberandy/qiv",
+        "use_latest_release": True,
+    })
+    assert ver.startswith('v3.'), ver
+

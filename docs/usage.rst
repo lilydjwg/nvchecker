@@ -494,7 +494,7 @@ use_max_tag
   sorted by old ``pkg_resources.parse_version``. Will return the tag name instead of date.
 
 use_latest_release
-  Set this to ``true`` to check for the latest release on gitea.
+  Set this to ``true`` to check for the latest release name on gitea.
 
   Gitea releases are not the same as git tags. You'll see big version names
   and descriptions in the release page for such releases, e.g.
