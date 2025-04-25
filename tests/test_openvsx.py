@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2021 Th3Whit3Wolf <the.white.wolf.is.1337@gmail.com>, et al.
 
 import pytest
-pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net, pytest.mark.skip('outage')]
 
 async def test_openvsx(get_version):
     assert await get_version("usernamehw.indent-one-space", {
