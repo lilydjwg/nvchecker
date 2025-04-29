@@ -14,7 +14,11 @@ async def get_version_impl(info):
   conf = dict(info)
 
   encoding = conf.get('encoding')
-  parser = html.HTMLParser(encoding=encoding)
+  is_xml = conf.get('is_xml')
+  if is_xml:
+    parser = etree.XMLParser(encoding=encoding)
+  else:
+    parser = html.HTMLParser(encoding=encoding)
   data = conf.get('post_data')
   if data is None:
     res = await session.get(conf['url'])
@@ -22,7 +26,11 @@ async def get_version_impl(info):
     res = await session.post(conf['url'], body = data, headers = {
         'Content-Type': conf.get('post_data_type', 'application/x-www-form-urlencoded')
       })
-  doc = html.fromstring(res.body, base_url=conf['url'], parser=parser)
+
+  if is_xml:
+    doc = etree.fromstring(res.body, base_url=conf['url'], parser=parser)
+  else:
+    doc = html.fromstring(res.body, base_url=conf['url'], parser=parser)
 
   try:
     els = doc.xpath(conf.get('xpath'))
@@ -32,10 +40,18 @@ async def get_version_impl(info):
   except etree.XPathEvalError as e:
     raise GetVersionError('bad xpath', exc_info=e)
 
-  version = [
-    str(el)
-    if isinstance(el, str)
-    else str(el.text_content())
-    for el in els
-  ]
+  if is_xml:
+    version = [
+      str(el)
+      if isinstance(el, str)
+      else ''.join(el.itertext())
+      for el in els
+    ]
+  else:
+    version = [
+      str(el)
+      if isinstance(el, str)
+      else str(el.text_content())
+      for el in els
+    ]
   return version

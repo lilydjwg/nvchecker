@@ -316,13 +316,16 @@ url
 xpath
   An xpath expression used to find the version string.
 
+is_xml
+  Set to ``true`` to use an XML parser instead of an HTML one.
+
 post_data
   (*Optional*) When present, a ``POST`` request (instead of a ``GET``) will be used. The value should be a string containing the full body of the request. The encoding of the string can be specified using the ``post_data_type`` option.
 
 post_data_type
   (*Optional*) Specifies the ``Content-Type`` of the request body (``post_data``). By default, this is ``application/x-www-form-urlencoded``.
 
-This source can also work with XML to some extent, e.g. it can parse an RSS feed like this:
+This source can parse an RSS feed like this:
 
 .. code-block:: toml
 
@@ -330,6 +333,7 @@ This source can also work with XML to some extent, e.g. it can parse an RSS feed
    source = "htmlparser"
    url = "https://my.proxmox.com/en/announcements/tag/proxmox-ve/rss"
    xpath = "//item/title"
+   is_xml = true
    from_pattern = 'Proxmox VE ([\d.]+) released!'
    to_pattern = '\1'
 
