@@ -12,8 +12,8 @@ async def test_rpmrepo_fedora(get_version):
     }) == "3.3.9"
 
 async def test_rpmrepo_alma(get_version):
-    assert await get_version("knot_fedora-39", {
+    assert await get_version("test", {
         "source": "rpmrepo",
-        "pkg": "tmux",
-        "repo": "http://ftp.sh.cvut.cz/almalinux/9.5/BaseOS/x86_64/os/",
-    }) == "3.2a"
+        "pkg": "readline",
+        "repo": "http://ftp.sh.cvut.cz/almalinux/9/BaseOS/x86_64/os/",
+    }) == "8.1"
