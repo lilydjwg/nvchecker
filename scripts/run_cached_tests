@@ -16,8 +16,6 @@ on_exit () {
   if [[ -s newdump ]]; then
     cat newdump >> ~/.mitmproxy/nvdump
   fi
-
-  cat mitmdump_output
 }
 
 trap on_exit EXIT

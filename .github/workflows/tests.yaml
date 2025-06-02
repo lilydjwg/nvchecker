@@ -76,6 +76,10 @@ jobs:
         mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
       run: scripts/run_cached_tests
 
+    - name: show mitmproxy log
+      if: ${{ always() }}
+      run: cat mitmdump_output
+
   tests:
     needs: setup-cache
     runs-on: ubuntu-latest
@@ -170,3 +174,8 @@ jobs:
       env:
         mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
       run: scripts/run_cached_tests
+
+    - name: show mitmproxy log
+      if: ${{ always() }}
+      run: cat mitmdump_output
+
