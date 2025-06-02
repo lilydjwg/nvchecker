@@ -16,6 +16,6 @@ if TYPE_CHECKING:
 tries = ContextVar('tries', default=1)
 proxy: ContextVar[Optional[str]] = ContextVar('proxy', default=None)
 user_agent = ContextVar('user_agent', default=DEFAULT_USER_AGENT)
-httptoken = ContextVar('httptoken', default=None)
+httptoken: ContextVar[Optional[str]] = ContextVar('httptoken', default=None)
 entry_waiter: ContextVar[EntryWaiter] = ContextVar('entry_waiter')
 verify_cert = ContextVar('verify_cert', default=True)
