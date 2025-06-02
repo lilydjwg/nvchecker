@@ -1,7 +1,83 @@
 name: run tests
 on: [push, pull_request]
 jobs:
+  setup-cache:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+        - "3.13"
+        deps:
+        - httpx[http2]>=0.14.0
+        exclude: []
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Setup Cache
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-pip
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-${{ hashFiles('pyproject.toml', 'setup.cfg') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-
+          ${{ runner.os }}-${{ env.cache-name }}-
+
+    - name: Install pycurl deps
+      if: ${{ contains(matrix.deps, 'pycurl') }}
+      run: |
+        sudo apt update
+        sudo apt install -y libcurl4-openssl-dev
+    # werkzeug is pinned for httpbin compatibility https://github.com/postmanlabs/httpbin/issues/673
+    - name: Install Python deps
+      env:
+        # use env to avoid `>` being redirection
+        deps: ${{ matrix.deps }}
+      run: pip install -U $deps pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq 'werkzeug<2.1' awesomeversion
+    # don't use binary distribution because:
+    #   hardcoded cacert path doesn't work on Ubuntu (should have been resolved?)
+    #   limited compression support (only deflate & gzip)
+    - name: Install pycurl
+      if: ${{ contains(matrix.deps, 'pycurl') }}
+      run: |
+        pip uninstall -y pycurl
+        pip install -U pycurl --no-binary :all:
+    - name: Decrypt keys
+      env:
+        KEY: ${{ secrets.KEY }}
+      run: if [[ -n $KEY ]]; then openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml; fi
+
+    - name: Setup mitmproxy cache
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-mitm
+      with:
+        path: ~/.mitmproxy
+        key: ${{ env.cache-name }}
+        restore-keys: |
+          ${{ env.cache-name }}-
+    - name: Install mitmproxy
+      run: |
+        /usr/bin/python -m venv --system-site-packages ~/.mitmproxy/venv
+        . ~/.mitmproxy/venv/bin/activate
+        pip install -U mitmproxy
+        # https://github.com/DevToys-app/DevToys/issues/1373#issuecomment-2599820594
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+    - name: Run pytest
+      env:
+        mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
+      run: scripts/run_cached_tests
+
   tests:
+    needs: setup-cache
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -24,7 +100,10 @@ jobs:
         # - aiohttp
         - tornado
         - httpx[http2]>=0.14.0
-        exclude: []
+        exclude:
+        # this has been run as setup-cache
+        - python-version: 3.13
+          deps: httpx[http2]>=0.14.0
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
