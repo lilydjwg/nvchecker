@@ -21,8 +21,8 @@ OPAM_DEFAULT_REPO_VERSION_URL = "%s/packages/%s/%s.%s"
 
 def _decompress_and_list_files(data: bytes) -> List[str]:
   # Convert the bytes to a file object and get a list of files
-  archive = tarfile.open(mode='r', fileobj=BytesIO(data))
-  return archive.getnames()
+  with tarfile.open(mode='r', fileobj=BytesIO(data)) as archive:
+    return archive.getnames()
 
 async def get_files(url: str) -> List[str]:
   # Download the file and get its contents
