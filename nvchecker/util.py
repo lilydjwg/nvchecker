@@ -66,15 +66,14 @@ else:
     def __str__(self):
       return self.version
 
+# The result of a `get_version` check.
+# 
+# * `None` - No version found.
+# * `str` - A single version string is found.
+# * `RichResult` - A version string with additional information.
+# * `List[Union[str, RichResult]]` - Multiple version strings with or without additional information are found. :ref:`list options` will be applied.
+# * `Exception` - An error occurred.
 VersionResult = Union[None, str, RichResult, List[Union[str, RichResult]], Exception]
-VersionResult.__doc__ = '''The result of a `get_version` check.
-
-* `None` - No version found.
-* `str` - A single version string is found.
-* `RichResult` - A version string with additional information.
-* `List[Union[str, RichResult]]` - Multiple version strings with or without additional information are found. :ref:`list options` will be applied.
-* `Exception` - An error occurred.
-'''
 
 class FileLoadError(Exception):
   def __init__(self, kind, filename, exc):
