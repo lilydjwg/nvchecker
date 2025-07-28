@@ -7,7 +7,7 @@ import pathlib
 import urllib
 from typing import Set
 try:
-  from compression import zstd
+  from compression import zstd # type: ignore
   zstd_decompressor = zstd.decompress
 except ImportError:
   import zstandard
