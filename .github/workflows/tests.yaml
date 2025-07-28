@@ -175,7 +175,7 @@ jobs:
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
     - name: Setup upterm session
-      uses: lhotari/action-upterm@v1
+      uses: owenthereal/action-upterm@v1
       with:
         limit-access-to-users: lilydjwg
 
