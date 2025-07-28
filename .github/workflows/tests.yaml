@@ -174,8 +174,11 @@ jobs:
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
-    # - name: Setup upterm session
-    #   uses: lhotari/action-upterm@v1
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
+      with:
+        limit-access-to-users: lilydjwg
+
     - name: Run pytest
       env:
         mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
@@ -184,8 +187,3 @@ jobs:
     - name: show mitmproxy log
       if: ${{ always() }}
       run: cat mitmdump_output
-
-    - name: Setup upterm session
-      uses: lhotari/action-upterm@v1
-      with:
-        limit-access-to-users: lilydjwg
