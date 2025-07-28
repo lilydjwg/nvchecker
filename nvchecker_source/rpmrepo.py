@@ -82,12 +82,12 @@ async def get_version(
 
 
 async def get_file(url: str) -> bytes:
-  res = await session.get(url, timeout=120)
+  res = await session.get(url)
   return res.body
 
 
 async def get_file_gz(url: str) -> bytes:
-  res = await session.get(url, timeout=120)
+  res = await session.get(url)
   loop = asyncio.get_running_loop()
   if url.endswith('.gz'):
     decompressor = gzip.decompress
