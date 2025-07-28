@@ -6,8 +6,17 @@ import gzip
 import pathlib
 import urllib
 from typing import Set
+try:
+  from compression import zstd
+  zstd_decompressor = zstd.decompress
+except ImportError:
+  import zstandard
+  def zstd_decompressor(data):
+    dctx = zstandard.ZstdDecompressor()
+    return dctx.decompress(data, max_output_size=len(data) * 30)
 
 import lxml.etree
+
 from nvchecker.api import session, AsyncCache, Entry, KeyManager, VersionResult
 
 
@@ -73,12 +82,17 @@ async def get_version(
 
 
 async def get_file(url: str) -> bytes:
-  res = await session.get(url)
+  res = await session.get(url, timeout=120)
   return res.body
 
 
 async def get_file_gz(url: str) -> bytes:
-  res = await session.get(url)
+  res = await session.get(url, timeout=120)
   loop = asyncio.get_running_loop()
-  return await loop.run_in_executor(
-    None, gzip.decompress, res.body)
+  if url.endswith('.gz'):
+    decompressor = gzip.decompress
+  elif url.endswith('.zst'):
+    decompressor = zstd_decompressor
+  else:
+    raise Exception('unrecognized compression format', url)
+  return await loop.run_in_executor(None, decompressor, res.body)
