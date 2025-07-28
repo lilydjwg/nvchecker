@@ -7,7 +7,8 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-        - "3.13"
+        # zstandard doesn't support 3.14 -> httpx doesn't support zstd -> don't cache zstd responses
+        - "3.14-dev"
         deps:
         - httpx[http2]>=0.14.0
         exclude: []
@@ -117,7 +118,7 @@ jobs:
         - httpx[http2]>=0.14.0
         exclude:
         # this has been run as setup-cache
-        - python-version: 3.13
+        - python-version: 3.14-dev
           deps: httpx[http2]>=0.14.0
     steps:
     - name: Checkout code
@@ -189,7 +190,10 @@ jobs:
         sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
     # - name: Setup upterm session
-    #   uses: lhotari/action-upterm@v1
+    #   uses: owenthereal/action-upterm@v1
+    #   with:
+    #     limit-access-to-users: lilydjwg
+
     - name: Run pytest
       env:
         mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
