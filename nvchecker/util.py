@@ -125,13 +125,17 @@ class EntryWaiter:
 
   def set_result(self, name: str, value: str) -> None:
     fu = self._waiting.get(name)
-    if fu is not None:
-      fu.set_result(value)
+    if fu is None:
+      fu = asyncio.Future()
+      self._waiting[name] = fu
+    fu.set_result(value)
 
   def set_exception(self, name: str, e: Exception) -> None:
     fu = self._waiting.get(name)
-    if fu is not None:
-      fu.set_exception(e)
+    if fu is None:
+      fu = asyncio.Future()
+      self._waiting[name] = fu
+    fu.set_exception(e)
 
 class RawResult(NamedTuple):
   '''The unprocessed result from a check.'''
