@@ -9,7 +9,7 @@ async def test_rpmrepo_fedora(get_version):
         "source": "rpmrepo",
         "pkg": "libbtrfs",
         "repo": "https://ftp.sh.cvut.cz/fedora/linux/updates/42/Everything/x86_64/",
-    }) == "6.15"
+    }) == "6.16"
 
 async def test_rpmrepo_alma(get_version):
     assert await get_version("test", {
