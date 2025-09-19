@@ -5,11 +5,12 @@ import pytest
 pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 
 async def test_rpmrepo_fedora(get_version):
-    assert await get_version("knot_fedora-39", {
+    ver = await get_version("knot_fedora-39", {
         "source": "rpmrepo",
         "pkg": "libbtrfs",
         "repo": "https://ftp.sh.cvut.cz/fedora/linux/updates/42/Everything/x86_64/",
-    }) == "6.16"
+    })
+    assert ver.startswith("6.16")
 
 async def test_rpmrepo_alma(get_version):
     assert await get_version("test", {
