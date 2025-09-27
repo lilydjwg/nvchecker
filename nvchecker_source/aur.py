@@ -102,7 +102,7 @@ async def _run_batch_impl(
 
     ret[name] = RichResult(
       version = version,
-      url = f'https://aur.archlinux.org/packages/{name}',
+      url = f'https://aur.archlinux.org/packages/{aurname}',
     )
 
   return ret
