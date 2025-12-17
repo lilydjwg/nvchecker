@@ -8,4 +8,4 @@ async def test_cran(get_version):
     ver = await get_version("xml2", {
         "source": "cran",
     })
-    assert ver.startswith("1.4.")
+    assert ver.startswith("1.5.")

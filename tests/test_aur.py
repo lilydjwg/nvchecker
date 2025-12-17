@@ -9,7 +9,7 @@ pytestmark = [pytest.mark.asyncio,
 async def test_aur(get_version):
     assert await get_version("ssed", {
         "source": "aur",
-    }) == "3.62-2"
+    }) == "3.62-3"
 
 @pytest.mark.flaky(reruns=10)
 async def test_aur_strip_release(get_version):
@@ -23,4 +23,4 @@ async def test_aur_use_last_modified(get_version):
     assert await get_version("ssed", {
         "source": "aur",
         'use_last_modified': True,
-    }) == "3.62-2-20150725052412"
+    }) == "3.62-3-20251205083127"
