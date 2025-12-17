@@ -26,7 +26,7 @@ def setup_module(module):
 
   db_path.mkdir(exist_ok=True)
 
-  cmd = ['fakeroot', 'pacman', '-Fy', '--dbpath', db_path]
+  cmd = ['fakeroot', 'pacman', '-Fy', '--dbpath', db_path, '--disable-sandbox-filesystem']
   subprocess.check_call(cmd)
 
 
