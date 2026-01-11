@@ -39,6 +39,7 @@ jobs:
     - name: Install lxml deps
       if: ${{ contains(matrix.python-version, '3.14') }}
       run: |
+        sudo apt update
         sudo apt install -y libxml2-dev libxslt1-dev cython3
 
     - name: Install Python deps
@@ -147,6 +148,7 @@ jobs:
     - name: Install lxml deps
       if: ${{ contains(matrix.python-version, '3.14') }}
       run: |
+        sudo apt update
         sudo apt install -y libxml2-dev libxslt1-dev cython3
 
     - name: Install Python deps
