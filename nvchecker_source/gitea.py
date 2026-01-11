@@ -1,6 +1,8 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
+from __future__ import annotations
+
 import urllib.parse
 
 GITEA_URL = 'https://%s/api/v1/repos/%s/commits'

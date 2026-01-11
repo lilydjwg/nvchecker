@@ -1,6 +1,8 @@
 # MIT licensed
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
+from __future__ import annotations
+
 from nvchecker.api import (
   BaseWorker, GetVersionError, RawResult,
 )
