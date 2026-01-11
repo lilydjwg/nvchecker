@@ -1,8 +1,6 @@
 # MIT licensed
 # Copyright (c) 2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from __future__ import annotations
-
 from contextvars import ContextVar
 from typing import Optional, TYPE_CHECKING
 

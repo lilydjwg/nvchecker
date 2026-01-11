@@ -1,6 +1,6 @@
 # MIT Licensed
 # Copyright (c) 2024 Bert Peters <bertptrs@archlinux.org>, et al.
-from __future__ import annotations
+
 from nvchecker.api import AsyncCache, Entry, RichResult
 
 PROJECT_INFO_URL = "https://api.launchpad.net/1.0/{launchpad}"

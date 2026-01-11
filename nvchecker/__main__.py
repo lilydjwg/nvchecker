@@ -2,8 +2,6 @@
 # MIT licensed
 # Copyright (c) 2013-2024 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from __future__ import annotations
-
 import sys
 import argparse
 import asyncio
