@@ -95,6 +95,9 @@ def main() -> None:
     vers.update(results)
     core.write_verfile(newverf, vers)
 
+  if options.nix_expr_folder is not None:
+    core.write_nix_expr_files(options, entries, results)
+
   if args.failures and has_failures:
     sys.exit(3)
 
