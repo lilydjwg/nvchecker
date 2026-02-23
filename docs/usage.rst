@@ -446,12 +446,8 @@ include_prereleases
 
   This returns the release names (not the tag names).
 
-  This requires a token because it's using the v4 GraphQL API.
-
 use_latest_tag
   Set this to ``true`` to check for the latest tag on GitHub.
-
-  This requires a token because it's using the v4 GraphQL API.
 
 query
   When ``use_latest_tag`` is ``true``, this sets a query for the tag. The exact
