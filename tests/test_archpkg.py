@@ -8,7 +8,7 @@ pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
 async def test_archpkg(get_version):
     assert await get_version("base", {
         "source": "archpkg",
-    }) == "3-2"
+    }) == "3-3"
 
 @pytest.mark.flaky
 async def test_archpkg_strip_release(get_version):
