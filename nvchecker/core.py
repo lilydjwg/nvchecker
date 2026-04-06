@@ -348,7 +348,7 @@ def apply_list_options(
 
   sort_version_key = sort_version_keys[
     conf.get("sort_version_key", "parse_version")]
-  versions.sort(key=lambda version: sort_version_key(str(version))) # type: ignore
+  versions.sort(key=lambda version: sort_version_key(str(version)))
 
   return versions[-1]
 

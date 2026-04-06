@@ -5,15 +5,21 @@ import asyncio
 import gzip
 import pathlib
 import urllib
-from typing import Set
-try:
-  from compression import zstd # type: ignore
-  zstd_decompressor = zstd.decompress
-except ImportError:
-  import zstandard
-  def zstd_decompressor(data):
-    dctx = zstandard.ZstdDecompressor()
-    return dctx.decompress(data, max_output_size=len(data) * 30)
+from typing import Set, TYPE_CHECKING
+
+if TYPE_CHECKING:
+  from typing_extensions import Buffer
+  def zstd_decompressor(data: Buffer) -> bytes:
+    return b''
+else:
+  try:
+    from compression import zstd
+    zstd_decompressor = zstd.decompress
+  except ImportError:
+    import zstandard
+    def zstd_decompressor(data):
+      dctx = zstandard.ZstdDecompressor()
+      return dctx.decompress(data, max_output_size=len(data) * 30)
 
 import lxml.etree
 
