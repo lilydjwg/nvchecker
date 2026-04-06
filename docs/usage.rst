@@ -1057,6 +1057,13 @@ strip_dir
 dbpath
   Path to the ALPM database directory. Default: ``/var/lib/pacman``. You need to update the database yourself with ``pacman -Fy``.
 
+This source runs the ``pacman -Flq ...`` command. To configure how many pacman instances are running concurrently::
+
+  [__config__.source.alpmfiles]
+  concurrency = 2
+
+By default it is ``2``. ``pacman -Flq ...`` uses a lot of memory so be careful.
+
 Check Open Vsx
 ~~~~~~~~~~~~~~~
 ::

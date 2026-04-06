@@ -1,14 +1,30 @@
 # MIT licensed
 # Copyright (c) 2023 Pekka Ristola <pekkarr [at] protonmail [dot] com>, et al.
 
-from asyncio import create_subprocess_exec
+from asyncio import create_subprocess_exec, Semaphore
 from asyncio.subprocess import PIPE
 import re
 from typing import Tuple, List
 
 from nvchecker.api import GetVersionError
 
+# pacman -F loads the whole databases into memory, using a lot of memory
+SEM = None
+
+def configure(config):
+  global SEM
+  concurrency = config.get('concurrency', 2)
+  SEM = Semaphore(concurrency)
+
 async def get_files(info: Tuple[str, str]) -> List[str]:
+  global SEM
+  if SEM is None:
+    SEM = Semaphore(2)
+
+  async with SEM:
+    return await _get_files_real(info)
+
+async def _get_files_real(info: Tuple[str, str]) -> List[str]:
   dbpath, pkg = info
   # there's no pyalpm bindings for the file databases
   cmd = ['pacman', '-Flq', '--dbpath', dbpath, pkg]
