@@ -19,8 +19,8 @@ async def test_gitea_max_tag_with_include(get_version):
         "source": "gitea",
         "gitea": "gitea/tea",
         "use_max_tag": True,
-        "include_regex": r'v0\.3.*',
-    }) == "v0.3.1"
+        "include_regex": r'v0\.9.*',
+    }) == "v0.9.2"
 
 async def test_gitea_latest_release(get_version):
     ver = await get_version("example", {
