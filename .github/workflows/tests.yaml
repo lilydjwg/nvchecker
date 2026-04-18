@@ -118,6 +118,7 @@ jobs:
         # no proxy support: easy to fail
         # - tornado
         - httpx[http2]>=0.14.0
+        - niquests[full]
         exclude:
         # this has been run as setup-cache
         - python-version: 3.14-dev

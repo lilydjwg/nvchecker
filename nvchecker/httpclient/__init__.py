@@ -23,6 +23,7 @@ def setup(
   which: Optional[str] = None,
   concurreny: int = 20,
   timeout: int = 20,
+  resolver: Optional[str] = None,
 ) -> None:
   if which is None:
     which = find_best_httplib()
@@ -31,7 +32,7 @@ def setup(
     '%s_httpclient' % which, globals(), locals(), level=1)
 
   session.set_obj(m.session)
-  session.setup(concurreny, timeout)
+  session.setup(concurreny, timeout, resolver)
 
 def find_best_httplib() -> str:
   try:
@@ -40,16 +41,21 @@ def find_best_httplib() -> str:
     which = 'tornado'
   except ImportError:
     try:
-      import aiohttp
-      which = 'aiohttp'
-      # connection reuse
+      import niquests
+      which = 'niquests'
+      # http/2 http/3 ech etc
     except ImportError:
       try:
-        import httpx
-        which = 'httpx'
+        import aiohttp
+        which = 'aiohttp'
+        # connection reuse
       except ImportError:
-        import tornado
-        which = 'tornado'
-        # fallback
+        try:
+          import httpx
+          which = 'httpx'
+        except ImportError:
+          import tornado
+          which = 'tornado'
+          # fallback
 
   return which

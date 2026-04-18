@@ -1,22 +1,27 @@
 # MIT licensed
-# Copyright (c) 2020-2022,2024 lilydjwg <lilydjwg@gmail.com>, et al.
+# Copyright (c) 2026 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 
-import httpx
+import niquests
 
 from .base import BaseSession, TemporaryError, Response, HTTPError
 
 __all__ = ['session']
 
-class HttpxSession(BaseSession):
+class NiquestsSession(BaseSession):
   def setup(
     self,
     concurreny: int = 20,
     timeout: int = 20,
     resolver: Optional[str] = None,
   ) -> None:
-    self.clients: Dict[Tuple[Optional[str], bool], httpx.AsyncClient] = {}
+    self.session = niquests.AsyncSession(
+      pool_connections = concurreny,
+      pool_maxsize = concurreny,
+      timeout = timeout,
+      resolver = resolver,
+    )
     self.timeout = timeout
 
   async def request_impl(
@@ -30,15 +35,12 @@ class HttpxSession(BaseSession):
     body = None,
     verify_cert: bool = True,
   ) -> Response:
-    client = self.clients.get((proxy, verify_cert))
-    if not client:
-      client = httpx.AsyncClient(
-        timeout = httpx.Timeout(self.timeout, pool=None),
-        http2 = True,
-        proxy = proxy,
-        verify = verify_cert,
-      )
-      self.clients[(proxy, verify_cert)] = client
+    proxies = None
+    if proxy is not None:
+      proxies = {
+        'http': proxy,
+        'https': proxy,
+      }
 
     try:
       if body is not None:
@@ -46,14 +48,18 @@ class HttpxSession(BaseSession):
         if 'Content-Type' not in headers:
           headers = {**headers, 'Content-Type': 'application/x-www-form-urlencoded'}
         body = body.encode()
-      r = await client.request(
-        method, url, json = json, content = body,
-        headers = headers,
-        follow_redirects = follow_redirects,
-        # httpx checks for None but not ()
+      r = await self.session.request(
+        method, url,
         params = params or None,
+        data = body,
+        json = json,
+        headers = headers,
+        allow_redirects = follow_redirects,
+        proxies = proxies,
+        verify = verify_cert,
       )
       err_cls: Optional[type] = None
+      assert r.status_code is not None
       if r.status_code >= 500:
         err_cls = TemporaryError
       elif r.status_code >= 400:
@@ -61,19 +67,18 @@ class HttpxSession(BaseSession):
       if err_cls is not None:
         raise err_cls(
           r.status_code,
-          r.reason_phrase,
+          r.reason,
           r,
         )
-
-    except httpx.TransportError as e:
+    except (niquests.ConnectionError, niquests.Timeout) as e:
       raise TemporaryError(599, repr(e), e)
 
-    body = await r.aread()
-    return Response(r.headers, body)
+    response_body = r.content
+    return Response(r.headers, response_body or b'')
 
   async def aclose(self):
-    for client in self.clients.values():
-      await client.aclose()
-    del self.clients
+    await self.session.close()
+    del self.session
 
-session = HttpxSession()
+
+session = NiquestsSession()

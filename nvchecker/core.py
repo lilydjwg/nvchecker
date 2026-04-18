@@ -181,6 +181,7 @@ class Options(NamedTuple):
   source_configs: Dict[str, Dict[str, Any]]
   httplib: Optional[str]
   http_timeout: int
+  resolver: Optional[str]
 
 def load_file(
   file: str, *,
@@ -224,25 +225,27 @@ def load_file(
     proxy = c.get('proxy')
     httplib = c.get('httplib', None)
     http_timeout = c.get('http_timeout', 20)
+    resolver = c.get('resolver', None)
   else:
     max_concurrency = 20
     proxy = None
     httplib = None
     http_timeout = 20
+    resolver = None
 
   return cast(Entries, config), Options(
     ver_files, max_concurrency, proxy, keymanager,
-    source_configs, httplib, http_timeout,
+    source_configs, httplib, http_timeout, resolver,
   )
 
 def setup_httpclient(
   max_concurrency: int = 20,
   httplib: Optional[str] = None,
   http_timeout: int = 20,
+  resolver: Optional[str] = None,
 ) -> Dispatcher:
   httplib_ = httplib or httpclient.find_best_httplib()
-  httpclient.setup(
-    httplib_, max_concurrency, http_timeout)
+  httpclient.setup(httplib_, max_concurrency, http_timeout, resolver)
   return Dispatcher()
 
 class Dispatcher:

@@ -40,6 +40,7 @@ class TornadoSession(BaseSession):
     self,
     concurreny: int = 20,
     timeout: int = 20,
+    resolver: Optional[str] = None,
   ) -> None:
     impl: Optional[str]
     if pycurl:

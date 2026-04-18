@@ -59,6 +59,7 @@ def main() -> None:
     options.max_concurrency,
     options.httplib,
     options.http_timeout,
+    options.resolver,
   )
   entry_waiter = EntryWaiter()
   try:
