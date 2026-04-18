@@ -2,6 +2,7 @@
 # Copyright (c) 2026 lilydjwg <lilydjwg@gmail.com>, et al.
 
 from typing import Dict, Optional
+import os
 
 import niquests
 
@@ -22,7 +23,7 @@ class NiquestsSession(BaseSession):
       timeout = timeout,
       resolver = resolver,
     )
-    self.timeout = timeout
+    self.verify = os.environ.get('SSL_CERT_FILE', True)
 
   async def request_impl(
     self, url: str, *,
@@ -56,7 +57,7 @@ class NiquestsSession(BaseSession):
         headers = headers,
         allow_redirects = follow_redirects,
         proxies = proxies,
-        verify = verify_cert,
+        verify = self.verify if verify_cert else False,
       )
       err_cls: Optional[type] = None
       assert r.status_code is not None
