@@ -1,110 +1,12 @@
 name: run tests
 on: [push, pull_request]
 jobs:
-  setup-cache:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-        # zstandard doesn't support 3.14 -> httpx doesn't support zstd -> don't cache zstd responses
-        - "3.14-dev"
-        deps:
-        - httpx[http2]>=0.14.0
-        exclude: []
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Setup Cache
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-pip
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-${{ hashFiles('pyproject.toml', 'setup.cfg') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-
-          ${{ runner.os }}-${{ env.cache-name }}-
-
-    - name: Install pycurl deps
-      if: ${{ contains(matrix.deps, 'pycurl') }}
-      run: |
-        sudo apt update
-        sudo apt install -y libcurl4-openssl-dev
-
-    - name: Install lxml deps
-      if: ${{ contains(matrix.python-version, '3.14') }}
-      run: |
-        sudo apt update
-        sudo apt install -y libxml2-dev libxslt1-dev cython3
-
-    - name: Install Python deps
-      env:
-        # use env to avoid `>` being redirection
-        deps: ${{ matrix.deps }}
-      run: pip install -U $deps pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq werkzeug awesomeversion
-    # don't use binary distribution because:
-    #   hardcoded cacert path doesn't work on Ubuntu (should have been resolved?)
-    #   limited compression support (only deflate & gzip)
-    - name: Install pycurl
-      if: ${{ contains(matrix.deps, 'pycurl') }}
-      run: |
-        pip uninstall -y pycurl
-        pip install -U pycurl --no-binary :all:
-    - name: Install zstandard
-      if: ${{ !contains(matrix.python-version, '3.14') }}
-      run: |
-        pip install -U zstandard
-
-    - name: Decrypt keys
-      env:
-        KEY: ${{ secrets.KEY }}
-      run: if [[ -n $KEY ]]; then openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml; fi
-
-    - name: Setup mitmproxy cache
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-mitm
-      with:
-        path: ~/.mitmproxy
-        key: ${{ env.cache-name }}
-        restore-keys: |
-          ${{ env.cache-name }}-
-    - name: Install mitmproxy
-      run: |
-        /usr/bin/python -m venv --system-site-packages ~/.mitmproxy/venv
-        . ~/.mitmproxy/venv/bin/activate
-        pip install -U mitmproxy
-        # https://github.com/DevToys-app/DevToys/issues/1373#issuecomment-2599820594
-        sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
-        sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-
-    - name: Run pytest
-      env:
-        mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
-      run: scripts/run_cached_tests
-
-    - name: show mitmproxy log
-      if: ${{ always() }}
-      run: cat mitmdump_output
-
   tests:
-    needs: setup-cache
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version:
-        - "3.8"
-        - "3.9"
-        - "3.10"
-        - "3.11"
-        - "3.12"
-        - "3.13"
         - "3.14"
         # pypy fails in some cases but we don't care much about that
         # with github actions we can't mark some jobs to not affect the overall
@@ -112,17 +14,9 @@ jobs:
         # See https://github.com/actions/toolkit/issues/399
         # - pypy-3.7
         deps:
-        - tornado pycurl
         # timer runs when loop is closed, see https://github.com/lilydjwg/nvchecker/actions/runs/11650699759/job/32439742210
-        # - aiohttp
-        # no proxy support: easy to fail
-        # - tornado
-        - httpx[http2]>=0.14.0
+        - aiohttp
         - niquests[full]
-        exclude:
-        # this has been run as setup-cache
-        - python-version: 3.14-dev
-          deps: httpx[http2]>=0.14.0
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -174,24 +68,6 @@ jobs:
       env:
         KEY: ${{ secrets.KEY }}
       run: if [[ -n $KEY ]]; then openssl enc -d -aes-256-ctr -pbkdf2 -k $KEY -in keyfile.toml.enc -out keyfile.toml; fi
-
-    - name: Setup mitmproxy cache
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-mitm
-      with:
-        path: ~/.mitmproxy
-        key: ${{ env.cache-name }}
-        restore-keys: |
-          ${{ env.cache-name }}-
-    - name: Install mitmproxy
-      run: |
-        /usr/bin/python -m venv --system-site-packages ~/.mitmproxy/venv
-        . ~/.mitmproxy/venv/bin/activate
-        pip install -U mitmproxy
-        # https://github.com/DevToys-app/DevToys/issues/1373#issuecomment-2599820594
-        sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
-        sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
     # - name: Setup upterm session
     #   uses: owenthereal/action-upterm@v1
@@ -200,10 +76,6 @@ jobs:
 
     - name: Run pytest
       env:
-        mitmdump: /home/runner/.mitmproxy/venv/bin/mitmdump
-      run: scripts/run_cached_tests
-
-    - name: show mitmproxy log
-      if: ${{ always() }}
-      run: cat mitmdump_output
+        KEYFILE: keyfile.toml
+      run: pytest
 
