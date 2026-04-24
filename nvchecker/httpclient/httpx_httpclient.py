@@ -66,7 +66,7 @@ class HttpxSession(BaseSession):
         )
 
     except httpx.TransportError as e:
-      raise TemporaryError(599, repr(e), e)
+      raise TemporaryError(599, repr(e), None)
 
     body = await r.aread()
     return Response(r.headers, body)

@@ -72,7 +72,7 @@ class NiquestsSession(BaseSession):
           r,
         )
     except (niquests.ConnectionError, niquests.Timeout) as e:
-      raise TemporaryError(599, repr(e), e)
+      raise TemporaryError(599, repr(e), None)
 
     response_body = r.content
     return Response(r.headers, response_body or b'')

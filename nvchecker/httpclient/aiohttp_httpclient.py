@@ -70,7 +70,7 @@ class AiohttpSession(BaseSession):
     except (
       asyncio.TimeoutError, aiohttp.ClientConnectorError,
     ) as e:
-      raise TemporaryError(599, repr(e), e)
+      raise TemporaryError(599, repr(e), None)
 
     err_cls: Optional[type] = None
     if res.status >= 500:
