@@ -953,6 +953,32 @@ branch
 
 When this source returns tags (``use_commit`` is not true) it supports :ref:`list options`.
 
+Check Git repository without git CLI
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "git_pygit2"
+
+This is equivalent to the ``git`` source, but uses pygit2/libgit2 instead of
+invoking the ``git`` executable. It is useful in environments where Python
+packages can be installed but external binaries cannot be executed.
+
+git
+  URL of the Git repository.
+
+use_commit
+  Return a commit hash instead of tags.
+
+branch
+  When ``use_commit`` is true, return the commit on the specified branch instead
+  of the default one.
+
+When this source returns tags (``use_commit`` is not true) it supports
+:ref:`list options`.
+
+.. note::
+   An additional dependency ``pygit2`` is required.
+
 Check Mercurial repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
