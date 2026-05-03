@@ -52,6 +52,7 @@ async def get_version_real(
     return [
       RichResult(
         version = tag['name'],
+        gitref = f"refs/tags/{tag['name']}",
         revision = tag['commit']['id'],
         url = f'https://{host}/{conf["gitlab"]}/-/tags/{tag["name"]}',
       ) for tag in data
