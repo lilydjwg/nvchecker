@@ -21,6 +21,10 @@ github = "lilydjwg/nvchecker"
 source = "git_pygit2"
 git = "https://gitlab.com/gitlab-org/gitlab-test.git"
 
+[gitlab-test-dulwich]
+source = "git_dulwich"
+git = "https://gitlab.com/gitlab-org/gitlab-test.git"
+
 [ssed]
 source = "regex"
 regex = "The current version is ([\\d.]+)\\."
