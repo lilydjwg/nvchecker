@@ -17,6 +17,10 @@ github = "lilydjwg/winterpy"
 source = "github"
 github = "lilydjwg/nvchecker"
 
+[gitlab-test-pygit2]
+source = "git_pygit2"
+git = "https://gitlab.com/gitlab-org/gitlab-test.git"
+
 [ssed]
 source = "regex"
 regex = "The current version is ([\\d.]+)\\."
