@@ -5,7 +5,7 @@ import pytest
 
 dulwich_available = True
 try:
-    import dulwich
+    import dulwich  # type: ignore[import-not-found]
 except ImportError:
     dulwich_available = False
 

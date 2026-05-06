@@ -3,7 +3,7 @@
 
 import asyncio
 
-import dulwich.client
+import dulwich.client  # type: ignore[import-not-found]
 
 from nvchecker.api import RichResult, GetVersionError
 
