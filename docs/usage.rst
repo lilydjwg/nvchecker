@@ -959,7 +959,7 @@ Check Git repository without git CLI
 
   source = "git_pygit2"
 
-This is equivalent to the ``git`` source, but uses pygit2/libgit2 instead of
+This is similar to the ``git`` source, but uses pygit2/libgit2 instead of
 invoking the ``git`` executable. It is useful in environments where Python
 packages can be installed but external binaries cannot be executed.
 
