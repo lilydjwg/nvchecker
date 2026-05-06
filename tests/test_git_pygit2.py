@@ -6,7 +6,7 @@ import pytest
 # Skip all tests in this file if pygit2 is not installed
 pygit2_available = True
 try:
-    import pygit2
+    import pygit2  # type: ignore[import-not-found]
 except ImportError:
     pygit2_available = False
 

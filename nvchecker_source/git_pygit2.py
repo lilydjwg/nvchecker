@@ -4,7 +4,7 @@
 import asyncio
 import tempfile
 
-import pygit2
+import pygit2  # type: ignore[import-not-found]
 
 from nvchecker.api import RichResult, GetVersionError
 
