@@ -953,7 +953,7 @@ branch
 
 When this source returns tags (``use_commit`` is not true) it supports :ref:`list options`.
 
-Check Git repository without git CLI
+Check Git repository without git CLI using pygit2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
@@ -978,6 +978,32 @@ When this source returns tags (``use_commit`` is not true) it supports
 
 .. note::
    An additional dependency ``pygit2`` is required.
+
+Check Git repository without git CLI using Dulwich
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+  source = "git_dulwich"
+
+This is similar to the ``git`` source, but uses Dulwich instead of invoking
+the ``git`` executable. It is useful in environments where Python packages can
+be installed but external binaries cannot be executed.
+
+git
+  URL of the Git repository.
+
+use_commit
+  Return a commit hash instead of tags.
+
+branch
+  When ``use_commit`` is true, return the commit on the specified branch instead
+  of the default one.
+
+When this source returns tags (``use_commit`` is not true) it supports
+:ref:`list options`.
+
+.. note::
+   An additional dependency ``dulwich`` is required.
 
 Check Mercurial repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
