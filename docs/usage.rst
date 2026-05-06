@@ -985,7 +985,7 @@ Check Git repository without git CLI using Dulwich
 
   source = "git_dulwich"
 
-This is equivalent to the ``git`` source, but uses Dulwich instead of invoking
+This is similar to the ``git`` source, but uses Dulwich instead of invoking
 the ``git`` executable. It is useful in environments where Python packages can
 be installed but external binaries cannot be executed.
 
