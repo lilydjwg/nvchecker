@@ -9,10 +9,18 @@ try:
 except ImportError:
     dulwich_available = False
 
+import os
+try:
+    import niquests
+    conflicts = 'SSL_CERT_FILE' in os.environ
+except ImportError:
+    conflicts = False
+
 pytestmark = [
     pytest.mark.asyncio,
     pytest.mark.needs_net,
     pytest.mark.skipif(not dulwich_available, reason="needs dulwich"),
+    pytest.mark.skipif(conflicts, reason="dulwich conflicts with niquests via urllib3/urllib3.future when mitm proxy is used"),
 ]
 
 
