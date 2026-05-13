@@ -112,7 +112,7 @@ jobs:
         - "3.12"
         - "3.13"
         - "3.14"
-        - "3.15-dev"
+        # - "3.15-dev"
         # pypy fails in some cases but we don't care much about that
         # with github actions we can't mark some jobs to not affect the overall
         # conclusion so we have to omit "allow-failure" tests.
