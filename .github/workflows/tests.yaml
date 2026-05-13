@@ -41,7 +41,7 @@ jobs:
         sudo apt install -y libcurl4-openssl-dev
 
     - name: Install lxml deps
-      if: ${{ contains(matrix.python-version, '3.14') }}
+      if: ${{ contains(matrix.python-version, '3.15') }}
       run: |
         sudo apt install -y libxml2-dev libxslt1-dev cython3
 
@@ -154,7 +154,7 @@ jobs:
       run: |
         sudo apt install -y libcurl4-openssl-dev
     - name: Install lxml deps
-      if: ${{ contains(matrix.python-version, '3.14') }}
+      if: ${{ contains(matrix.python-version, '3.15') }}
       run: |
         sudo apt install -y libxml2-dev libxslt1-dev cython3
 
