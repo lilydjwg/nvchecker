@@ -49,7 +49,7 @@ jobs:
       env:
         # use env to avoid `>` being redirection
         deps: ${{ matrix.deps }}
-      run: pip install -U $deps pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq werkzeug awesomeversion pygit2 dulwich
+      run: pip install -U $deps pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq werkzeug awesomeversion dulwich
     # don't use binary distribution because:
     #   hardcoded cacert path doesn't work on Ubuntu (should have been resolved?)
     #   limited compression support (only deflate & gzip)
@@ -59,9 +59,13 @@ jobs:
         pip uninstall -y pycurl
         pip install -U pycurl --no-binary :all:
     - name: Install zstandard
-      if: ${{ !contains(matrix.python-version, '3.14') }}
+      if: ${{ !contains(matrix.python-version, '3.14') && !contains(matrix.python-version, '3.15') }}
       run: |
         pip install -U zstandard
+    - name: Install pygit2
+      if: ${{ !contains(matrix.python-version, '3.15') }}
+      run: |
+        pip install -U pygit2
 
     - name: Decrypt keys
       env:
@@ -162,7 +166,7 @@ jobs:
       env:
         # use env to avoid `>` being redirection
         deps: ${{ matrix.deps }}
-      run: pip install -U $deps pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq werkzeug awesomeversion pygit2 dulwich
+      run: pip install -U $deps pytest 'pytest-asyncio>=0.24' pytest-httpbin pytest-rerunfailures structlog tomli platformdirs lxml jq werkzeug awesomeversion dulwich
     # don't use binary distribution because:
     #   hardcoded cacert path doesn't work on Ubuntu (should have been resolved?)
     #   limited compression support (only deflate & gzip)
@@ -172,9 +176,13 @@ jobs:
         pip uninstall -y pycurl
         pip install -U pycurl --no-binary :all:
     - name: Install zstandard
-      if: ${{ !contains(matrix.python-version, '3.14') }}
+      if: ${{ !contains(matrix.python-version, '3.14') && !contains(matrix.python-version, '3.15') }}
       run: |
         pip install -U zstandard
+    - name: Install pygit2
+      if: ${{ !contains(matrix.python-version, '3.15') }}
+      run: |
+        pip install -U pygit2
 
     - name: Decrypt keys
       env:
