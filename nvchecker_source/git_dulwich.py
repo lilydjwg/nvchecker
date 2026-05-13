@@ -4,6 +4,7 @@
 import asyncio
 
 import dulwich.client  # type: ignore[import-not-found]
+from dulwich.config import StackedConfig  # type: ignore[import-not-found]
 
 from nvchecker.api import RichResult, GetVersionError
 
@@ -15,7 +16,8 @@ async def _list_remote_refs_async(key):
 def _list_remote_refs(key):
     git, ref = key
 
-    client, path = dulwich.client.get_transport_and_path(git)
+    config = StackedConfig.default()
+    client, path = dulwich.client.get_transport_and_path(git, config=config)
     result = client.get_refs(path)
     refs = result.refs
 
