@@ -13,13 +13,20 @@ async def _list_remote_refs_async(key):
     return await asyncio.to_thread(_list_remote_refs, key)
 
 
+def _list_heads(remote):
+    try:
+        return remote.list_heads()
+    except AttributeError:
+        return remote.ls_remotes()
+
+
 def _list_remote_refs(key):
     git, ref = key
 
     with tempfile.TemporaryDirectory() as tmpdir:
         repo = pygit2.init_repository(tmpdir, bare=True)
         remote = repo.remotes.create_anonymous(git)
-        refs = remote.list_heads()
+        refs = _list_heads(remote)
 
     if ref is None:
         return refs
