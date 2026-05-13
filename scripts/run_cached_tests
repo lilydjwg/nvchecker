@@ -31,7 +31,13 @@ for _ in {1..10}; do
   sleep 1
 done
 
-export SSL_CERT_FILE=$HOME/.mitmproxy/mitmproxy-ca-cert.pem
+if [[ -f /etc/ssl/certs/ca-certificates.crt ]]; then
+  # combine system ca bundle so that requests not going through the proxy still works (e.g. dulwich)
+  cat /etc/ssl/certs/ca-certificates.crt $HOME/.mitmproxy/mitmproxy-ca-cert.pem > $HOME/ca.crt
+else
+  cp $HOME/.mitmproxy/mitmproxy-ca-cert.pem $HOME/ca.crt
+fi
+export SSL_CERT_FILE=$HOME/ca.crt
 export GIT_SSL_CAINFO=$SSL_CERT_FILE
 export http_proxy=http://localhost:7890 https_proxy=http://localhost:7890
 

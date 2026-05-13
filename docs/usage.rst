@@ -989,6 +989,8 @@ This is similar to the ``git`` source, but uses Dulwich instead of invoking
 the ``git`` executable. It is useful in environments where Python packages can
 be installed but external binaries cannot be executed.
 
+This source does not support proxy environment variables currently.
+
 git
   URL of the Git repository.
 
