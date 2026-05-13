@@ -17,6 +17,45 @@ pytestmark = [
 ]
 
 
+class OldRemote:
+    def ls_remotes(self):
+        return [
+            {"name": "refs/tags/v1.0", "oid": "abc123"},
+            {"name": "refs/heads/main", "oid": "def456"},
+        ]
+
+
+class NewRef:
+    name = "refs/tags/v1.0"
+    oid = "abc123"
+
+
+class NewRemote:
+    def list_heads(self):
+        return [NewRef()]
+
+
+async def test_git_pygit2_list_heads_old_pygit2_shape():
+    from nvchecker_source.git_pygit2 import _list_heads
+
+    refs = _list_heads(OldRemote())
+
+    assert refs[0].name == "refs/tags/v1.0"
+    assert refs[0].oid == "abc123"
+
+    assert refs[1].name == "refs/heads/main"
+    assert refs[1].oid == "def456"
+
+
+async def test_git_pygit2_list_heads_new_pygit2_shape():
+    from nvchecker_source.git_pygit2 import _list_heads
+
+    refs = _list_heads(NewRemote())
+
+    assert refs[0].name == "refs/tags/v1.0"
+    assert refs[0].oid == "abc123"
+
+
 async def test_git_pygit2(get_version):
     assert (
         await get_version(
