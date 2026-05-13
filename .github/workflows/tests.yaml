@@ -30,16 +30,19 @@ jobs:
           ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-
           ${{ runner.os }}-${{ env.cache-name }}-
 
+    - name: Install pygit2 deps
+      run: |
+        sudo apt update
+        sudo apt install -y libgit2-dev
+
     - name: Install pycurl deps
       if: ${{ contains(matrix.deps, 'pycurl') }}
       run: |
-        sudo apt update
         sudo apt install -y libcurl4-openssl-dev
 
     - name: Install lxml deps
       if: ${{ contains(matrix.python-version, '3.14') }}
       run: |
-        sudo apt update
         sudo apt install -y libxml2-dev libxslt1-dev cython3
 
     - name: Install Python deps
@@ -142,15 +145,18 @@ jobs:
           ${{ runner.os }}-${{ env.cache-name }}-${{ matrix.deps }}-
           ${{ runner.os }}-${{ env.cache-name }}-
 
+    - name: Install pygit2 deps
+      run: |
+        sudo apt update
+        sudo apt install -y libgit2-dev
+
     - name: Install pycurl deps
       if: ${{ contains(matrix.deps, 'pycurl') }}
       run: |
-        sudo apt update
         sudo apt install -y libcurl4-openssl-dev
     - name: Install lxml deps
       if: ${{ contains(matrix.python-version, '3.14') }}
       run: |
-        sudo apt update
         sudo apt install -y libxml2-dev libxslt1-dev cython3
 
     - name: Install Python deps
