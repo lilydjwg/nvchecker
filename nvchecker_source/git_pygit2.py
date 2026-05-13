@@ -3,21 +3,38 @@
 
 import asyncio
 import tempfile
+from dataclasses import dataclass
+from typing import Any
 
 import pygit2  # type: ignore[import-not-found]
 
-from nvchecker.api import RichResult, GetVersionError
+from nvchecker.api import GetVersionError, RichResult
+
+
+@dataclass(frozen=True)
+class RemoteRef:
+    name: str
+    oid: Any
 
 
 async def _list_remote_refs_async(key):
     return await asyncio.to_thread(_list_remote_refs, key)
 
 
+def _normalize_ref(ref):
+    if isinstance(ref, dict):
+        return RemoteRef(name=ref["name"], oid=ref["oid"])
+
+    return RemoteRef(name=ref.name, oid=ref.oid)
+
+
 def _list_heads(remote):
-    try:
-        return remote.list_heads()
-    except AttributeError:
-        return remote.ls_remotes()
+    if hasattr(remote, "list_heads"):
+        refs = remote.list_heads()
+    else:
+        refs = remote.ls_remotes()
+
+    return [_normalize_ref(ref) for ref in refs]
 
 
 def _list_remote_refs(key):
