@@ -41,21 +41,16 @@ def find_best_httplib() -> str:
     which = 'tornado'
   except ImportError:
     try:
-      import niquests
-      which = 'niquests'
-      # http/2 http/3 ech etc
+      import aiohttp
+      which = 'aiohttp'
+      # connection reuse
     except ImportError:
       try:
-        import aiohttp
-        which = 'aiohttp'
-        # connection reuse
+        import httpx
+        which = 'httpx'
       except ImportError:
-        try:
-          import httpx
-          which = 'httpx'
-        except ImportError:
-          import tornado
-          which = 'tornado'
-          # fallback
+        import tornado
+        which = 'tornado'
+        # fallback
 
   return which
