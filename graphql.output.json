@@ -1,0 +1,307 @@
+{
+    "data": {
+      "rateLimit": {
+        "limit": 5000,
+        "remaining": 4988,
+        "resetAt": "2024-11-20T05:34:23Z"
+      },
+      "repository": {
+        "defaultBranchRef": {
+          "target": {
+            "history": {
+              "totalCount": 4640,
+              "edges": [
+                {
+                  "node": {
+                    "oid": "65c463fcbf3b75eb60c9d51d4cf04abbfe736b98",
+                    "committedDate": "2024-11-19T19:49:27Z"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "refs": {
+          "edges": [
+            {
+              "node": {
+                "name": "v3.0.9",
+                "target": {
+                  "oid": "72c8f30c17e03b01711b902525250e48594350aa"
+                }
+              }
+            }
+          ]
+        },
+        "releases": {
+          "totalCount": 26,
+          "edges": [
+            {
+              "node": {
+                "name": "Version 3.0.9",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v3.0.9",
+                "tagName": "v3.0.9",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2024-06-13T16:56:28Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Release version 3.2rc3",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v3.2rc3",
+                "tagName": "v3.2rc3",
+                "isPrerelease": false,
+                "isLatest": true,
+                "createdAt": "2023-10-10T10:22:24Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.8",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v3.0.8",
+                "tagName": "v3.0.8",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2022-09-28T19:05:06Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.7",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v3.0.7",
+                "tagName": "v3.0.7",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2022-02-19T13:42:25Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v3.0",
+                "tagName": "v3.0",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2021-10-03T09:05:27Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.6",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v3.0.6",
+                "tagName": "v3.0.6",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2021-10-03T09:00:16Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.5",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0.5",
+                "tagName": "3.0.5",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2021-05-10T11:50:07Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.4",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0.4",
+                "tagName": "3.0.4",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2020-11-20T16:59:15Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.3",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0.3",
+                "tagName": "3.0.3",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2020-11-19T08:43:35Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.2",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0.2",
+                "tagName": "3.0.2",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2020-05-08T09:56:50Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0.1",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0.1",
+                "tagName": "3.0.1",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2020-04-15T10:37:32Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0-1",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0-1",
+                "tagName": "3.0-1",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2020-04-15T07:34:31Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0 rc6",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0rc6",
+                "tagName": "3.0rc6",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2019-12-11T20:54:31Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0 rc5",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0rc5",
+                "tagName": "3.0rc5",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2019-04-25T07:21:23Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.9.5-8",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.9.5-8",
+                "tagName": "v2.9.5-8",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2019-04-23T20:27:29Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0 rc4",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0rc4",
+                "tagName": "3.0rc4",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2019-02-18T19:33:08Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0 rc3",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0rc3",
+                "tagName": "3.0rc3",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2018-11-30T17:38:31Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0 rc2",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0rc2",
+                "tagName": "3.0rc2",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2018-10-09T10:36:15Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.9.5-7",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.9.5-7",
+                "tagName": "v2.9.5-7",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2018-09-07T15:05:41Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 3.0 rc1",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/3.0rc1",
+                "tagName": "3.0rc1",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2018-09-06T06:19:17Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.9.5-5",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.9.5-5",
+                "tagName": "v2.9.5-5",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2018-04-09T08:07:46Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.9.5-3",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.9.5-3",
+                "tagName": "v2.9.5-3",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2018-03-24T18:45:21Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.9.5-2",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.9.5-2",
+                "tagName": "v2.9.5-2",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2018-02-19T10:16:04Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.9.5-1",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.9.5-1",
+                "tagName": "v2.9.5-1",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2017-09-20T15:24:37Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.8",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.8",
+                "tagName": "v2.8",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2017-05-10T19:04:48Z"
+              }
+            },
+            {
+              "node": {
+                "name": "Version 2.6",
+                "url": "https://github.com/drwetter/testssl.sh/releases/tag/v2.6",
+                "tagName": "v2.6",
+                "isPrerelease": false,
+                "isLatest": false,
+                "createdAt": "2015-09-25T18:56:09Z"
+              }
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": false,
+            "endCursor": "Y3Vyc29yOnYyOpK5MjAxNS0wOS0yNVQxNDo1NjowOS0wNDowMM4AHJKe"
+          }
+        }
+      }
+    }
+  }
