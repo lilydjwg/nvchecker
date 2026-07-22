@@ -17,8 +17,6 @@ pytestmark = [
     pytest.mark.skipif(not dulwich_available, reason="needs dulwich"),
 ]
 
-from nvchecker_source import git_dulwich  # noqa: E402
-
 
 @pytest.mark.needs_net
 async def test_git_dulwich(get_version):
@@ -66,6 +64,8 @@ async def test_git_dulwich_commit_branch(get_version):
 
 
 async def test_git_dulwich_http_auth(monkeypatch):
+    from nvchecker_source import git_dulwich
+
     expected_password = "secret-token"
 
     class FakeKeyManager:
