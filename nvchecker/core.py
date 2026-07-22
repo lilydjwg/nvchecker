@@ -360,9 +360,8 @@ def _process_result(r: RawResult) -> Union[RichResult, Exception]:
   conf = r.conf
   name = r.name
 
-  url = None
-  revision = None
-  gitref = None
+  result = None
+
   if isinstance(version, GetVersionError):
     kw = version.kwargs
     kw['name'] = name
@@ -375,15 +374,11 @@ def _process_result(r: RawResult) -> Union[RichResult, Exception]:
   elif isinstance(version, list):
     version_str = apply_list_options(version, conf, name)
     if isinstance(version_str, RichResult):
-      url = version_str.url
-      gitref = version_str.gitref
-      revision = version_str.revision
+      result = version_str
       version_str = version_str.version
   elif isinstance(version, RichResult):
+    result = version
     version_str = version.version
-    url = version.url
-    gitref = version.gitref
-    revision = version.revision
   else:
     version_str = version
 
@@ -392,12 +387,9 @@ def _process_result(r: RawResult) -> Union[RichResult, Exception]:
 
     try:
       version_str = substitute_version(version_str, conf)
-      return RichResult(
-        version = version_str,
-        url = url,
-        gitref = gitref,
-        revision = revision,
-      )
+      if result is None:
+        return RichResult(version=version_str)
+      return dataclasses.replace(result, version=version_str)
     except (ValueError, re.error) as e:
       logger.exception('error occurred in version substitutions', name=name)
       return e

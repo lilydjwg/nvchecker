@@ -52,6 +52,8 @@ if sys.version_info[:2] >= (3, 10):
     gitref: Optional[str] = None
     revision: Optional[str] = None
     url: Optional[str] = None
+    creation_time: Optional[str] = None
+    revision_creation_time: Optional[str] = None
 
     def __str__(self):
       return self.version
@@ -62,6 +64,8 @@ else:
     gitref: Optional[str] = None
     revision: Optional[str] = None
     url: Optional[str] = None
+    creation_time: Optional[str] = None
+    revision_creation_time: Optional[str] = None
 
     def __str__(self):
       return self.version
