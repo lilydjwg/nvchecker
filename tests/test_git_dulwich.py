@@ -64,7 +64,6 @@ async def test_git_dulwich_commit_branch(get_version):
 
 
 async def test_git_dulwich_http_auth(monkeypatch):
-
     expected_password = "secret-token"
 
     class FakeKeyManager:
