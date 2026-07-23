@@ -7,7 +7,7 @@ import pytest
 
 dulwich_available = True
 try:
-    __import__("dulwich")
+    from nvchecker_source import git_dulwich
 except ImportError:
     dulwich_available = False
 
@@ -64,7 +64,6 @@ async def test_git_dulwich_commit_branch(get_version):
 
 
 async def test_git_dulwich_http_auth(monkeypatch):
-    from nvchecker_source import git_dulwich
 
     expected_password = "secret-token"
 
