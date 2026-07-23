@@ -24,9 +24,9 @@ from nvchecker.util import Entries, ResultData, RawResult
 
 use_keyfile = False
 
-async def run(
+async def run_results(
   entries: Entries, max_concurrency: int = 20,
-) -> Dict[str, str]:
+) -> ResultData:
   task_sem = asyncio.Semaphore(max_concurrency)
   result_q: asyncio.Queue[RawResult] = asyncio.Queue()
   keyfile = os.environ.get('KEYFILE')
@@ -48,6 +48,12 @@ async def run(
   runner_coro = core.run_tasks(futures)
 
   results, _has_failures = await main.run(result_coro, runner_coro)
+  return results
+
+async def run(
+  entries: Entries, max_concurrency: int = 20,
+) -> Dict[str, str]:
+  results = await run_results(entries, max_concurrency)
   return {k: r.version for k, r in results.items()}
 
 @pytest_asyncio.fixture(scope="session")
@@ -56,6 +62,15 @@ async def get_version():
     entries = {name: config}
     newvers = await run(entries)
     return newvers.get(name)
+
+  return __call__
+
+@pytest_asyncio.fixture(scope="session")
+async def get_result():
+  async def __call__(name, config):
+    entries = {name: config}
+    results = await run_results(entries)
+    return results.get(name)
 
   return __call__
 

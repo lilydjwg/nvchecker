@@ -57,7 +57,16 @@ QUERY_LATEST_TAG = '''
         node {{
           name
           target {{
+            __typename
             oid
+            ... on Commit {{
+              committedDate
+            }}
+            ... on Tag {{
+              tagger {{
+                date
+              }}
+            }}
           }}
         }}
       }}
@@ -74,11 +83,13 @@ QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
         node {{
           name
           url
+          publishedAt
           tag {{
             name
           }}
           tagCommit {{
             oid
+            committedDate
           }}
         }}
       }}
@@ -111,13 +122,26 @@ async def get_latest_tag(key: Tuple[str, str, str, str]) -> RichResult:
   if not refs:
     raise GetVersionError('no tag found')
 
-  version = refs[0]['node']['name']
-  revision = refs[0]['node']['target']['oid']
+  node = refs[0]['node']
+  target = node['target']
+
+  if target['__typename'] == 'Commit':
+    revision_creation_time = target.get('committedDate')
+  elif target['__typename'] == 'Tag':
+    tagger = target.get('tagger')
+    revision_creation_time = (
+      tagger.get('date') if tagger is not None else None
+    )
+  else:
+    revision_creation_time = None
+
+  version = node['name']
   return RichResult(
     version = version,
     gitref = f"refs/tags/{version}",
-    revision = revision,
+    revision = target['oid'],
     url = f'https://github.com/{repo}/releases/tag/{version}',
+    revision_creation_time = revision_creation_time,
   )
 
 async def get_latest_release_with_prereleases(key: Tuple[str, str, str, str]) -> RichResult:
@@ -143,17 +167,21 @@ async def get_latest_release_with_prereleases(key: Tuple[str, str, str, str]) ->
   if not refs:
     raise GetVersionError('no release found')
 
-  tag_name = refs[0]['node']['tag']['name']
+  node = refs[0]['node']
+  tag_name = node['tag']['name']
+
   if use_release_name:
-    version = refs[0]['node']['name']
+    version = node['name']
   else:
     version = tag_name
 
   return RichResult(
     version = version,
     gitref = f"refs/tags/{tag_name}",
-    revision = refs[0]['node']['tagCommit']['oid'],
-    url = refs[0]['node']['url'],
+    revision = node['tagCommit']['oid'],
+    url = node['url'],
+    creation_time = node.get('publishedAt'),
+    revision_creation_time = node['tagCommit'].get('committedDate'),
   )
 
 async def get_version_real(
@@ -234,6 +262,7 @@ async def get_version_real(
         version = ref['name'] if use_release_name else ref['tag_name'],
         gitref = f"refs/tags/{ref['tag_name']}",
         url = ref['html_url'],
+        creation_time = ref.get('published_at'),
       ) for ref in data if include_prereleases or not ref['prerelease']
     ]
     if not releases:
@@ -253,6 +282,7 @@ async def get_version_real(
       version = version,
       gitref = f"refs/tags/{data['tag_name']}",
       url = data['html_url'],
+      creation_time = data.get('published_at'),
     )
 
   else:
@@ -260,6 +290,7 @@ async def get_version_real(
       # YYYYMMDD.HHMMSS
       version = data[0]['commit']['committer']['date'].rstrip('Z').replace('-', '').replace(':', '').replace('T', '.'),
       revision = data[0]['sha'],
+      revision_creation_time = data[0]['commit']['committer']['date'],
       url = data[0]['html_url'],
     )
 
