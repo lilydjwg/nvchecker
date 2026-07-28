@@ -85,7 +85,7 @@ def cmp() -> None:
   parser.add_argument('-a', '--all', action='store_true',
                       help="Include unchanged versions.")
   parser.add_argument('-s', '--sort',
-                      choices=('parse_version', 'vercmp', 'awesomeversion', 'none'),
+                      choices=('parse_version', 'vercmp', 'awesomeversion', 'portage', 'none'),
                       default='parse_version',
                       help='Version compare method to backwards the arrow '
                            '(default: parse_version)')

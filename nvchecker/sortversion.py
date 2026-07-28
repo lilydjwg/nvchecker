@@ -2,7 +2,8 @@
 # Copyright (c) 2013-2021 lilydjwg <lilydjwg@gmail.com>, et al.
 
 '''
-Sort versions using deprecated pkg_resource / packaging.parse_version or pyalpm.vercmp
+Sort versions using deprecated pkg_resource / packaging.parse_version, pyalpm,
+or Portage comparators.
 '''
 
 __all__ = ["sort_version_keys"]
@@ -27,8 +28,19 @@ except ImportError:
     raise NotImplementedError("Using awesomeversion but it can not be imported!")
   awesomeversion_available = False
 
+try:
+  from portage.versions import vercmp as portage_vercmp
+  from functools import cmp_to_key
+  portage_vercmp = cmp_to_key(portage_vercmp)
+  portage_available = True
+except ImportError:
+  def portage_vercmp(k):
+    raise NotImplementedError("Using portage but portage can not be imported!")
+  portage_available = False
+
 sort_version_keys = {
   "parse_version": parse_version,
   "vercmp": vercmp,
   "awesomeversion": AwesomeVersion,
+  "portage": portage_vercmp,
 }
