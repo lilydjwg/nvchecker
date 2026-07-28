@@ -236,10 +236,11 @@ exclude_regex
 
 sort_version_key
   Sort the version string using this key function. Choose among
-  ``parse_version``, ``vercmp`` and ``awesomeversion``. Default value is
+  ``parse_version``, ``vercmp``, ``awesomeversion`` and ``portage``. Default value is
   ``parse_version``. ``parse_version`` uses an old version of
   ``pkg_resources.parse_version``. ``vercmp`` uses ``pyalpm.vercmp``.
   ``awesomeversion`` uses `awesomeversion <https://github.com/ludeeus/awesomeversion>`_.
+  ``portage`` uses ``portage.versions.vercmp``.
 
 ignored
   Version strings that are explicitly ignored, separated by whitespace. This
