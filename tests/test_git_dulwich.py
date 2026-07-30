@@ -7,7 +7,7 @@ import pytest
 
 dulwich_available = True
 try:
-    __import__("dulwich")
+    from nvchecker_source import git_dulwich
 except ImportError:
     dulwich_available = False
 
@@ -16,8 +16,6 @@ pytestmark = [
     pytest.mark.asyncio,
     pytest.mark.skipif(not dulwich_available, reason="needs dulwich"),
 ]
-
-from nvchecker_source import git_dulwich  # noqa: E402
 
 
 @pytest.mark.needs_net
