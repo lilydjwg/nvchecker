@@ -236,14 +236,24 @@ class AsyncCache:
     The ``key`` should be hashable, and the function will be called with it as
     its sole argument. For multiple simultaneous calls with the same key, only
     one will actually be called, and others will wait and return the same
-    (cached) value.
+    (cached) value. The cache is additionally partitioned by the current
+    request context.
     '''
+    cache_key = (
+      key,
+      ctx_tries.get(),
+      ctx_proxy.get(),
+      ctx_ua.get(),
+      ctx_httpt.get(),
+      ctx_verify_cert.get(),
+    )
+
     async with self.lock:
-      cached = self.cache.get(key)
+      cached = self.cache.get(cache_key)
       if cached is None:
         coro = func(key)
         fu = asyncio.create_task(coro)
-        self.cache[key] = fu
+        self.cache[cache_key] = fu
 
     if asyncio.isfuture(cached): # pending
       return await cached
@@ -251,7 +261,7 @@ class AsyncCache:
       return cached
     else: # not cached
       r = await fu
-      self.cache[key] = r
+      self.cache[cache_key] = r
       return r
 
 if TYPE_CHECKING:
