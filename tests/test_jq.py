@@ -29,5 +29,6 @@ async def test_jq_filter(get_version):
         "source": "jq",
         "url": "https://aur.archlinux.org/rpc/v5/info?arg[]=nvchecker-git",
         "filter": '.results[0].PackageBase',
+        "maintainers": ["alice", "bob"],
     })
     assert ver == "nvchecker-git"

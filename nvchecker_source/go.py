@@ -17,14 +17,11 @@ async def get_version(
     cache: AsyncCache, keymanager: KeyManager,
     **kwargs,
 ) -> RichResult:
-  key = tuple(sorted(conf.items()))
+  key = conf['go']
   return await cache.get(key, get_version_impl)
 
 
-async def get_version_impl(info) -> RichResult:
-  conf = dict(info)
-  pkg_name = conf.get('go')
-
+async def get_version_impl(pkg_name) -> RichResult:
   url = GO_PKG_URL.format(pkg=pkg_name)
   res = await session.get(url)
   doc = html.fromstring(res.body.decode())

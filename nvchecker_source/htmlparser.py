@@ -7,30 +7,21 @@ from lxml import html, etree
 from nvchecker.api import session, GetVersionError
 
 async def get_version(name, conf, *, cache, **kwargs):
-  key = tuple(sorted(conf.items()))
-  return await cache.get(key, get_version_impl)
-
-async def get_version_impl(info):
-  conf = dict(info)
+  key = (
+    conf['url'],
+    conf.get('post_data'),
+    conf.get('post_data_type', 'application/x-www-form-urlencoded'),
+  )
+  body = await cache.get(key, get_body)
 
   encoding = conf.get('encoding')
   is_xml = conf.get('is_xml')
   if is_xml:
     parser = etree.XMLParser(encoding=encoding)
+    doc = etree.fromstring(body, base_url=conf['url'], parser=parser)
   else:
     parser = html.HTMLParser(encoding=encoding)
-  data = conf.get('post_data')
-  if data is None:
-    res = await session.get(conf['url'])
-  else:
-    res = await session.post(conf['url'], body = data, headers = {
-        'Content-Type': conf.get('post_data_type', 'application/x-www-form-urlencoded')
-      })
-
-  if is_xml:
-    doc = etree.fromstring(res.body, base_url=conf['url'], parser=parser)
-  else:
-    doc = html.fromstring(res.body, base_url=conf['url'], parser=parser)
+    doc = html.fromstring(body, base_url=conf['url'], parser=parser)
 
   try:
     els = doc.xpath(conf.get('xpath'))
@@ -55,3 +46,14 @@ async def get_version_impl(info):
       for el in els
     ]
   return version
+
+async def get_body(info):
+  url, post_data, post_data_type = info
+
+  if post_data is None:
+    res = await session.get(url)
+  else:
+    res = await session.post(url, body = post_data, headers = {
+      'Content-Type': post_data_type,
+    })
+  return res.body
