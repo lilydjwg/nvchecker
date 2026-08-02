@@ -1,6 +1,41 @@
 name: run tests
 on: [push, pull_request]
 jobs:
+  collect-tests:
+    name: Collect tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.9"
+          - "3.14"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install test dependencies
+        run: |
+          pip install \
+            pytest \
+            pytest-asyncio \
+            pytest-httpbin \
+            pytest-rerunfailures
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Run pytest collection
+        run: pytest --collect-only -q
+
+
   setup-cache:
     runs-on: ubuntu-latest
     strategy:
@@ -118,7 +153,9 @@ jobs:
       run: cat mitmdump_output
 
   tests:
-    needs: setup-cache
+    needs:
+      - setup-cache
+      - collect-tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
