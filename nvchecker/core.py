@@ -167,10 +167,16 @@ def write_verfile(file: Path, versions: ResultData) -> None:
   ) + '\n'
   safe_overwrite(file, data)
 
+def _rich_result_to_dict(result: RichResult) -> Dict[str, Any]:
+  return {
+    k: v
+    for k, v in dataclasses.asdict(result).items()
+    if v is not None
+  }
+
 def json_encode(obj):
   if isinstance(obj, RichResult):
-    d = {k: v for k, v in dataclasses.asdict(obj).items() if v is not None}
-    return d
+    return _rich_result_to_dict(obj)
   raise TypeError(obj)
 
 class Options(NamedTuple):
@@ -415,6 +421,7 @@ def check_version_update(
       revision = r.revision,
       old_version = oldver,
       url = r.url,
+      rich_result = _rich_result_to_dict(r),
     )
   else:
     # provide visible user feedback if it was the only entry
