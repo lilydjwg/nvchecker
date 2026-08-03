@@ -618,6 +618,14 @@ use_pre_release
 
 This source supports :ref:`list options`.
 
+RichResult metadata:
+
+================  ===================================  ==========================
+Mode              ``creation_time``                    ``revision_creation_time``
+================  ===================================  ==========================
+all versions      earliest available file upload time  -
+================  ===================================  ==========================
+
 .. note::
    An additional dependency "packaging" is required.
    You can use ``pip install 'nvchecker[pypi]'``.
