@@ -479,6 +479,26 @@ To set an authorization token, you can set:
 This source supports :ref:`list options` when ``use_max_tag`` or
 ``use_max_release`` is set.
 
+RichResult metadata
+~~~~~~~~~~~~~~~~~~~
+
+When available from the existing GitHub API responses, this source populates
+the following optional ``RichResult`` fields. No additional API requests are
+issued solely to retrieve timestamp information.
+
+==================================== ====================== =============================================
+Mode                                 creation_time          revision_creation_time
+==================================== ====================== =============================================
+default commit/path                  —                      commit timestamp
+``use_latest_release``               release publish time   —
+``use_max_release``                  release publish time   —
+``use_latest_release`` +
+``include_prereleases``              release publish time   commit timestamp
+``use_latest_tag``                   —                      tag creation time (annotated tags) or commit
+                                                            timestamp (lightweight tags)
+``use_max_tag``                      —                      —
+==================================== ====================== =============================================
+
 Check Gitea
 ~~~~~~~~~~~
 ::
