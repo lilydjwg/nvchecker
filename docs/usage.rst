@@ -489,14 +489,14 @@ issued solely to retrieve timestamp information.
 ==================================== ====================== =============================================
 Mode                                 creation_time          revision_creation_time
 ==================================== ====================== =============================================
-default commit/path                  —                      commit timestamp
-``use_latest_release``               release publish time   —
-``use_max_release``                  release publish time   —
+default commit/path                  -                      commit timestamp
+``use_latest_release``               release publish time   -
+``use_max_release``                  release publish time   -
 ``use_latest_release`` +
 ``include_prereleases``              release publish time   commit timestamp
-``use_latest_tag``                   —                      tag creation time (annotated tags) or commit
+``use_latest_tag``                   -                      tag creation time (annotated tags) or commit
                                                             timestamp (lightweight tags)
-``use_max_tag``                      —                      —
+``use_max_tag``                      -                      -
 ==================================== ====================== =============================================
 
 Check Gitea
