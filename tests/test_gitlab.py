@@ -44,3 +44,35 @@ async def test_gitlab_max_tag_with_ignored(get_version):
         "ignored": "v1.1.0 v1.1.1",
     }) == "v1.0.0"
 
+async def test_gitlab_revision_creation_time(get_result):
+    result = await get_result("example", {
+        "source": "gitlab",
+        "gitlab": "gitlab-org/gitlab-test",
+    })
+
+    assert result.version == "20190625"
+    assert result.revision is not None
+    assert result.creation_time is None
+    assert (
+        result.revision_creation_time
+        == "2019-06-25T23:59:19.000+00:00"
+    )
+
+async def test_gitlab_max_tag_timestamps(get_result):
+    result = await get_result("example", {
+        "source": "gitlab",
+        "gitlab": "gitlab-org/gitlab-test",
+        "use_max_tag": True,
+    })
+
+    assert result.version == "v1.1.1"
+    assert result.gitref == "refs/tags/v1.1.1"
+    assert (
+        result.revision
+        == "189a6c924013fc3fe40d6f1ec1dc20214183bc97"
+    )
+    assert result.creation_time == "2019-11-20T14:56:20.000Z"
+    assert (
+        result.revision_creation_time
+        == "2019-10-11T18:06:49.000+02:00"
+    )

@@ -55,6 +55,8 @@ async def get_version_real(
         gitref = f"refs/tags/{tag['name']}",
         revision = tag['commit']['id'],
         url = f'https://{host}/{conf["gitlab"]}/-/tags/{tag["name"]}',
+        creation_time = tag.get('created_at'),
+        revision_creation_time = tag['commit'].get('created_at'),
       ) for tag in data
     ]
   else:
@@ -62,6 +64,7 @@ async def get_version_real(
       version = data[0]['created_at'].split('T', 1)[0].replace('-', ''),
       revision = data[0]['id'],
       url = data[0]['web_url'],
+      revision_creation_time = data[0]['created_at'],
     )
 
 def check_ratelimit(exc, name):
