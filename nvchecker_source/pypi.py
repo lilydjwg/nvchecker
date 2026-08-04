@@ -34,9 +34,19 @@ async def get_version(name, conf, *, cache, **kwargs):
     if not use_pre_release and parsed_version.is_prerelease:
       continue
 
+    creation_time = min(
+      (
+        release_file['upload_time_iso_8601']
+        for release_file in vers
+        if release_file.get('upload_time_iso_8601') is not None
+      ),
+      default = None,
+    )
+
     ret.append(RichResult(
       version = version,
       url = f'https://pypi.org/project/{package}/{version}/',
+      creation_time = creation_time,
     ))
 
   return ret
