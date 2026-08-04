@@ -622,6 +622,20 @@ To set an authorization token, you can set:
 
 This source supports :ref:`list options` when ``use_max_tag`` is set.
 
+RichResult metadata
+~~~~~~~~~~~~~~~~~~~
+
+When available from the existing GitLab API responses, this source populates
+the following optional ``RichResult`` fields. No additional API requests are
+issued solely to retrieve timestamp information.
+
+================  ======================  ==========================
+Mode              ``creation_time``       ``revision_creation_time``
+================  ======================  ==========================
+default commit    -                       commit timestamp
+``use_max_tag``   tag creation time       commit timestamp
+================  ======================  ==========================
+
 Check PyPI
 ~~~~~~~~~~
 ::
