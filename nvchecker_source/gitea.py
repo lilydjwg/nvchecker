@@ -46,7 +46,22 @@ async def get_version(
   if token:
     headers["Authorization"] = f'token {token}'
 
-  data = await cache.get_json(url, headers = headers)
+  if use_max_tag:
+    data = []
+    page = 1
+    while True:
+      page_data = await cache.get_json(
+        f'{url}?page={page}',
+        headers = headers,
+      )
+      if not page_data:
+        break
+
+      data.extend(page_data)
+      page += 1
+  else:
+    data = await cache.get_json(url, headers = headers)
+
   if use_max_tag:
     return [
       RichResult(
