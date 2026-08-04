@@ -35,6 +35,9 @@ def _console_msg(event):
 
   event['msg'] = msg
 
+  if 'rich_result' in event:
+    del event['rich_result']
+
   return event
 
 def exc_info(logger, level, event):
