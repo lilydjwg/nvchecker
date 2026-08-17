@@ -26,8 +26,9 @@ def _console_msg(event):
   else:
     msg = evt
 
-  if 'revision' in event and not event['revision']:
-      del event['revision']
+  for optional_field in ['revision', 'changelog_url']:
+      if optional_field in event and not event[optional_field]:
+          del event[optional_field]
 
   if 'name' in event:
     msg = f"{event['name']}: {msg}"

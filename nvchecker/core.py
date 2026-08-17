@@ -421,6 +421,7 @@ def check_version_update(
       revision = r.revision,
       old_version = oldver,
       url = r.url,
+      changelog_url = r.changelog_url,
       rich_result = _rich_result_to_dict(r),
     )
   else:

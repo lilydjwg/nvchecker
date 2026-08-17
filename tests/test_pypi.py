@@ -56,9 +56,28 @@ async def test_pypi_yanked_version(get_version):
     }) == "1.26.20"
 
 
+@pytest.mark.needs_net
+async def test_pypi_changelog(get_result):
+    result = await get_result("example", {
+        "source": "pypi",
+    })
+
+    assert result.changelog_url == None
+
+
+@pytest.mark.needs_net
+async def test_pypi_no_changelog(get_result):
+    result = await get_result("numpy", {
+        "source": "pypi",
+    })
+
+    assert result.changelog_url.startswith('https://numpy.org')
+
+
 async def test_pypi_creation_time():
     cache = AsyncMock()
     cache.get_json.return_value = {
+        "info": {"project_urls": {}},
         "releases": {
             "1.0.0": [
                 {
@@ -97,6 +116,7 @@ async def test_pypi_creation_time():
 async def test_pypi_creation_time_uses_earliest_file():
     cache = AsyncMock()
     cache.get_json.return_value = {
+        "info": {"project_urls": {}},
         "releases": {
             "1.0.0": [
                 {
@@ -134,6 +154,7 @@ async def test_pypi_creation_time_uses_earliest_file():
 async def test_pypi_creation_time_ignores_missing_timestamps():
     cache = AsyncMock()
     cache.get_json.return_value = {
+        "info": {"project_urls": {}},
         "releases": {
             "1.0.0": [
                 {
@@ -172,6 +193,7 @@ async def test_pypi_creation_time_ignores_missing_timestamps():
 async def test_pypi_creation_time_unavailable(release_files):
     cache = AsyncMock()
     cache.get_json.return_value = {
+        "info": {"project_urls": {}},
         "releases": {
             "1.0.0": release_files,
         },
