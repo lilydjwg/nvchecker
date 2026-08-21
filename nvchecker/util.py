@@ -52,6 +52,7 @@ if sys.version_info[:2] >= (3, 10):
     gitref: Optional[str] = None
     revision: Optional[str] = None
     url: Optional[str] = None
+    changelog_url: Optional[str] = None
     # Creation/publication time of the selected version object, if applicable.
     creation_time: Optional[str] = None
     # Creation time of the underlying revision object, if applicable.
@@ -66,6 +67,7 @@ else:
     gitref: Optional[str] = None
     revision: Optional[str] = None
     url: Optional[str] = None
+    changelog_url: Optional[str] = None
     # Creation/publication time of the selected version object, if applicable.
     creation_time: Optional[str] = None
     # Creation time of the underlying revision object, if applicable.

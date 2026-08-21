@@ -43,10 +43,17 @@ async def get_version(name, conf, *, cache, **kwargs):
       default = None,
     )
 
+    urls = data['info']['project_urls']
+    changelog_url = next(
+        (value for key, value in urls.items() if key.lower().startswith(('change', 'release'))),
+        None
+    )
+
     ret.append(RichResult(
       version = version,
       url = f'https://pypi.org/project/{package}/{version}/',
       creation_time = creation_time,
+      changelog_url = changelog_url,
     ))
 
   return ret

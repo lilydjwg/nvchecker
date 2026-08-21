@@ -184,6 +184,7 @@ async def get_version(
     return RichResult(
       version = version,
       url = changelog,
+      changelog_url = changelog,
     )
   else:
     return version

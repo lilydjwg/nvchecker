@@ -35,7 +35,10 @@ def _console_msg(event):
 
   event['msg'] = msg
 
-  if 'rich_result' in event:
+  if rich_result := event.get('rich_result'):
+    if changelog_url := rich_result.get('changelog_url'):
+        event['changelog_url'] = changelog_url
+
     del event['rich_result']
 
   return event
