@@ -74,11 +74,12 @@ QUERY_LATEST_TAG = '''
   }}
 }}
 '''
-
+# Do not use "orderBy: {field: CREATED_AT, direction: DESC}" here; it orders
+# releases by tag creation time, not published time
 QUERY_LATEST_RELEASE_WITH_PRERELEASES = '''
 {{
   repository(name: "{name}", owner: "{owner}") {{
-    releases(first: 1, orderBy: {{field: CREATED_AT, direction: DESC}}) {{
+    releases(first: 1) {{
       edges {{
         node {{
           name
