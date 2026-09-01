@@ -152,7 +152,9 @@ def cmp() -> None:
 
         if older:
           if args.newer:
-            continue  # don't store this diff
+            logger.debug('not newer, skipped', name=name,
+                         oldver=oldver, newver=newver)
+            continue
           diff['delta'] = 'old'
         else:
           diff['delta'] = 'new'
@@ -162,7 +164,8 @@ def cmp() -> None:
 
     elif newver is None:
       if args.newer:
-        continue  # don't store this diff
+        logger.debug('gone, skipped', name=name, oldver=oldver)
+        continue
       diff['delta'] = 'gone'
 
     if args.all or diff['delta'] != 'equal':
