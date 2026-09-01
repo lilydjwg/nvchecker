@@ -38,7 +38,11 @@ except ImportError:
     raise NotImplementedError("Using portage but portage can not be imported!")
   portage_available = False
 
+def no_sort(k: str) -> int:
+  return 0
+
 sort_version_keys = {
+  "none": no_sort,
   "parse_version": parse_version,
   "vercmp": vercmp,
   "awesomeversion": AwesomeVersion,

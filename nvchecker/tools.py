@@ -87,17 +87,19 @@ def cmp() -> None:
   parser.add_argument('-s', '--sort',
                       choices=('parse_version', 'vercmp', 'awesomeversion', 'portage', 'none'),
                       default='parse_version',
-                      help='Version compare method to backwards the arrow '
+                      help='Version compare method to backwards the arrow, '
+                           'for entries without sort_version_key '
                            '(default: parse_version)')
   parser.add_argument('-n', '--newer', action='store_true',
-                      help='Shows only the newer ones according to --sort.')
+                      help='Shows only the newer ones, according to the '
+                           "entry's sort_version_key or --sort.")
   parser.add_argument('--exit-status', action='store_true',
                       help="exit with status 4 if there are updates")
   args = parser.parse_args()
   if core.process_common_arguments(args):
     return
 
-  opt = core.load_file(args.file, use_keymanager=False)[1]
+  entries, opt = core.load_file(args.file, use_keymanager=False)
   if opt.ver_files is None:
     logger.critical(
       "doesn't have 'oldver' and 'newver' set.",
@@ -110,6 +112,18 @@ def cmp() -> None:
 
   oldvers = {k: v.version for k, v in core.read_verfile(oldverf).items()}
   newvers = {k: v.version for k, v in core.read_verfile(newverf).items()}
+
+  from .sortversion import sort_version_keys
+  entry_sort = {}  # takes precedence over --sort
+  for name, conf in entries.items():
+    key = conf.get('sort_version_key')
+    if key is None:
+      continue
+    if key not in sort_version_keys:
+      logger.critical('unknown sort_version_key.', name=name,
+                      sort_version_key=key, choices=list(sort_version_keys))
+      sys.exit(2)
+    entry_sort[name] = key
 
   differences = []
 
@@ -126,14 +140,17 @@ def cmp() -> None:
       if oldver == newver:
         diff['delta'] = 'equal'
 
-      elif args.sort == "none":
-        diff['delta'] = 'new'  # assume it's a new version if we're not comparing
-
       else:
-        from .sortversion import sort_version_keys
-        version = sort_version_keys[args.sort]
+        sort_name = entry_sort.get(name, args.sort)
+        version = sort_version_keys[sort_name]
 
-        if version(oldver) > version(newver):
+        try:
+          older = version(oldver) > version(newver)
+        except NotImplementedError as e:
+          logger.critical(str(e), name=name, sort_version_key=sort_name)
+          sys.exit(2)
+
+        if older:
           if args.newer:
             continue  # don't store this diff
           diff['delta'] = 'old'

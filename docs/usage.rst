@@ -236,11 +236,16 @@ exclude_regex
 
 sort_version_key
   Sort the version string using this key function. Choose among
-  ``parse_version``, ``vercmp``, ``awesomeversion`` and ``portage``. Default value is
-  ``parse_version``. ``parse_version`` uses an old version of
+  ``parse_version``, ``vercmp``, ``awesomeversion``, ``portage`` and ``none``.
+  Default value is ``parse_version``. ``parse_version`` uses an old version of
   ``pkg_resources.parse_version``. ``vercmp`` uses ``pyalpm.vercmp``.
   ``awesomeversion`` uses `awesomeversion <https://github.com/ludeeus/awesomeversion>`_.
-  ``portage`` uses ``portage.versions.vercmp``.
+  ``portage`` uses ``portage.versions.vercmp``. ``none`` does not order the
+  versions; use it where they carry no ordering, such as the commit hash from a
+  ``git`` source with ``use_commit``. If the source returns several versions,
+  ``none`` takes the last one and logs a warning.
+
+  ``nvcmp`` also reads this option, in preference to its own ``--sort``.
 
 ignored
   Version strings that are explicitly ignored, separated by whitespace. This

@@ -355,8 +355,12 @@ def apply_list_options(
   if not versions:
     return None
 
-  sort_version_key = sort_version_keys[
-    conf.get("sort_version_key", "parse_version")]
+  sort_version_key_name = conf.get("sort_version_key", "parse_version")
+  if sort_version_key_name == "none" and len(versions) > 1:
+    logger.warning('sort_version_key is none and the source returned several '
+                   'versions; using the last one',
+                   name=name, versions=versions)
+  sort_version_key = sort_version_keys[sort_version_key_name]
   versions.sort(key=lambda version: sort_version_key(str(version)))
 
   return versions[-1]
