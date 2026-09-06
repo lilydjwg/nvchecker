@@ -10,7 +10,7 @@ mitmdump=${mitmdump:-mitmdump}
 ignore_hosts='127\.0\.0\.1|geo\.mirror\.pkgbuild\.com'
 
 if [[ -f ~/.mitmproxy/nvdump ]]; then
-  $mitmdump -S ~/.mitmproxy/nvdump -p 7890 --ignore-hosts "$ignore_hosts" --server-replay-reuse --server-replay-extra=forward -w newdump >mitmdump_output &
+  $mitmdump -S ~/.mitmproxy/nvdump -p 7890 --ignore-hosts "$ignore_hosts" --server-replay-extra=forward -w newdump >mitmdump_output &
 else
   $mitmdump -w ~/.mitmproxy/nvdump -p 7890 --ignore-hosts "$ignore_hosts" >mitmdump_output &
 fi
