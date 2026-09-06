@@ -5,6 +5,11 @@ from nvchecker.api import (
   VersionResult, RichResult, Entry, AsyncCache, KeyManager,
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+logger.warning('Pagure was sunset in 2026')
+
 PAGURE_URL = 'https://%s/api/0/%s/git/tags?with_commits=true'
 
 async def get_version(
