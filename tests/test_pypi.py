@@ -57,7 +57,7 @@ async def test_pypi_yanked_version(get_version):
 
 
 @pytest.mark.needs_net
-async def test_pypi_changelog(get_result):
+async def test_pypi_no_changelog(get_result):
     result = await get_result("example", {
         "source": "pypi",
     })
@@ -66,7 +66,16 @@ async def test_pypi_changelog(get_result):
 
 
 @pytest.mark.needs_net
-async def test_pypi_no_changelog(get_result):
+async def test_pypi_none_project_urls(get_result):
+    result = await get_result("yoctools", {
+        "source": "pypi",
+    })
+
+    assert result.changelog_url == None
+
+
+@pytest.mark.needs_net
+async def test_pypi_changelog(get_result):
     result = await get_result("numpy", {
         "source": "pypi",
     })
