@@ -1,0 +1,18 @@
+["testssl.sh-git"]
+source="github-test"
+github="drwetter/testssl.sh"
+#use_max_tag=true
+#use_latest_tag=true
+
+#uses latest release marked as Latest by github, this is not always the newest (evidenced by the repo in this file)
+#use_latest_release=true
+#include_prereleases=true
+
+#selects the most recent by ordered list descending
+use_newest_release=true
+
+#use_release_name=true
+
+#i find these useful to match arch guidelines for VCS packages
+use_commit_number=true
+use_commit_hash=true
