@@ -3,7 +3,8 @@ on: [push, pull_request]
 jobs:
   collect-tests:
     name: Collect tests
-    runs-on: ubuntu-latest
+    # 26.04 doesn't have Python 3.9
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
@@ -17,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -37,7 +38,7 @@ jobs:
 
 
   setup-cache:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -51,7 +52,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
     - name: Setup Cache
@@ -156,7 +157,7 @@ jobs:
     needs:
       - setup-cache
       - collect-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -167,7 +168,8 @@ jobs:
         - "3.12"
         - "3.13"
         - "3.14"
-        # - "3.15-dev"
+        - "3.15"
+        - "3.15t"
         # pypy fails in some cases but we don't care much about that
         # with github actions we can't mark some jobs to not affect the overall
         # conclusion so we have to omit "allow-failure" tests.
@@ -188,7 +190,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
     - name: Setup Cache
