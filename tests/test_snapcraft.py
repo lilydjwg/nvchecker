@@ -1,8 +1,11 @@
 # MIT licensed
 # Copyright (c) 2025 Maxim Slipenko <maxim@slipenko.com>, et al.
 
+import os
+
 import pytest
-pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net]
+pytestmark = [pytest.mark.asyncio, pytest.mark.needs_net,
+             pytest.mark.skipif(bool(os.environ.get('GITHUB_RUN_ID')), reason="429 very often")]
 
 async def test_snapcraft(get_version):
     assert await get_version("test", {
