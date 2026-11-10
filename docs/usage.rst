@@ -378,7 +378,7 @@ Find with a Command
 
   source = "cmd"
 
-Use a shell command line to get the version. The output is stripped first, so trailing newlines do not bother.
+Use a shell command line to get a version. The command may output multiple versions, with one version per line. Each line is stripped first, so trailing newlines do not bother. Empty lines are skipped.
 
 cmd
   The command line to use. This will run with the system's standard shell (i.e. ``/bin/sh``).

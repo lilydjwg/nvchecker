@@ -50,7 +50,7 @@ async def run_cmd(name: str, cmd: str, timeout: int = 60) -> str:
       cmd=cmd, error=error_s,
       returncode=p.returncode)
   else:
-    return output_s
+    return [line.strip() for line in output_s.splitlines() if line.strip()]
 
 async def get_version(
   name, conf, *, cache, keymanager=None
