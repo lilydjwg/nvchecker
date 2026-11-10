@@ -16,6 +16,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
+    "sphinx_rtd_theme",
 ]
 
 primary_domain = "py"
@@ -33,15 +34,6 @@ autodoc_docstring_signature = False
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 html_theme = "sphinx_rtd_theme"
-on_rtd = os.environ.get("READTHEDOCS", None) == "True"
-
-# On RTD we can't import sphinx_rtd_theme, but it will be applied by
-# default anyway.  This block will use the same theme when building locally
-# as on RTD.
-if not on_rtd:
-    import sphinx_rtd_theme
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-
 html_theme_options = {
     'collapse_navigation': False,
 }
