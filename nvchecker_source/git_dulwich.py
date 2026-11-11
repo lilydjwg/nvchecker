@@ -3,7 +3,7 @@
 
 import asyncio
 from collections.abc import Hashable
-from typing import Dict, List, Optional, Tuple, Union, cast
+from typing import Dict, List, Optional, Tuple, cast
 
 import dulwich.client  # type: ignore[import-not-found]
 from dulwich.config import StackedConfig  # type: ignore[import-not-found]
@@ -99,9 +99,9 @@ async def get_version(
         _list_remote_refs_async,
     )
 
-    versions: List[Union[str, RichResult]] = []
-    for refname, revision in refs.items():
-        refname = refname.decode()
+    versions: List[RichResult] = []
+    for refname_bytes, revision in refs.items():
+        refname = refname_bytes.decode()
         if not refname.startswith("refs/tags/"):
             continue
         if refname.endswith("^{}"):

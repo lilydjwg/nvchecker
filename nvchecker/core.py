@@ -40,6 +40,7 @@ from .util import (
   Entry, Entries, KeyManager, RawResult, RichResult, ResultData,
   FunctionWorker, GetVersionError,
   FileLoadError, EntryWaiter,
+  apply_regex_match,
 )
 from . import __version__
 from .sortversion import sort_version_keys
@@ -326,15 +327,13 @@ def substitute_version(
   return version
 
 def apply_list_options(
-  versions: List[Union[str, RichResult]],
+  versions: Union[List[str], List[RichResult]],
   conf: Entry,
   name: str,
 ) -> Optional[Union[str, RichResult]]:
   pattern = conf.get('include_regex')
   if versions and pattern:
-    re_pat = re.compile(pattern)
-    versions2 = [x for x in versions
-                if re_pat.fullmatch(str(x))]
+    versions2 = apply_regex_match(re.compile(pattern), versions, True)
     if not versions2:
       logger.warning('include_regex matched no versions',
                      name=name, versions=versions, regex=pattern)
@@ -343,14 +342,14 @@ def apply_list_options(
 
   pattern = conf.get('exclude_regex')
   if pattern:
-    re_pat = re.compile(pattern)
-    versions = [x for x in versions
-                if not re_pat.fullmatch(str(x))]
+    versions = apply_regex_match(re.compile(pattern), versions, False)
 
   ignored = set(conf.get('ignored', '').split())
   if ignored:
-    versions = [x for x in versions
-                if str(x) not in ignored]
+    if isinstance(versions[0], RichResult):
+      versions = [x for x in versions if str(x) not in ignored]
+    else:
+      versions = [x for x in versions if x not in ignored]
 
   if not versions:
     return None

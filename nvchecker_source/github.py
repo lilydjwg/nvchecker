@@ -245,7 +245,7 @@ async def get_version_real(
   data = await cache.get_json(url, headers = headers)
 
   if use_max_tag:
-    tags: List[Union[str, RichResult]] = [
+    tags: List[RichResult] = [
       RichResult(
         version = ref['ref'].split('/', 2)[-1],
         gitref = ref['ref'],
@@ -258,7 +258,7 @@ async def get_version_real(
     return tags
 
   if use_max_release:
-    releases: List[Union[str, RichResult]] = [
+    releases: List[RichResult] = [
       RichResult(
         version = ref['name'] if use_release_name else ref['tag_name'],
         gitref = f"refs/tags/{ref['tag_name']}",

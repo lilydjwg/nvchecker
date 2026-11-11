@@ -2,14 +2,19 @@
 # Copyright (c) 2020 Felix Yan <felixonmars@archlinux.org>, et al.
 
 from functools import partial
+from typing import Optional
 
 from .cmd import run_cmd
 
-from nvchecker.api import RichResult
+from nvchecker.api import (
+  RichResult, Entry, AsyncCache, KeyManager, VersionResult
+)
 
 async def get_version(
-  name, conf, *, cache, keymanager=None
-):
+  name: str, conf: Entry, *,
+  cache: AsyncCache,
+  keymanager: Optional[KeyManager] = None,
+) -> VersionResult:
   git = conf['git']
 
   use_commit = conf.get('use_commit', False)

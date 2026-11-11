@@ -84,7 +84,7 @@ async def get_version(
     versions_set.add(version) # type: ignore
 
   versions = list(versions_set)
-  return versions # type: ignore
+  return versions
 
 
 async def get_file(url: str) -> bytes:

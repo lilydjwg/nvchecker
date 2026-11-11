@@ -3,12 +3,15 @@
 
 import asyncio
 from functools import partial
+from typing import Optional
 
 import structlog
 
-from nvchecker.api import GetVersionError, VersionResult
+from nvchecker.api import (
+  GetVersionError, Entry, AsyncCache, KeyManager,
+)
 
-async def run_cmd(name: str, cmd: str, timeout: int = 60) -> VersionResult:
+async def run_cmd(name: str, cmd: str, timeout: int = 60) -> str:
   logger = structlog.get_logger(
     logger_name = __name__,
     name = name,
@@ -50,10 +53,13 @@ async def run_cmd(name: str, cmd: str, timeout: int = 60) -> VersionResult:
       cmd=cmd, error=error_s,
       returncode=p.returncode)
   else:
-    return [l for line in output_s.splitlines() if (l := line.strip())]
+    return output_s
 
 async def get_version(
-  name, conf, *, cache, keymanager=None
-):
+  name: str, conf: Entry, *,
+  cache: AsyncCache,
+  keymanager: Optional[KeyManager] = None,
+) -> list[str]:
   cmd = conf['cmd']
-  return await cache.get(cmd, partial(run_cmd, name))
+  output = await cache.get(cmd, partial(run_cmd, name))
+  return [l for line in output.splitlines() if (l := line.strip())]

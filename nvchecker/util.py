@@ -9,13 +9,14 @@ from asyncio import Queue
 from typing import (
   Dict, Optional, List, NamedTuple, Union,
   Any, Tuple, Callable, Coroutine, Hashable,
-  TYPE_CHECKING,
+  TYPE_CHECKING, TypeVar,
 )
 from pathlib import Path
 import contextvars
 import abc
 import netrc
 from dataclasses import dataclass
+import re
 
 if TYPE_CHECKING:
   import tomli as tomllib
@@ -44,6 +45,8 @@ if sys.version_info[:2] >= (3, 11):
   from typing import LiteralString
 else:
   LiteralString = str
+
+T = TypeVar('T')
 
 if sys.version_info[:2] >= (3, 10):
   @dataclass(kw_only=True)
@@ -81,9 +84,20 @@ else:
 # * `None` - No version found.
 # * `str` - A single version string is found.
 # * `RichResult` - A version string with additional information.
-# * `List[Union[str, RichResult]]` - Multiple version strings with or without additional information are found. :ref:`list options` will be applied.
+# * `List[str]` - Multiple version strings. :ref:`list options` will be applied.
+# * `List[RichResult]` - Multiple version strings with additional information are found. :ref:`list options` will be applied.
 # * `Exception` - An error occurred.
-VersionResult = Union[None, str, RichResult, List[Union[str, RichResult]], Exception]
+VersionResult = Union[None, str, RichResult, List[str], List[RichResult], Exception]
+
+def apply_regex_match(
+  regex: re.Pattern,
+  versions: Union[List[str], List[RichResult]],
+  op: bool,
+) -> Union[List[str], List[RichResult]]:
+  if isinstance(versions[0], RichResult):
+    return [x for x in versions if regex.fullmatch(str(x)) == op]
+  else:
+    return [x for x in versions if regex.fullmatch(x) == op]
 
 class FileLoadError(Exception):
   def __init__(self, kind, filename, exc):
@@ -239,8 +253,8 @@ class AsyncCache:
   async def get(
     self,
     key: Hashable,
-    func: Callable[[Hashable], Coroutine[Any, Any, Any]],
-  ) -> Any:
+    func: Callable[[Hashable], Coroutine[None, None, T]],
+  ) -> T:
     '''Run async ``func`` and cache its return value by ``key``.
 
     The ``key`` should be hashable, and the function will be called with it as

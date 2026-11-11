@@ -98,7 +98,7 @@ async def parse_packages(key: Tuple[AsyncCache, str]) -> Tuple[Dict[str, str], D
 
   pkg_map = defaultdict(list)
   srcpkg_map = defaultdict(list)
-  pkg_to_src_map = defaultdict(list)
+  pkg_to_src_map: Dict[str, str] = {}
 
   pkg = None
   srcpkg = None

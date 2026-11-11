@@ -5,7 +5,7 @@ import asyncio
 import tempfile
 from collections.abc import Hashable
 from dataclasses import dataclass
-from typing import Any, List, Optional, Tuple, Union, cast
+from typing import Any, List, Optional, Tuple, cast
 
 import pygit2
 
@@ -125,7 +125,7 @@ async def get_version(
         _list_remote_refs_async,
     )
 
-    versions: List[Union[str, RichResult]] = []
+    versions: List[RichResult] = []
     for ref in refs:
         if not ref.name.startswith("refs/tags/"):
             continue

@@ -1,7 +1,7 @@
 # MIT licensed
 # Copyright (c) 2013-2020 lilydjwg <lilydjwg@gmail.com>, et al.
 
-from typing import Any, List, Union
+from typing import Any
 from urllib.parse import urlencode
 
 from nvchecker.api import VersionResult, RichResult, Entry, AsyncCache
@@ -55,7 +55,7 @@ async def _get_tags(
   max_page: int,
   cache: AsyncCache,
 ) -> VersionResult:
-  ret: List[Union[str, RichResult]] = []
+  ret: list[RichResult] = []
 
   for _ in range(max_page):
     data = await cache.get_json(url)
