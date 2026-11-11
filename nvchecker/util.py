@@ -92,12 +92,12 @@ VersionResult = Union[None, str, RichResult, List[str], List[RichResult], Except
 def apply_regex_match(
   regex: re.Pattern,
   versions: Union[List[str], List[RichResult]],
-  op: bool,
+  cond: bool,
 ) -> Union[List[str], List[RichResult]]:
   if isinstance(versions[0], RichResult):
-    return [x for x in versions if regex.fullmatch(str(x)) == op]
+    return [x for x in versions if bool(regex.fullmatch(str(x))) == cond]
   else:
-    return [x for x in versions if regex.fullmatch(x) == op]
+    return [x for x in versions if bool(regex.fullmatch(x)) == cond]
 
 class FileLoadError(Exception):
   def __init__(self, kind, filename, exc):
