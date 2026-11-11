@@ -6,9 +6,9 @@ from functools import partial
 
 import structlog
 
-from nvchecker.api import GetVersionError
+from nvchecker.api import GetVersionError, VersionResult
 
-async def run_cmd(name: str, cmd: str, timeout: int = 60) -> str:
+async def run_cmd(name: str, cmd: str, timeout: int = 60) -> VersionResult:
   logger = structlog.get_logger(
     logger_name = __name__,
     name = name,

@@ -7,7 +7,7 @@ from collections.abc import Hashable
 from dataclasses import dataclass
 from typing import Any, List, Optional, Tuple, Union, cast
 
-import pygit2  # type: ignore[import-not-found]
+import pygit2
 
 from nvchecker.api import (
     AsyncCache,

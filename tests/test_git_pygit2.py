@@ -8,7 +8,7 @@ from nvchecker.api import GetVersionError
 # Skip all tests in this file if pygit2 is not installed
 pygit2_available = True
 try:
-    import pygit2  # type: ignore[import-not-found]
+    import pygit2
 except ImportError:
     pygit2_available = False
 
