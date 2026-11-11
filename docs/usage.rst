@@ -1042,7 +1042,7 @@ When this source returns tags (``use_commit`` is not true) it supports
    An additional dependency ``pygit2`` is required.
 
 Check Git repository without git CLI using Dulwich
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
   source = "git_dulwich"
