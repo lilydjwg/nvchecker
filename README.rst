@@ -28,6 +28,7 @@ Dependency
 - One of these Python library combinations (ordered by preference):
 
   * tornado + pycurl
+  * httpx2 with http2 support
   * aiohttp
   * httpx with http2 support (experimental; only latest version is supported)
   * tornado

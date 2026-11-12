@@ -43,10 +43,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-        # zstandard doesn't support 3.14 -> httpx doesn't support zstd -> don't cache zstd responses
         - "3.14"
         deps:
-        - httpx[http2]>=0.14.0
+        - httpx2[http2]
         exclude: []
     steps:
     - name: Checkout code
@@ -181,11 +180,12 @@ jobs:
         # - aiohttp
         # no proxy support: easy to fail
         # - tornado
+        - httpx2[http2]
         - httpx[http2]>=0.14.0
         exclude:
         # this has been run as setup-cache
         - python-version: 3.14
-          deps: httpx[http2]>=0.14.0
+          deps: httpx2[http2]
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
