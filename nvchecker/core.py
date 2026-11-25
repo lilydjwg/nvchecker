@@ -46,6 +46,7 @@ from . import __version__
 from .sortversion import sort_version_keys
 from .ctxvars import tries as ctx_tries
 from .ctxvars import entry_waiter as ctx_entry_waiter
+from .ctxvars import entry_responses as ctx_entry_responses
 from . import httpclient
 
 logger = structlog.get_logger(logger_name=__name__)
@@ -265,10 +266,12 @@ class Dispatcher:
     entry_waiter: EntryWaiter,
     tries: int,
     source_configs: Dict[str, Dict[str, Any]],
+    entry_responses: Optional[Dict[str, List[bytes]]] = None,
   ) -> List[asyncio.Future]:
     mods: Dict[str, Tuple[types.ModuleType, List]] = {}
     ctx_tries.set(tries)
     ctx_entry_waiter.set(entry_waiter)
+    ctx_entry_responses.set(entry_responses)
     root_ctx = contextvars.copy_context()
 
     for name, entry in entries.items():
@@ -431,11 +434,22 @@ def check_version_update(
     level = logging.INFO if verbose else logging.DEBUG
     logger.log(level, 'up-to-date', name=name, version=r.version, url=r.url)
 
+def _write_failure_log(prefix: str, name: str, body: bytes) -> None:
+  safe_name = re.sub(r'[/\\]', '_', name)
+  path = Path(f'{prefix}{safe_name}.txt')
+  try:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(body)
+  except OSError as e:
+    logger.warning('failed to write failure log', name=name, path=str(path), exc_info=e)
+
 async def process_result(
   oldvers: ResultData,
   result_q: Queue[RawResult],
   entry_waiter: EntryWaiter,
   verbose: bool = False,
+  log_failures_prefix: Optional[str] = None,
+  entry_responses: Optional[Dict[str, List[bytes]]] = None,
 ) -> Tuple[ResultData, bool]:
   ret = {}
   has_failures = False
@@ -447,10 +461,13 @@ async def process_result(
       except Exception as e:
         logger.exception('error processing result', result=r)
         r1 = e
+      responses = entry_responses.pop(r.name, None) if entry_responses is not None else None
       if isinstance(r1, Exception):
         entry_waiter.set_exception(r.name, r1)
         # no versions are returned from "apply_list_options"?
         logger.error('no-result', name=r.name, error=repr(r1))
+        if log_failures_prefix is not None and responses:
+          _write_failure_log(log_failures_prefix, r.name, responses[-1])
         has_failures = True
         continue
       check_version_update(oldvers, r.name, r1, verbose)

@@ -8,6 +8,7 @@ import structlog
 import aiohttp
 
 from .base import BaseSession, TemporaryError, Response, HTTPError
+from ..ctxvars import http_responses
 
 __all__ = ['session']
 
@@ -78,7 +79,8 @@ class AiohttpSession(BaseSession):
     elif res.status >= 400:
       err_cls = HTTPError
     if err_cls is not None:
-      raise err_cls(res.status, res.reason, res)
+      err_body = await res.read() if http_responses.get() is not None else None
+      raise err_cls(res.status, res.reason, res, err_body)
 
     body = await res.content.read()
     return Response(res.headers, body)

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from contextvars import ContextVar
-from typing import Optional, TYPE_CHECKING
+from typing import Dict, List, Optional, TYPE_CHECKING
 
 from . import __version__
 
@@ -19,3 +19,5 @@ user_agent = ContextVar('user_agent', default=DEFAULT_USER_AGENT)
 httptoken: ContextVar[Optional[str]] = ContextVar('httptoken', default=None)
 entry_waiter: ContextVar[EntryWaiter] = ContextVar('entry_waiter')
 verify_cert = ContextVar('verify_cert', default=True)
+http_responses: ContextVar[Optional[List[bytes]]] = ContextVar('http_responses', default=None)
+entry_responses: ContextVar[Optional[Dict[str, List[bytes]]]] = ContextVar('entry_responses', default=None)

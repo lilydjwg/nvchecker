@@ -34,6 +34,8 @@ from .ctxvars import proxy as ctx_proxy
 from .ctxvars import user_agent as ctx_ua
 from .ctxvars import httptoken as ctx_httpt
 from .ctxvars import verify_cert as ctx_verify_cert
+from .ctxvars import http_responses as ctx_http_responses
+from .ctxvars import entry_responses as ctx_entry_responses
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -226,9 +228,11 @@ class AsyncCache:
   '''A cache for use with async functions.'''
   cache: Dict[Hashable, Any]
   lock: asyncio.Lock
+  _responses: Dict[Hashable, List[bytes]]
 
   def __init__(self) -> None:
     self.cache = {}
+    self._responses = {}
     self.lock = asyncio.Lock()
 
   async def _get_json(
@@ -271,22 +275,37 @@ class AsyncCache:
       ctx_httpt.get(),
       ctx_verify_cert.get(),
     )
+    recorder = ctx_http_responses.get()
 
     async with self.lock:
       cached = self.cache.get(cache_key)
       if cached is None:
-        coro = func(key)
-        fu = asyncio.create_task(coro)
+        if recorder is not None:
+          sub_recorder: List[bytes] = []
+          self._responses[cache_key] = sub_recorder
+          ctx = contextvars.copy_context()
+          ctx.run(ctx_http_responses.set, sub_recorder)
+          coro = func(key)
+          fu = ctx.run(asyncio.create_task, coro)
+        else:
+          coro = func(key)
+          fu = asyncio.create_task(coro)
         self.cache[cache_key] = fu
 
-    if asyncio.isfuture(cached): # pending
-      return await cached
-    elif cached is not None: # cached
-      return cached
-    else: # not cached
-      r = await fu
-      self.cache[cache_key] = r
-      return r
+    try:
+      if asyncio.isfuture(cached): # pending
+        return await cached
+      elif cached is not None: # cached
+        return cached
+      else: # not cached
+        r = await fu
+        self.cache[cache_key] = r
+        return r
+    finally:
+      if recorder is not None:
+        cached_responses = self._responses.get(cache_key)
+        if cached_responses:
+          recorder.extend(cached_responses)
 
 if TYPE_CHECKING:
   from typing_extensions import Protocol
@@ -342,6 +361,11 @@ class FunctionWorker(BaseWorker):
     verify_cert = entry.get('verify_cert', None)
     if verify_cert is not None:
       ctx_verify_cert.set(verify_cert)
+    entry_responses = ctx_entry_responses.get()
+    if entry_responses is not None:
+      responses: List[bytes] = []
+      entry_responses[name] = responses
+      ctx_http_responses.set(responses)
 
     try:
       async with self.task_sem:

@@ -7,7 +7,7 @@ from __future__ import annotations
 import sys
 import argparse
 import asyncio
-from typing import Coroutine, Tuple
+from typing import Coroutine, Dict, List, Optional, Tuple
 from pathlib import Path
 
 import structlog
@@ -27,6 +27,8 @@ def main() -> None:
                       help='try N times when network errors occur')
   parser.add_argument('--failures', action='store_true',
                       help='exit with code 3 if failures / errors happen during checking')
+  parser.add_argument('--log-failures-prefix', type=str, metavar='PREFIX',
+                      help='write HTTP response bodies of failed entries to files with this prefix')
   parser.add_argument('-e', '--entry', type=str,
                       help='only execute on specified entry (useful for debugging)')
   core.add_common_arguments(parser)
@@ -62,12 +64,16 @@ def main() -> None:
     options.resolver,
   )
   entry_waiter = EntryWaiter()
+  entry_responses: Optional[Dict[str, List[bytes]]] = (
+    {} if args.log_failures_prefix is not None else None
+  )
   try:
     futures = dispatcher.dispatch(
       entries, task_sem, result_q,
       keymanager, entry_waiter,
       args.tries,
       options.source_configs,
+      entry_responses=entry_responses,
     )
   except ModuleNotFoundError as e:
     sys.exit(f'Error: {e}')
@@ -76,7 +82,12 @@ def main() -> None:
     oldvers = core.read_verfile(options.ver_files[0])
   else:
     oldvers = {}
-  result_coro = core.process_result(oldvers, result_q, entry_waiter, verbose=bool(args.entry))
+  result_coro = core.process_result(
+    oldvers, result_q, entry_waiter,
+    verbose=bool(args.entry),
+    log_failures_prefix=args.log_failures_prefix,
+    entry_responses=entry_responses,
+  )
   runner_coro = core.run_tasks(futures)
 
   if sys.version_info >= (3, 10):
