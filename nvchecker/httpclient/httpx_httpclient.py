@@ -63,6 +63,7 @@ class HttpxSession(BaseSession):
           r.status_code,
           r.reason_phrase,
           r,
+          r.content,
         )
 
     except httpx.TransportError as e:

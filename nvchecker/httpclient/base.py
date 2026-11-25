@@ -5,7 +5,7 @@ import structlog
 from typing import Optional, Dict, Mapping
 import json as _json
 
-from ..ctxvars import tries, proxy, user_agent, httptoken, verify_cert
+from ..ctxvars import tries, proxy, user_agent, httptoken, verify_cert, http_responses
 
 logger = structlog.get_logger(logger_name=__name__)
 
@@ -69,6 +69,7 @@ class BaseSession:
     ua = user_agent.get()
     httpt = httptoken.get()
     verify = verify_cert.get()
+    recorder = http_responses.get()
 
     headers = headers.copy()
     headers.setdefault('User-Agent', ua)
@@ -77,7 +78,7 @@ class BaseSession:
 
     for i in range(1, t+1):
       try:
-        return await self.request_impl(
+        res = await self.request_impl(
           url,
           method = method,
           headers = headers,
@@ -88,13 +89,22 @@ class BaseSession:
           proxy = p or None,
           verify_cert = verify,
         )
+        if recorder is not None:
+          recorder.append(res.body)
+        return res
       except TemporaryError as e:
         if i == t:
+          if recorder is not None and e.body is not None:
+            recorder.append(e.body)
           raise
         else:
           logger.warning('temporary error, retrying',
                          tries = i, exc_info = e)
           continue
+      except HTTPError as e:
+        if recorder is not None and e.body is not None:
+          recorder.append(e.body)
+        raise
 
     raise Exception('should not reach')
 
@@ -113,10 +123,12 @@ class BaseSession:
     raise NotImplementedError
 
 class BaseHTTPError(Exception):
-  def __init__(self, code, message, response):
+  def __init__(self, code, message, response, body: Optional[bytes] = None):
+    super().__init__(code, message, response)
     self.code = code
     self.message = message
     self.response = response
+    self.body = body
 
 class TemporaryError(BaseHTTPError):
   '''A temporary error (e.g. network error) happens.'''

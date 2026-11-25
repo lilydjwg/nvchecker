@@ -96,7 +96,7 @@ class TornadoSession(BaseSession):
       err_cls = HTTPError
     if err_cls is not None:
       raise err_cls(
-        res.code, res.reason, res
+        res.code, res.reason, res, res.body
       )
 
     return Response(res.headers, res.body)
